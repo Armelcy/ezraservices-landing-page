@@ -41,54 +41,185 @@
     <section class="hero" id="hero">
         <div class="hero-container">
             <div class="hero-content">
-                <h1 class="hero-title">Ezra</h1>
-                <p class="hero-tagline">Cameroon's #1 Service Marketplace</p>
+                <h1 class="hero-title">Trouvez des prestataires de confiance au Cameroun</h1>
+                <p class="hero-tagline">La marketplace #1 des services à domicile</p>
                 <p class="hero-subtext">
-                    Connectez-vous avec des prestataires de confiance près de chez vous. 
-                    Services vérifiés, paiement sécurisé, support en français.
+                    Connectez-vous avec des professionnels vérifiés près de chez vous. 
+                    Paiement Mobile Money sécurisé, support en français 24/7.
                 </p>
-                <div class="hero-buttons">
-                    <a href="#download" class="btn-primary">Télécharger l'App</a>
-                    <a href="#how-it-works" class="btn-secondary">Découvrir</a>
+                
+                <!-- Location-based Search Bar -->
+                <div class="hero-search">
+                    <div class="search-container">
+                        <div class="location-selector">
+                            <span class="location-icon">📍</span>
+                            <select class="location-dropdown">
+                                <option value="douala">Douala</option>
+                                <option value="yaounde">Yaoundé</option>
+                                <option value="bafoussam">Bafoussam</option>
+                                <option value="garoua">Garoua</option>
+                                <option value="bamenda">Bamenda</option>
+                            </select>
+                        </div>
+                        <input type="text" class="search-input" placeholder="Ex: Mon évier de cuisine fuit, je cherche un plombier urgent...">
+                        <button class="search-btn">Rechercher</button>
+                    </div>
+                    <div class="search-examples">
+                        <span class="example-label">Exemples populaires:</span>
+                        <span class="example-tag">Nettoyage maison</span>
+                        <span class="example-tag">Plombier urgence</span>
+                        <span class="example-tag">Jardinage weekend</span>
+                    </div>
                 </div>
+                
+                <div class="hero-buttons">
+                    <a href="#download" class="btn-primary">Télécharger l'App Gratuite</a>
+                    <a href="#how-it-works" class="btn-secondary">Comment ça marche</a>
+                </div>
+                <!-- Trust Signals & Social Proof -->
+                <div class="hero-trust">
+                    <div class="trust-badges">
+                        <div class="trust-badge">
+                            <span class="badge-icon">✅</span>
+                            <span class="badge-text">Vérifiés CNI</span>
+                        </div>
+                        <div class="trust-badge">
+                            <span class="badge-icon">📱</span>
+                            <span class="badge-text">Mobile Money</span>
+                        </div>
+                        <div class="trust-badge">
+                            <span class="badge-icon">🛡️</span>
+                            <span class="badge-text">Garantie Ezra</span>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="hero-stats">
                     <div class="stat">
-                        <span class="stat-number">500+</span>
-                        <span class="stat-label">Prestataires</span>
+                        <span class="stat-number">2,847+</span>
+                        <span class="stat-label">Services réalisés</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">10+</span>
-                        <span class="stat-label">Villes</span>
+                        <span class="stat-number">630+</span>
+                        <span class="stat-label">Prestataires actifs</span>
                     </div>
                     <div class="stat">
-                        <span class="stat-number">95%</span>
-                        <span class="stat-label">Satisfaction</span>
+                        <span class="stat-number">4.8★</span>
+                        <span class="stat-label">Note moyenne</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">12 min</span>
+                        <span class="stat-label">Temps de réponse</span>
                     </div>
                 </div>
             </div>
             <div class="hero-visual">
                 <div class="phone-mockup">
-                    <div class="phone-screen">
-                        <div class="app-interface">
-                            <div class="app-header">
-                                <div class="app-logo">Ezra</div>
-                                <div class="app-location">📍 Douala</div>
-                            </div>
-                            <div class="app-search">
-                                <div class="search-bar">🔍 Rechercher un service...</div>
-                            </div>
-                            <div class="app-categories">
-                                <div class="category">🧹 Nettoyage</div>
-                                <div class="category">🔧 Plomberie</div>
-                                <div class="category">⚡ Électricité</div>
-                                <div class="category">🌱 Jardinage</div>
-                            </div>
-                        </div>
+                    <div class="phone-frame">
+                        <img src="assets/images/customer-homepage.png" 
+                             alt="Interface client Ezra Services - Trouvez des prestataires vérifiés au Cameroun" 
+                             class="app-screenshot"
+                             loading="lazy">
+                    </div>
+                    <!-- Optional: Add floating elements for visual appeal -->
+                    <div class="floating-badge badge-1">
+                        <span class="badge-icon">✅</span>
+                        <span class="badge-text">Vérifiés CNI</span>
+                    </div>
+                    <div class="floating-badge badge-2">
+                        <span class="badge-icon">📱</span>
+                        <span class="badge-text">Mobile Money</span>
+                    </div>
+                    <div class="floating-badge badge-3">
+                        <span class="badge-icon">⚡</span>
+                        <span class="badge-text">Réponse rapide</span>
                     </div>
                 </div>
             </div>
         </div>
         <div class="hero-pattern"></div>
+    </section>
+
+    <!-- Social Proof Section -->
+    <section class="social-proof">
+        <div class="container">
+            <div class="testimonial-banner">
+                <div class="testimonial-content">
+                    <div class="testimonial-text">
+                        <h3>"Équipe très professionnelle, intervention rapide. Je recommande vivement Ezra pour tous vos besoins à domicile."</h3>
+                        <div class="testimonial-author">
+                            <span class="author-name">Marie K. - Douala</span>
+                            <div class="rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-text">Service de nettoyage</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">4.8/5</span>
+                            <span class="stat-desc">Note App Store</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">1,247</span>
+                            <span class="stat-desc">Avis clients</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Price Transparency Section -->
+    <section class="price-transparency">
+        <div class="container">
+            <h2 class="section-title">Prix transparents basés sur des milliers de projets</h2>
+            <p class="section-subtitle">Découvrez combien coûtent réellement les services au Cameroun</p>
+            <div class="price-grid">
+                <div class="price-card">
+                    <div class="service-icon">🧹</div>
+                    <h4>Nettoyage maison</h4>
+                    <div class="price-range">
+                        <span class="price-from">Dès 15,000 CFA</span>
+                        <span class="price-avg">Moyenne: 25,000 CFA</span>
+                    </div>
+                    <p class="price-desc">Basé sur 342 projets récents</p>
+                </div>
+                <div class="price-card">
+                    <div class="service-icon">🔧</div>
+                    <h4>Réparation plomberie</h4>
+                    <div class="price-range">
+                        <span class="price-from">Dès 8,000 CFA</span>
+                        <span class="price-avg">Moyenne: 18,000 CFA</span>
+                    </div>
+                    <p class="price-desc">Basé sur 156 projets récents</p>
+                </div>
+                <div class="price-card">
+                    <div class="service-icon">⚡</div>
+                    <h4>Installation électrique</h4>
+                    <div class="price-range">
+                        <span class="price-from">Dès 12,000 CFA</span>
+                        <span class="price-avg">Moyenne: 35,000 CFA</span>
+                    </div>
+                    <p class="price-desc">Basé sur 89 projets récents</p>
+                </div>
+                <div class="price-card">
+                    <div class="service-icon">🌱</div>
+                    <h4>Entretien jardin</h4>
+                    <div class="price-range">
+                        <span class="price-from">Dès 10,000 CFA</span>
+                        <span class="price-avg">Moyenne: 22,000 CFA</span>
+                    </div>
+                    <p class="price-desc">Basé sur 134 projets récents</p>
+                </div>
+            </div>
+            <div class="price-guarantee">
+                <div class="guarantee-badge">
+                    <span class="guarantee-icon">🛡️</span>
+                    <span class="guarantee-text">Devis gratuit • Sans engagement • Prix fixé à l'avance</span>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- How It Works -->
@@ -120,6 +251,71 @@
                     </div>
                     <h3>Payer en Sécurité</h3>
                     <p>Payez avec Mobile Money (MTN, Orange) ou en espèces. Transaction 100% sécurisée et garantie.</p>
+                    <div class="step-cta">
+                        <a href="#download" class="mini-cta">Commencer maintenant</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Categories Showcase -->
+    <section class="service-categories">
+        <div class="container">
+            <h2 class="section-title">Services populaires disponibles</h2>
+            <p class="section-subtitle">Découvrez nos catégories les plus demandées avec des prestataires disponibles maintenant</p>
+            <div class="categories-carousel">
+                <div class="category-card trending">
+                    <div class="category-header">
+                        <div class="category-icon">🧹</div>
+                        <div class="category-badge">Trending</div>
+                    </div>
+                    <h3>Nettoyage & Ménage</h3>
+                    <p class="category-desc">67 prestataires • Réponse moyenne: 8 min</p>
+                    <div class="category-stats">
+                        <span class="stat">★ 4.9 (234 avis)</span>
+                        <span class="stat">Dès 15,000 CFA</span>
+                    </div>
+                    <button class="category-cta">Voir les prestataires</button>
+                </div>
+                <div class="category-card urgent">
+                    <div class="category-header">
+                        <div class="category-icon">🔧</div>
+                        <div class="category-badge emergency">Urgence 24/7</div>
+                    </div>
+                    <h3>Plomberie & Sanitaire</h3>
+                    <p class="category-desc">23 prestataires • Réponse moyenne: 12 min</p>
+                    <div class="category-stats">
+                        <span class="stat">★ 4.7 (156 avis)</span>
+                        <span class="stat">Dès 8,000 CFA</span>
+                    </div>
+                    <button class="category-cta urgent">Urgence maintenant</button>
+                </div>
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">⚡</div>
+                        <div class="category-badge">Certifié</div>
+                    </div>
+                    <h3>Électricité & Climat</h3>
+                    <p class="category-desc">31 prestataires • Réponse moyenne: 15 min</p>
+                    <div class="category-stats">
+                        <span class="stat">★ 4.8 (98 avis)</span>
+                        <span class="stat">Dès 12,000 CFA</span>
+                    </div>
+                    <button class="category-cta">Réserver maintenant</button>
+                </div>
+                <div class="category-card">
+                    <div class="category-header">
+                        <div class="category-icon">🌱</div>
+                        <div class="category-badge">Populaire</div>
+                    </div>
+                    <h3>Jardinage & Extérieur</h3>
+                    <p class="category-desc">42 prestataires • Réponse moyenne: 20 min</p>
+                    <div class="category-stats">
+                        <span class="stat">★ 4.6 (187 avis)</span>
+                        <span class="stat">Dès 10,000 CFA</span>
+                    </div>
+                    <button class="category-cta">Découvrir</button>
                 </div>
             </div>
         </div>
@@ -128,7 +324,7 @@
     <!-- Features -->
     <section class="features" id="features">
         <div class="container">
-            <h2 class="section-title">Pourquoi choisir Ezra ?</h2>
+            <h2 class="section-title">Pourquoi 95% de nos clients recommandent Ezra</h2>
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">📱</div>
@@ -215,11 +411,37 @@
         </div>
     </section>
 
+    <!-- Final CTA with Urgency -->
+    <section class="urgency-cta">
+        <div class="container">
+            <div class="urgency-banner">
+                <div class="urgency-content">
+                    <div class="urgency-text">
+                        <h3>🔥 Offre de lancement limitée</h3>
+                        <p>Premiers 100 utilisateurs: <strong>50% de réduction</strong> sur votre premier service + frais de livraison offerts</p>
+                        <div class="urgency-timer">
+                            <span class="timer-label">Se termine dans:</span>
+                            <div class="timer-display">
+                                <span class="timer-unit">2j</span>
+                                <span class="timer-unit">14h</span>
+                                <span class="timer-unit">23m</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="urgency-cta-buttons">
+                        <a href="#download" class="btn-primary urgent">Réclamer mon offre</a>
+                        <p class="urgency-note">✅ Plus que 23 places disponibles</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Download Section -->
     <section class="download-section" id="download">
         <div class="container">
-            <h2 class="section-title">Téléchargez Ezra dès maintenant</h2>
-            <p class="section-subtitle">Rejoignez des milliers d'utilisateurs qui font confiance à Ezra</p>
+            <h2 class="section-title">Rejoignez plus de 5,000 utilisateurs satisfaits</h2>
+            <p class="section-subtitle">Téléchargement gratuit • Aucun frais caché • Annulation possible à tout moment</p>
             <div class="download-buttons">
                 <a href="#" class="download-btn">
                     <div class="download-icon">📱</div>
