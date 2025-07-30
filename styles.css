@@ -70,76 +70,21 @@ body {
     text-decoration: none;
 }
 
-.logo-icon {
-    width: 45px;
+.logo-image {
     height: 45px;
-    margin-right: 12px;
-    position: relative;
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
 }
 
-.logo-pin {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, var(--navy-blue) 0%, var(--vibrant-orange) 50%, var(--rich-purple) 100%);
-    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.footer-logo-image {
+    height: 45px;
+    width: auto;
+    max-width: 200px;
+    object-fit: contain;
+    margin-bottom: 1rem;
 }
 
-.logo-pin::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 2px,
-        rgba(255,255,255,0.1) 2px,
-        rgba(255,255,255,0.1) 4px
-    );
-}
-
-.logo-sun {
-    position: absolute;
-    top: 15%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 12px;
-    height: 12px;
-    background: var(--warm-cream);
-    border-radius: 50%;
-}
-
-.logo-handshake {
-    font-size: 16px;
-    position: absolute;
-    bottom: 20%;
-    left: 50%;
-    transform: translateX(-50%);
-    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
-}
-
-.logo-pattern {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 40%;
-    background: linear-gradient(0deg, var(--rich-purple) 0%, transparent 100%);
-}
-
-.logo-text {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--navy-blue);
-    letter-spacing: -0.02em;
-}
 
 .nav-menu {
     display: flex;
