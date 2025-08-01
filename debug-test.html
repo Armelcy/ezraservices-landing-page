@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test - Ezra Landing Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .logo-test {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, #1B365D 0%, #6B46C1 100%);
+            color: white;
+            border-radius: 10px;
+        }
+        
+        .logo-image {
+            height: 60px;
+            width: auto;
+            max-width: 300px;
+            object-fit: contain;
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        
+        /* WhatsApp Buttons */
+        .whatsapp-float {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            z-index: 99999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(37, 211, 102, 0.6); }
+            100% { box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4); }
+        }
+
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+
+        .simple-whatsapp {
+            position: fixed;
+            right: 100px;
+            bottom: 25px;
+            width: 60px;
+            height: 60px;
+            background: #25D366;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 99999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-size: 24px;
+            color: white;
+        }
+
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 Debug Test - Ezra Landing Page</h1>
+
+    <!-- Logo Test Section -->
+    <div class="test-section">
+        <h2>📷 Logo Test</h2>
+        <div class="logo-test">
+            <h3>Current Logo</h3>
+            <img src="assets/images/ezra-logo.png?v=2025" alt="Ezra Services Logo" class="logo-image">
+            <p>If you see the new location pin logo with blue patterns and handshake above, the logo update worked! ✅</p>
+            <p>If you see the old text-based logo, there's a cache issue. ❌</p>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <h4>Image File Info:</h4>
+            <p><strong>File:</strong> assets/images/ezra-logo.png</p>
+            <p><strong>Cache Buster:</strong> ?v=2025</p>
+            <p><strong>Expected:</strong> Location pin with blue geometric patterns and handshake</p>
+        </div>
+    </div>
+
+    <!-- WhatsApp Test Section -->
+    <div class="test-section">
+        <h2>💬 WhatsApp Button Test</h2>
+        <div id="whatsapp-status"></div>
+        
+        <h4>What you should see:</h4>
+        <ul>
+            <li>✅ Green circular button in bottom-right corner (animated)</li>
+            <li>✅ Simple green button in bottom-right (backup)</li>
+            <li>✅ Both buttons should be clickable and open WhatsApp</li>
+        </ul>
+
+        <h4>Troubleshooting Steps:</h4>
+        <div id="troubleshoot-results"></div>
+    </div>
+
+    <!-- Force Clear Cache Section -->
+    <div class="test-section">
+        <h2>🔄 Cache Control</h2>
+        <button onclick="clearCacheAndReload()" style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+            🔄 Force Clear Cache & Reload
+        </button>
+        <p><em>Click this button if you still see the old logo or missing WhatsApp buttons</em></p>
+    </div>
+
+    <!-- WhatsApp Buttons -->
+    <div id="whatsapp-float" class="whatsapp-float">
+        <div class="whatsapp-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="simple-whatsapp" onclick="openWhatsApp()">
+        💬
+    </div>
+
+    <script>
+        // WhatsApp functionality
+        function openWhatsApp() {
+            const message = encodeURIComponent("Bonjour l'équipe Ezra Services! 👋\n\nJe teste le contact WhatsApp depuis votre site.");
+            const url = `https://wa.me/237622334455?text=${message}`;
+            console.log('Opening WhatsApp:', url);
+            window.open(url, '_blank');
+        }
+
+        // Main WhatsApp button functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const whatsappFloat = document.querySelector('#whatsapp-float');
+            if (whatsappFloat) {
+                whatsappFloat.addEventListener('click', openWhatsApp);
+                document.getElementById('whatsapp-status').innerHTML = '<div class="test-result success">✅ Main WhatsApp button found and initialized</div>';
+            } else {
+                document.getElementById('whatsapp-status').innerHTML = '<div class="test-result error">❌ Main WhatsApp button NOT found</div>';
+            }
+
+            // Run diagnostics
+            runDiagnostics();
+        });
+
+        function runDiagnostics() {
+            const results = [];
+            
+            // Check if elements exist
+            const whatsappFloat = document.querySelector('#whatsapp-float');
+            const logoImg = document.querySelector('.logo-image');
+            
+            results.push(whatsappFloat ? '✅ WhatsApp element exists' : '❌ WhatsApp element missing');
+            results.push(logoImg ? '✅ Logo element exists' : '❌ Logo element missing');
+            
+            // Check computed styles
+            if (whatsappFloat) {
+                const styles = getComputedStyle(whatsappFloat);
+                results.push(`📊 WhatsApp position: ${styles.position}`);
+                results.push(`📊 WhatsApp z-index: ${styles.zIndex}`);
+                results.push(`📊 WhatsApp display: ${styles.display}`);
+                results.push(`📊 WhatsApp visibility: ${styles.visibility}`);
+            }
+            
+            document.getElementById('troubleshoot-results').innerHTML = results.map(r => 
+                `<div class="test-result ${r.includes('❌') ? 'error' : 'success'}">${r}</div>`
+            ).join('');
+        }
+
+        function clearCacheAndReload() {
+            // Try to clear various cache types
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+            
+            // Clear localStorage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Add timestamp to force reload
+            const url = new URL(window.location);
+            url.searchParams.set('nocache', Date.now());
+            window.location.href = url.toString();
+        }
+
+        // Debug info
+        console.log('🔧 Debug page loaded');
+        console.log('📁 Current URL:', window.location.href);
+        console.log('🖼️ Logo source should be: assets/images/ezra-logo.png?v=2025');
+    </script>
+</body>
+</html>

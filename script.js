@@ -234,3 +234,111 @@ if (logoIcon) {
         this.style.transform = 'scale(1) rotate(0deg)';
     });
 }
+
+// WhatsApp Business Floating Button
+document.addEventListener('DOMContentLoaded', function() {
+    const whatsappFloat = document.querySelector('#whatsapp-float');
+    
+    if (whatsappFloat) {
+        // Debug: Ensure button is visible
+        console.log('✅ WhatsApp button found and initializing...');
+        whatsappFloat.style.display = 'block';
+        whatsappFloat.style.visibility = 'visible';
+        // WhatsApp Business phone number (replace with actual business number)
+        const whatsappBusinessNumber = '+237622334455'; // Example Cameroon number
+        
+        whatsappFloat.addEventListener('click', function() {
+            // Pre-filled message for customer support
+            const message = encodeURIComponent(
+                "Bonjour l'équipe Ezra Services! 👋\n\n" +
+                "Je visite votre site web et j'aimerais en savoir plus sur vos services.\n\n" +
+                "Pouvez-vous m'aider avec:\n" +
+                "☑️ Informations sur les services disponibles\n" +
+                "☑️ Prix et tarification\n" +
+                "☑️ Comment télécharger l'application\n" +
+                "☑️ Inscription comme prestataire\n\n" +
+                "Merci! 🙏"
+            );
+            
+            // Try to open WhatsApp app first, fallback to web
+            const whatsappUrl = `https://wa.me/${whatsappBusinessNumber.replace(/[^\d]/g, '')}?text=${message}`;
+            
+            // Track click event
+            console.log('WhatsApp Business contact initiated');
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            // Optional: Add analytics tracking
+            // gtag('event', 'whatsapp_contact', {
+            //     'event_category': 'customer_support',
+            //     'event_label': 'floating_button'
+            // });
+        });
+
+        // Show tooltip after a delay for first-time visitors
+        setTimeout(() => {
+            if (!localStorage.getItem('whatsapp_tooltip_seen')) {
+                const tooltip = whatsappFloat.querySelector('.whatsapp-tooltip');
+                if (tooltip) {
+                    tooltip.style.opacity = '1';
+                    tooltip.style.visibility = 'visible';
+                    tooltip.style.transform = 'translateY(-50%) translateX(-5px)';
+                    
+                    // Hide after 3 seconds
+                    setTimeout(() => {
+                        tooltip.style.opacity = '0';
+                        tooltip.style.visibility = 'hidden';
+                        tooltip.style.transform = 'translateY(-50%)';
+                        localStorage.setItem('whatsapp_tooltip_seen', 'true');
+                    }, 3000);
+                }
+            }
+        }, 2000);
+
+        // Show tooltip on hover (as defined in CSS)
+        whatsappFloat.addEventListener('mouseenter', function() {
+            const tooltip = this.querySelector('.whatsapp-tooltip');
+            if (tooltip) {
+                tooltip.style.opacity = '1';
+                tooltip.style.visibility = 'visible';
+                tooltip.style.transform = 'translateY(-50%) translateX(-5px)';
+            }
+        });
+
+        whatsappFloat.addEventListener('mouseleave', function() {
+            const tooltip = this.querySelector('.whatsapp-tooltip');
+            if (tooltip) {
+                tooltip.style.opacity = '0';
+                tooltip.style.visibility = 'hidden';
+                tooltip.style.transform = 'translateY(-50%)';
+            }
+        });
+    }
+});
+
+// Enhanced WhatsApp Integration for specific page sections
+function initializeWhatsAppIntegration() {
+    // Add WhatsApp contact options to specific sections
+    const contactSection = document.querySelector('#contact');
+    const heroSection = document.querySelector('#hero');
+    
+    // Add WhatsApp quick contact to hero section
+    if (heroSection) {
+        const heroButtons = heroSection.querySelector('.hero-buttons');
+        if (heroButtons && !heroButtons.querySelector('.whatsapp-hero-btn')) {
+            const whatsappHeroBtn = document.createElement('a');
+            whatsappHeroBtn.className = 'btn-tertiary whatsapp-hero-btn';
+            whatsappHeroBtn.innerHTML = '💬 Aide WhatsApp';
+            whatsappHeroBtn.href = '#';
+            whatsappHeroBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector('#whatsapp-float').click();
+            });
+            heroButtons.appendChild(whatsappHeroBtn);
+        }
+    }
+}
+
+// Initialize WhatsApp integration when DOM is loaded
+document.addEventListener('DOMContentLoaded', initializeWhatsAppIntegration);
