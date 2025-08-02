@@ -1,1 +1,285 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#3B82F6"/><meta name="description" content="Ezra Services Admin Dashboard - Cameroon Marketplace Management"/><title>Ezra Admin Dashboard</title><script defer="defer" src="/static/js/main.ebff149a.js"></script><link href="/static/css/main.5425f897.css" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Services - Your Trusted Marketplace in Cameroon</title>
+    <meta name="description" content="Ezra Services connects customers with trusted service providers across Cameroon. Find reliable plumbers, electricians, cleaners, and more in Douala, Yaoundé, and beyond.">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ezraservice.com/">
+    <meta property="og:title" content="Ezra Services - Your Trusted Marketplace in Cameroon">
+    <meta property="og:description" content="Connect with trusted service providers across Cameroon. Reliable, vetted professionals for all your needs.">
+    <meta property="og:image" content="https://ezraservice.com/assets/images/ezra-logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://ezraservice.com/">
+    <meta property="twitter:title" content="Ezra Services - Your Trusted Marketplace in Cameroon">
+    <meta property="twitter:description" content="Connect with trusted service providers across Cameroon. Reliable, vetted professionals for all your needs.">
+    <meta property="twitter:image" content="https://ezraservice.com/assets/images/ezra-logo.png">
+
+    <link rel="icon" type="image/png" href="assets/images/ezra-logo.png">
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Preload critical resources -->
+    <link rel="preload" href="assets/images/ezra-logo.png?v=2025" as="image" type="image/png">
+    
+    <!-- Schema.org markup for Google -->
+    <script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "LocalBusiness",
+        "name": "Ezra Services",
+        "description": "Trusted marketplace connecting customers with verified service providers in Cameroon",
+        "url": "https://ezraservice.com",
+        "telephone": "+237622334455",
+        "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "CM",
+            "addressLocality": "Douala"
+        },
+        "areaServed": {
+            "@type": "Country",
+            "name": "Cameroon"
+        },
+        "serviceType": "Marketplace Platform"
+    }
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <img src="assets/images/ezra-logo.png?v=2025" alt="Ezra Services Logo" class="logo-image">
+                <div class="logo-text">
+                    <h1>Ezra Services</h1>
+                    <p>Marketplace du Cameroun</p>
+                </div>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="#services" class="nav-link">Services</a>
+                <a href="#how-it-works" class="nav-link">Comment ça marche</a>
+                <a href="#contact" class="nav-link">Contact</a>
+                <a href="admin" class="nav-link admin-link">🔐 Admin</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h2 class="hero-title">
+                    Connectez-vous aux meilleurs prestataires du Cameroun
+                </h2>
+                <p class="hero-subtitle">
+                    Trouvez rapidement des professionnels vérifiés pour tous vos besoins quotidiens. 
+                    Plombiers, électriciens, femmes de ménage, et plus encore à Douala, Yaoundé et partout au Cameroun.
+                </p>
+                
+                <div class="hero-actions">
+                    <button class="btn-primary" onclick="downloadApp()">
+                        📱 Télécharger l'App
+                    </button>
+                    <button class="btn-secondary" onclick="openWhatsApp()">
+                        💬 WhatsApp
+                    </button>
+                </div>
+
+                <div class="trust-indicators">
+                    <div class="trust-item">
+                        <span class="trust-number">500+</span>
+                        <span class="trust-label">Prestataires vérifiés</span>
+                    </div>
+                    <div class="trust-item">
+                        <span class="trust-number">2000+</span>
+                        <span class="trust-label">Clients satisfaits</span>
+                    </div>
+                    <div class="trust-item">
+                        <span class="trust-number">24/7</span>
+                        <span class="trust-label">Support client</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-image">
+                <img src="assets/images/customer-homepage.png" alt="Interface client Ezra Services" class="hero-screenshot">
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title">Nos Services Populaires</h2>
+            <p class="section-subtitle">Des professionnels qualifiés pour tous vos besoins</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🔧</div>
+                    <h3>Plomberie & Électricité</h3>
+                    <p>Réparations d'urgence, installations et maintenance</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3>Ménage & Nettoyage</h3>
+                    <p>Services de nettoyage résidentiel et commercial</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🚚</div>
+                    <h3>Déménagement</h3>
+                    <p>Transport et déménagement sécurisé</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🔨</div>
+                    <h3>Réparations</h3>
+                    <p>Menuiserie, peinture et travaux divers</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">👩‍🍳</div>
+                    <h3>Services Culinaires</h3>
+                    <p>Chefs à domicile et traiteurs</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🌿</div>
+                    <h3>Jardinage</h3>
+                    <p>Entretien d'espaces verts et aménagement</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <h2 class="section-title">Comment ça marche</h2>
+            <p class="section-subtitle">Simple, rapide et sécurisé</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Choisissez votre service</h3>
+                    <p>Parcourez notre liste de services ou décrivez votre besoin</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Trouvez un prestataire</h3>
+                    <p>Consultez les profils, avis et tarifs des professionnels disponibles</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Réservez en toute sécurité</h3>
+                    <p>Paiement sécurisé avec garantie satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h2 class="section-title">Contactez-nous</h2>
+            <p class="section-subtitle">Notre équipe est là pour vous aider</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>📱 Téléphone</h3>
+                    <p><a href="tel:+237622334455">+237 622 334 455</a></p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>📧 Email</h3>
+                    <p><a href="mailto:support@ezraservice.com">support@ezraservice.com</a></p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>💬 WhatsApp</h3>
+                    <p><a href="https://wa.me/237622334455" target="_blank">Écrire sur WhatsApp</a></p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>📍 Localisation</h3>
+                    <p>Douala, Cameroun</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <img src="assets/images/ezra-logo.png?v=2025" alt="Ezra Services Logo" class="logo-image">
+                        <div class="logo-text">
+                            <h3>Ezra Services</h3>
+                            <p>Votre marketplace de confiance</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#services">Plomberie & Électricité</a></li>
+                        <li><a href="#services">Ménage & Nettoyage</a></li>
+                        <li><a href="#services">Déménagement</a></li>
+                        <li><a href="#services">Réparations</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="tel:+237622334455">+237 622 334 455</a></li>
+                        <li><a href="mailto:support@ezraservice.com">Support</a></li>
+                        <li><a href="https://wa.me/237622334455">WhatsApp</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#privacy">Politique de confidentialité</a></li>
+                        <li><a href="#terms">Conditions d'utilisation</a></li>
+                        <li><a href="admin">🔐 Administration</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Ezra Services. Tous droits réservés. | Fait avec ❤️ au Cameroun 🇨🇲</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Floating Button -->
+    <div id="whatsapp-float" class="whatsapp-float">
+        <div class="whatsapp-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.890-5.335 11.893-11.893A11.821 11.821 0 0020.465 3.516"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Simple WhatsApp Button (Backup) -->
+    <div class="simple-whatsapp" onclick="openWhatsApp()">
+        💬
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
