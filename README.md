@@ -4,7 +4,7 @@ Official landing page for Ezra Services, Cameroon's #1 Service Marketplace.
 
 ## 🚀 Live Site
 
-Visit the live site at: [ezraservices.com](https://ezraservices.com)
+Visit the live site at: [ezraservices.com](https://ezraservice.com)
 
 ## 📋 Features
 
