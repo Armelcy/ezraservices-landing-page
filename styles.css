@@ -259,22 +259,31 @@ body {
 .hero-stats {
     display: flex;
     gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .stat {
     text-align: center;
+    min-width: 120px;
+    flex: 1;
 }
 
 .stat-number {
     display: block;
-    font-size: 2rem;
+    font-size: 2.2rem;
     font-weight: 700;
     color: var(--warm-cream);
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
 }
 
 .stat-label {
-    font-size: 0.9rem;
-    opacity: 0.8;
+    font-size: 0.95rem;
+    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.3;
+    word-wrap: break-word;
 }
 
 .hero-visual {
@@ -1221,6 +1230,19 @@ body {
     
     .hero-stats {
         justify-content: center;
+        gap: 1.5rem;
+    }
+    
+    .stat {
+        min-width: 100px;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
     }
 }
 
@@ -1271,6 +1293,21 @@ body {
     .hero-stats {
         flex-wrap: wrap;
         gap: 1rem;
+        justify-content: center;
+    }
+    
+    .stat {
+        min-width: 90px;
+        flex: none;
+    }
+    
+    .stat-number {
+        font-size: 1.8rem;
+    }
+    
+    .stat-label {
+        font-size: 0.85rem;
+        line-height: 1.2;
     }
 }
 
