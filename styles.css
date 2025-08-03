@@ -398,15 +398,17 @@ body {
 }
 
 .category-card {
-    background: white;
+    background: #f8fafc;
     padding: 12px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
     font-size: 13px;
     font-weight: 500;
+    color: #374151;
 }
 
 .category-line {
@@ -430,13 +432,14 @@ body {
 }
 
 .provider-card-french {
-    background: white;
+    background: #f8fafc;
     padding: 12px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    border: 1px solid #e5e7eb;
     margin-bottom: 15px;
 }
 
