@@ -53,107 +53,116 @@
     <!-- Deployment successful - removing debug indicator -->
     
     <!-- Header -->
-    <header class="header">
-        <div class="container">
+    <nav class="navbar">
+        <div class="nav-container">
             <div class="logo">
                 <img src="assets/images/ezra-logo.png?v=2025" alt="Ezra Services Logo" class="logo-image">
-                <div class="logo-text">
-                    <h1>Ezra Services</h1>
-                    <p>Marketplace du Cameroun</p>
-                </div>
             </div>
             
-            <nav class="nav-links">
+            <div class="nav-menu">
                 <a href="#services" class="nav-link">Services</a>
                 <a href="#how-it-works" class="nav-link">Comment ça marche</a>
                 <a href="#contact" class="nav-link">Contact</a>
-                <a href="admin" class="nav-link admin-link">🔐 Admin</a>
-            </nav>
+                <a href="admin" class="cta-button">🔐 Admin</a>
+            </div>
         </div>
-    </header>
+    </nav>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
-        <div class="container">
+        <div class="hero-container">
             <div class="hero-content">
-                <h2 class="hero-title">
+                <h1 class="hero-title">
                     Connectez-vous aux meilleurs prestataires du Cameroun
-                </h2>
-                <p class="hero-subtitle">
+                </h1>
+                <p class="hero-tagline">Votre marketplace de confiance</p>
+                <p class="hero-subtext">
                     Trouvez rapidement des professionnels vérifiés pour tous vos besoins quotidiens. 
                     Plombiers, électriciens, femmes de ménage, et plus encore à Douala, Yaoundé et partout au Cameroun.
                 </p>
                 
-                <div class="hero-actions">
-                    <button class="btn-primary" onclick="downloadApp()">
-                        📱 Télécharger l'App
-                    </button>
-                    <button class="btn-secondary" onclick="openWhatsApp()">
-                        💬 WhatsApp
-                    </button>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn-primary">📱 Télécharger l'App</a>
+                    <button class="btn-secondary" onclick="openWhatsApp()">💬 WhatsApp</button>
                 </div>
 
-                <div class="trust-indicators">
-                    <div class="trust-item">
-                        <span class="trust-number">500+</span>
-                        <span class="trust-label">Prestataires vérifiés</span>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Prestataires vérifiés</span>
                     </div>
-                    <div class="trust-item">
-                        <span class="trust-number">2000+</span>
-                        <span class="trust-label">Clients satisfaits</span>
+                    <div class="stat">
+                        <span class="stat-number">2000+</span>
+                        <span class="stat-label">Clients satisfaits</span>
                     </div>
-                    <div class="trust-item">
-                        <span class="trust-number">24/7</span>
-                        <span class="trust-label">Support client</span>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Support client</span>
                     </div>
                 </div>
             </div>
             
-            <div class="hero-image">
-                <img src="assets/images/customer-homepage.png" alt="Interface client Ezra Services" class="hero-screenshot">
+            <div class="hero-visual">
+                <div class="phone-mockup">
+                    <div class="phone-frame">
+                        <img src="assets/images/customer-homepage.png" alt="Interface client Ezra Services" class="app-screenshot">
+                    </div>
+                    <div class="floating-badge badge-1">
+                        <span class="badge-icon">⚡</span>
+                        Réponse rapide
+                    </div>
+                    <div class="floating-badge badge-2">
+                        <span class="badge-icon">✅</span>
+                        Vérifiés
+                    </div>
+                    <div class="floating-badge badge-3">
+                        <span class="badge-icon">💯</span>
+                        Qualité garantie
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section class="services" id="services">
+    <section class="features" id="services">
         <div class="container">
             <h2 class="section-title">Nos Services Populaires</h2>
             <p class="section-subtitle">Des professionnels qualifiés pour tous vos besoins</p>
             
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">🔧</div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
                     <h3>Plomberie & Électricité</h3>
                     <p>Réparations d'urgence, installations et maintenance</p>
                 </div>
                 
-                <div class="service-card">
-                    <div class="service-icon">🏠</div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏠</div>
                     <h3>Ménage & Nettoyage</h3>
                     <p>Services de nettoyage résidentiel et commercial</p>
                 </div>
                 
-                <div class="service-card">
-                    <div class="service-icon">🚚</div>
+                <div class="feature-card">
+                    <div class="feature-icon">🚚</div>
                     <h3>Déménagement</h3>
                     <p>Transport et déménagement sécurisé</p>
                 </div>
                 
-                <div class="service-card">
-                    <div class="service-icon">🔨</div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔨</div>
                     <h3>Réparations</h3>
                     <p>Menuiserie, peinture et travaux divers</p>
                 </div>
                 
-                <div class="service-card">
-                    <div class="service-icon">👩‍🍳</div>
+                <div class="feature-card">
+                    <div class="feature-icon">👩‍🍳</div>
                     <h3>Services Culinaires</h3>
                     <p>Chefs à domicile et traiteurs</p>
                 </div>
                 
-                <div class="service-card">
-                    <div class="service-icon">🌿</div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌿</div>
                     <h3>Jardinage</h3>
                     <p>Entretien d'espaces verts et aménagement</p>
                 </div>
@@ -167,21 +176,30 @@
             <h2 class="section-title">Comment ça marche</h2>
             <p class="section-subtitle">Simple, rapide et sécurisé</p>
             
-            <div class="steps">
+            <div class="steps-grid">
                 <div class="step">
-                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <div class="step-emoji">🔍</div>
+                        <div class="step-number">1</div>
+                    </div>
                     <h3>Choisissez votre service</h3>
                     <p>Parcourez notre liste de services ou décrivez votre besoin</p>
                 </div>
                 
                 <div class="step">
-                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <div class="step-emoji">👨‍🔧</div>
+                        <div class="step-number">2</div>
+                    </div>
                     <h3>Trouvez un prestataire</h3>
                     <p>Consultez les profils, avis et tarifs des professionnels disponibles</p>
                 </div>
                 
                 <div class="step">
-                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <div class="step-emoji">✅</div>
+                        <div class="step-number">3</div>
+                    </div>
                     <h3>Réservez en toute sécurité</h3>
                     <p>Paiement sécurisé avec garantie satisfaction</p>
                 </div>
@@ -190,30 +208,60 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="contact" id="contact">
+    <section class="contact-section" id="contact">
         <div class="container">
             <h2 class="section-title">Contactez-nous</h2>
             <p class="section-subtitle">Notre équipe est là pour vous aider</p>
             
-            <div class="contact-info">
-                <div class="contact-item">
-                    <h3>📱 Téléphone</h3>
-                    <p><a href="tel:+237622334455">+237 622 334 455</a></p>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <div class="contact-icon">📱</div>
+                        <div class="contact-details">
+                            <h4>Téléphone</h4>
+                            <p><a href="tel:+237622334455">+237 622 334 455</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📧</div>
+                        <div class="contact-details">
+                            <h4>Email</h4>
+                            <p><a href="mailto:support@ezraservice.com">support@ezraservice.com</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">💬</div>
+                        <div class="contact-details">
+                            <h4>WhatsApp</h4>
+                            <p><a href="https://wa.me/237622334455" target="_blank">Écrire sur WhatsApp</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon">📍</div>
+                        <div class="contact-details">
+                            <h4>Localisation</h4>
+                            <p>Douala, Cameroun</p>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="contact-item">
-                    <h3>📧 Email</h3>
-                    <p><a href="mailto:support@ezraservice.com">support@ezraservice.com</a></p>
-                </div>
-                
-                <div class="contact-item">
-                    <h3>💬 WhatsApp</h3>
-                    <p><a href="https://wa.me/237622334455" target="_blank">Écrire sur WhatsApp</a></p>
-                </div>
-                
-                <div class="contact-item">
-                    <h3>📍 Localisation</h3>
-                    <p>Douala, Cameroun</p>
+                <div class="contact-form">
+                    <h3>Envoyez-nous un message</h3>
+                    <form>
+                        <div class="form-group">
+                            <input type="text" placeholder="Votre nom" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Votre email" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="4" placeholder="Votre message" required></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Envoyer le message</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -225,17 +273,21 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <div class="logo">
-                        <img src="assets/images/ezra-logo.png?v=2025" alt="Ezra Services Logo" class="logo-image">
-                        <div class="logo-text">
-                            <h3>Ezra Services</h3>
-                            <p>Votre marketplace de confiance</p>
-                        </div>
+                        <img src="assets/images/ezra-logo.png?v=2025" alt="Ezra Services Logo" class="footer-logo-image">
+                    </div>
+                    <p class="footer-description">
+                        Votre marketplace de confiance pour trouver les meilleurs prestataires de services au Cameroun.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="social-link">📧</a>
+                        <a href="https://wa.me/237622334455" class="social-link">💬</a>
+                        <a href="#" class="social-link">📱</a>
                     </div>
                 </div>
                 
                 <div class="footer-section">
                     <h4>Services</h4>
-                    <ul>
+                    <ul class="footer-links">
                         <li><a href="#services">Plomberie & Électricité</a></li>
                         <li><a href="#services">Ménage & Nettoyage</a></li>
                         <li><a href="#services">Déménagement</a></li>
@@ -245,7 +297,7 @@
                 
                 <div class="footer-section">
                     <h4>Support</h4>
-                    <ul>
+                    <ul class="footer-links">
                         <li><a href="#contact">Contact</a></li>
                         <li><a href="tel:+237622334455">+237 622 334 455</a></li>
                         <li><a href="mailto:support@ezraservice.com">Support</a></li>
@@ -255,7 +307,7 @@
                 
                 <div class="footer-section">
                     <h4>Légal</h4>
-                    <ul>
+                    <ul class="footer-links">
                         <li><a href="#privacy">Politique de confidentialité</a></li>
                         <li><a href="#terms">Conditions d'utilisation</a></li>
                         <li><a href="admin">🔐 Administration</a></li>
@@ -264,7 +316,14 @@
             </div>
             
             <div class="footer-bottom">
-                <p>&copy; 2025 Ezra Services. Tous droits réservés. | Fait avec ❤️ au Cameroun 🇨🇲</p>
+                <div class="footer-legal">
+                    <p>&copy; 2025 Ezra Services. Tous droits réservés.</p>
+                    <div class="legal-links">
+                        <a href="#privacy">Confidentialité</a>
+                        <a href="#terms">Conditions</a>
+                        <a href="#contact">Contact</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
