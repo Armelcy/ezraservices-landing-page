@@ -1,1 +1,56 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"/><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/><meta http-equiv="Pragma" content="no-cache"/><meta http-equiv="Expires" content="0"/><link rel="icon" href="/favicon.ico"/><meta name="viewport" content="width=device-width,initial-scale=1"/><meta name="theme-color" content="#3B82F6"/><meta name="description" content="Ezra Services Admin Dashboard - Cameroon Marketplace Management"/><title>Ezra Admin Dashboard - Fixed Email</title><script defer="defer" src="/static/js/main.4b3a363a.js?v=20250802-fixed"></script><link href="/static/css/main.5425f897.css?v=20250802-fixed" rel="stylesheet"></head><body><noscript>You need to enable JavaScript to run this app.</noscript><div id="root"></div></body></html>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirection - Ezra Admin Dashboard</title>
+    <meta http-equiv="refresh" content="0; url=https://admin.ezraservice.com">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1B365D 0%, #6B46C1 100%);
+            color: white;
+        }
+        .redirect-message {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .spinner {
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 3px solid white;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-message">
+        <h2>🔄 Redirection vers l'Admin Dashboard</h2>
+        <div class="spinner"></div>
+        <p>Vous êtes redirigé vers le tableau de bord principal...</p>
+        <p><a href="https://admin.ezraservice.com" style="color: #60A5FA;">Cliquez ici si la redirection ne fonctionne pas</a></p>
+    </div>
+    
+    <script>
+        // Backup redirect in case meta refresh fails
+        setTimeout(() => {
+            window.location.href = 'https://admin.ezraservice.com';
+        }, 1000);
+    </script>
+</body>
+</html>
