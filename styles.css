@@ -338,16 +338,189 @@ body {
     z-index: 2;
 }
 
-.app-screenshot {
+.app-screenshot-french {
     width: calc(100% - 50px);
     height: calc(100% - 50px);
-    object-fit: cover;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
     border-radius: 20px;
-    display: block;
     position: absolute;
     top: 25px;
     left: 25px;
     z-index: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.phone-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #000;
+}
+
+.status-icons {
+    display: flex;
+    gap: 5px;
+    font-size: 12px;
+}
+
+.app-welcome h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 5px 0;
+}
+
+.app-welcome p {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 0 0 20px 0;
+}
+
+.categories-section h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 12px 0;
+}
+
+.categories-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.category-card {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.category-line {
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+}
+
+.category-card.cleaning .category-line { background: #10b981; }
+.category-card.electrical .category-line { background: #f59e0b; }
+.category-card.plumbing .category-line { background: #3b82f6; }
+.category-card.gardening .category-line { background: #84cc16; }
+.category-card.tutoring .category-line { background: #8b5cf6; }
+.category-card.medical .category-line { background: #ef4444; }
+
+.featured-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 10px 0;
+}
+
+.provider-card-french {
+    background: white;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.provider-avatar {
+    width: 40px;
+    height: 40px;
+    background: #8b5cf6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.provider-info-french strong {
+    font-size: 14px;
+    color: #1f2937;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.provider-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-bottom: 3px;
+}
+
+.provider-meta span {
+    font-size: 11px;
+    color: #6b7280;
+}
+
+.price {
+    font-size: 12px;
+    color: #10b981;
+    font-weight: 600;
+}
+
+.book-button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 8px;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    flex: 1;
+}
+
+.nav-item.active {
+    color: #3b82f6;
+}
+
+.nav-item span:first-child {
+    font-size: 16px;
+}
+
+.nav-item span:last-child {
+    font-size: 8px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.nav-item.active span:last-child {
+    color: #3b82f6;
 }
 
 /* Floating badges around the phone */
