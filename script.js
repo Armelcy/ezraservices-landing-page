@@ -1,5 +1,72 @@
+// Language System
+const languages = {
+    fr: {
+        'Services': 'Services',
+        'Comment ça marche': 'Comment ça marche',
+        'Télécharger': 'Télécharger',
+        'Contact': 'Contact',
+        'Votre Marketplace de Services de Confiance': 'Votre Marketplace de Services de Confiance',
+        'Connectez-vous aux meilleurs prestataires du Cameroun': 'Connectez-vous aux meilleurs prestataires du Cameroun',
+        'Nos Services Populaires': 'Nos Services Populaires',
+        'Paiements Sécurisés': 'Paiements Sécurisés',
+        'Téléchargez l\'App Ezra': 'Téléchargez l\'App Ezra',
+        'Ce que disent nos clients': 'Ce que disent nos clients',
+        'Contactez-nous': 'Contactez-nous'
+    },
+    en: {
+        'Services': 'Services',
+        'Comment ça marche': 'How It Works',
+        'Télécharger': 'Download',
+        'Contact': 'Contact',
+        'Votre Marketplace de Services de Confiance': 'Your Trusted Service Marketplace',
+        'Connectez-vous aux meilleurs prestataires du Cameroun': 'Connect with the best service providers in Cameroon',
+        'Nos Services Populaires': 'Our Popular Services',
+        'Paiements Sécurisés': 'Secure Payments',
+        'Téléchargez l\'App Ezra': 'Download Ezra App',
+        'Ce que disent nos clients': 'What Our Clients Say',
+        'Contactez-nous': 'Contact Us'
+    }
+};
+
+let currentLanguage = 'fr';
+
+function switchLanguage(lang) {
+    currentLanguage = lang;
+    
+    // Update active language button
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-lang') === lang) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Update text content
+    const translations = languages[lang];
+    Object.keys(translations).forEach(key => {
+        const elements = document.querySelectorAll(`[data-text="${key}"]`);
+        elements.forEach(element => {
+            element.textContent = translations[key];
+        });
+    });
+    
+    // Store preference
+    localStorage.setItem('preferred-language', lang);
+}
+
 // Mobile Navigation Toggle
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize language system
+    const savedLanguage = localStorage.getItem('preferred-language') || 'fr';
+    switchLanguage(savedLanguage);
+    
+    // Add language toggle listeners
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const lang = btn.getAttribute('data-lang');
+            switchLanguage(lang);
+        });
+    });
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
     
