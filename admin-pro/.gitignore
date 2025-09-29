@@ -1,0 +1,30 @@
+# Ezra Admin Dashboard - Security
+# Never commit these files with real credentials
+
+# Local configuration with real API keys
+config-local.js
+config-production.js
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Editor files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.backup
+
+# Log files
+*.log
+npm-debug.log*
+
+# Security note: Only commit config-template.js
+# Real credentials should only exist in gitignored files
