@@ -352,7 +352,13 @@
 
             <div class="security-info">
                 <h3>📱 Setup Authenticator</h3>
-                <p>Scan this QR code with your authenticator app (Google Authenticator, Authy, etc.) to complete the setup.</p>
+                <p>Set up multi-factor authentication using your authenticator app:</p>
+                <ol style="text-align: left; font-size: 0.875rem; margin-top: 12px; padding-left: 20px;">
+                    <li>Open Google Authenticator, Authy, or similar app</li>
+                    <li>Tap "+" or "Add Account"</li>
+                    <li>Scan the QR code below OR enter the secret key manually</li>
+                    <li>Enter the 6-digit code from your app</li>
+                </ol>
             </div>
 
             <div class="qr-container">
@@ -524,21 +530,20 @@
                     });
                     qrContainer.appendChild(qrCanvas);
                 } else {
-                    // Fallback: Show QR code as text/link
+                    // Fallback: Show manual setup instructions
                     qrContainer.innerHTML = `
                         <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center;">
-                            <p style="font-weight: 600; margin-bottom: 12px;">🔗 QR Code Alternative</p>
+                            <p style="font-weight: 600; margin-bottom: 12px;">📱 Manual Setup</p>
                             <p style="font-size: 0.875rem; color: #6B7280; margin-bottom: 16px;">
-                                Click this link or manually enter the code below:
+                                Open your authenticator app and add account manually:
                             </p>
-                            <a href="${mfaData.qrCode}" target="_blank" style="
-                                color: #FF6B35; 
-                                text-decoration: underline; 
-                                font-weight: 600;
-                                word-break: break-all;
-                                display: block;
-                                margin-bottom: 16px;
-                            ">Open in Authenticator App</a>
+                            <div style="margin: 16px 0;">
+                                <strong>Account Name:</strong> Ezra Admin<br>
+                                <strong>Secret Key:</strong> <span style="font-family: monospace; background: white; padding: 4px 8px; border-radius: 4px;">${mfaData.secret}</span>
+                            </div>
+                            <p style="font-size: 0.75rem; color: #9CA3AF;">
+                                💡 Tip: Copy the secret key and paste it into your authenticator app
+                            </p>
                         </div>
                     `;
                 }
