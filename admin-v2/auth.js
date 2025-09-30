@@ -37,13 +37,26 @@ class EzraAdminAuth {
       const { data: factors } = await this.supabase.auth.mfa.listFactors();
       
       if (factors && factors.length > 0) {
-        // MFA is set up, challenge required
-        return {
-          status: 'mfa_challenge_required',
-          user: data.user,
-          profile: profile,
-          factors: factors
-        };
+        // Check if there are any verified factors
+        const verifiedFactors = factors.filter(factor => factor.status === 'verified');
+        
+        if (verifiedFactors.length > 0) {
+          // MFA is set up and verified, challenge required
+          return {
+            status: 'mfa_challenge_required',
+            user: data.user,
+            profile: profile,
+            factors: verifiedFactors
+          };
+        } else {
+          // MFA factors exist but not verified, need to complete setup
+          return {
+            status: 'mfa_setup_required',
+            user: data.user,
+            profile: profile,
+            existingFactor: factors[0]
+          };
+        }
       } else {
         // First time admin login - require MFA setup
         return {
@@ -59,25 +72,34 @@ class EzraAdminAuth {
     }
   }
 
-  // 2. Set up TOTP MFA for new admin
-  async setupMFA() {
+  // 2. Set up TOTP MFA for new admin or use existing
+  async setupMFA(existingFactor = null) {
     try {
-      // Enroll TOTP factor
-      const { data, error } = await this.supabase.auth.mfa.enroll({
-        factorType: 'totp',
-        friendlyName: 'Ezra Admin Authenticator'
-      });
+      let factorData;
+      
+      if (existingFactor) {
+        // Use existing factor that wasn't completed
+        factorData = existingFactor;
+        this.logSecurityEvent('mfa_setup_resumed', { factorId: existingFactor.id });
+      } else {
+        // Create new TOTP factor
+        const { data, error } = await this.supabase.auth.mfa.enroll({
+          factorType: 'totp',
+          friendlyName: `Ezra Admin Authenticator ${Date.now()}` // Add timestamp to make unique
+        });
 
-      if (error) {
-        throw new Error(`MFA setup failed: ${error.message}`);
+        if (error) {
+          throw new Error(`MFA setup failed: ${error.message}`);
+        }
+
+        factorData = data;
+        this.logSecurityEvent('mfa_setup_initiated');
       }
 
-      this.logSecurityEvent('mfa_setup_initiated');
-
       return {
-        qrCode: data.qr_code,
-        secret: data.secret,
-        factorId: data.id
+        qrCode: factorData.qr_code,
+        secret: factorData.secret,
+        factorId: factorData.id
       };
 
     } catch (error) {
@@ -291,7 +313,30 @@ class EzraAdminAuth {
     }
   }
 
-  // 13. Force re-authentication for sensitive operations
+  // 13. Reset MFA (remove all factors)
+  async resetMFA() {
+    try {
+      const { data: factors } = await this.supabase.auth.mfa.listFactors();
+      
+      if (factors && factors.length > 0) {
+        // Unenroll all existing factors
+        for (const factor of factors) {
+          await this.supabase.auth.mfa.unenroll({ factorId: factor.id });
+        }
+        
+        this.logSecurityEvent('mfa_reset');
+        return true;
+      }
+      
+      return false;
+
+    } catch (error) {
+      this.logSecurityEvent('mfa_reset_failed', { error: error.message });
+      throw error;
+    }
+  }
+
+  // 14. Force re-authentication for sensitive operations
   async requireReauth(action) {
     try {
       const { data: factors } = await this.supabase.auth.mfa.listFactors();

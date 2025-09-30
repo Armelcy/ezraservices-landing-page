@@ -490,8 +490,8 @@
                 currentUser = result.user;
 
                 if (result.status === 'mfa_setup_required') {
-                    // First time login - setup MFA
-                    await setupMFA();
+                    // First time login or incomplete setup - setup MFA
+                    await setupMFA(result.existingFactor);
                 } else if (result.status === 'mfa_challenge_required') {
                     // Returning user - challenge MFA
                     await challengeMFA(result.factors[0].id);
@@ -505,9 +505,9 @@
         }
 
         // Setup MFA for first-time users
-        async function setupMFA() {
+        async function setupMFA(existingFactor = null) {
             try {
-                const mfaData = await window.adminAuth.setupMFA();
+                const mfaData = await window.adminAuth.setupMFA(existingFactor);
                 
                 // Generate QR code with fallback
                 const qrContainer = document.getElementById('qr-code-container');
