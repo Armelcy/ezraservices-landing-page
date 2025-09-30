@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .user-role {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .logout-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #DC2626;
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border-left: 4px solid var(--ezra-orange);
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 2rem;
+        }
+
+        .dashboard-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .data-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-700);
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .activity-feed {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-weight: 500;
+            color: var(--gray-900);
+            font-size: 0.875rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+        }
+
+        .error-message {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">🛡️</div>
+            <span>Ezra Admin Dashboard</span>
+        </div>
+        <div class="user-menu">
+            <div class="user-info">
+                <div class="user-name" id="user-name">Loading...</div>
+                <div class="user-role">Administrator</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="stat-number" id="total-users">Loading...</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Providers</h3>
+                <div class="stat-number" id="total-providers">Loading...</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Bookings</h3>
+                <div class="stat-number" id="total-bookings">Loading...</div>
+            </div>
+            <div class="stat-card">
+                <h3>Revenue (XAF)</h3>
+                <div class="stat-number" id="total-revenue">Loading...</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="main-panel">
+                <div class="dashboard-section">
+                    <h2 class="section-title">Quick Actions</h2>
+                    <div class="actions-grid">
+                        <button class="action-btn" onclick="showSection('users')">👥 Manage Users</button>
+                        <button class="action-btn" onclick="showSection('providers')">🏢 Providers</button>
+                        <button class="action-btn" onclick="showSection('bookings')">📅 Bookings</button>
+                        <button class="action-btn" onclick="showSection('transactions')">💰 Transactions</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-section" id="content-area">
+                    <h2 class="section-title">Welcome to Ezra Admin</h2>
+                    <p>Your secure administrative dashboard for managing the Ezra Services platform.</p>
+                    <p style="margin-top: 1rem; color: var(--gray-600);">
+                        Select an action above to manage different aspects of your platform.
+                    </p>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="activity-feed">
+                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600;">Recent Activity</h3>
+                    <div id="activity-list">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js?v=2"></script>
+    <script>
+        let currentUser = null;
+        let supabaseClient = null;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check MFA authentication first
+            const isAuthenticated = await window.adminAuth.validateSession();
+            if (!isAuthenticated) {
+                window.location.href = './index.html';
+                return;
+            }
+
+            // Initialize Supabase client
+            supabaseClient = window.supabase.createClient(
+                window.EZRA_CONFIG.SUPABASE_URL,
+                window.EZRA_CONFIG.SUPABASE_ANON_KEY
+            );
+
+            await loadUserInfo();
+            await loadDashboardData();
+            await loadActivity();
+        });
+
+        // Load user information
+        async function loadUserInfo() {
+            try {
+                const { data: { user } } = await supabaseClient.auth.getUser();
+                if (user) {
+                    const { data: profile } = await supabaseClient
+                        .from('profiles')
+                        .select('full_name, email')
+                        .eq('id', user.id)
+                        .single();
+
+                    document.getElementById('user-name').textContent = 
+                        profile?.full_name || user.email || 'Admin User';
+                    currentUser = user;
+                }
+            } catch (error) {
+                console.error('Failed to load user info:', error);
+                document.getElementById('user-name').textContent = 'Admin User';
+            }
+        }
+
+        // Load dashboard statistics
+        async function loadDashboardData() {
+            try {
+                const [usersResult, providersResult, bookingsResult] = await Promise.all([
+                    supabaseClient.from('profiles').select('id', { count: 'exact' }),
+                    supabaseClient.from('providers').select('id', { count: 'exact' }),
+                    supabaseClient.from('bookings').select('id, total_amount', { count: 'exact' })
+                ]);
+
+                document.getElementById('total-users').textContent = usersResult.count || '0';
+                document.getElementById('total-providers').textContent = providersResult.count || '0';
+                document.getElementById('total-bookings').textContent = bookingsResult.count || '0';
+
+                if (bookingsResult.data) {
+                    const totalRevenue = bookingsResult.data.reduce((sum, booking) => sum + (booking.total_amount || 0), 0);
+                    document.getElementById('total-revenue').textContent = totalRevenue.toLocaleString();
+                } else {
+                    document.getElementById('total-revenue').textContent = '0';
+                }
+
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                document.getElementById('total-users').textContent = '--';
+                document.getElementById('total-providers').textContent = '--';
+                document.getElementById('total-bookings').textContent = '--';
+                document.getElementById('total-revenue').textContent = '--';
+            }
+        }
+
+        // Load activity feed
+        async function loadActivity() {
+            try {
+                const { data: activities } = await supabaseClient
+                    .from('admin_activity_log')
+                    .select('action, created_at')
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+
+                const activityList = document.getElementById('activity-list');
+                
+                if (activities && activities.length > 0) {
+                    activityList.innerHTML = activities.map(activity => `
+                        <div class="activity-item">
+                            <div class="activity-icon">📋</div>
+                            <div class="activity-content">
+                                <div class="activity-text">${formatAction(activity.action)}</div>
+                                <div class="activity-time">${formatTime(activity.created_at)}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    activityList.innerHTML = '<div style="text-align: center; color: #6B7280; padding: 1rem;">No recent activity</div>';
+                }
+
+            } catch (error) {
+                console.error('Failed to load activity:', error);
+                document.getElementById('activity-list').innerHTML = '<div style="text-align: center; color: #EF4444; padding: 1rem;">Failed to load activity</div>';
+            }
+        }
+
+        // Show different sections
+        async function showSection(section) {
+            const contentArea = document.getElementById('content-area');
+            
+            switch(section) {
+                case 'users':
+                    await loadUsers();
+                    break;
+                case 'providers':
+                    await loadProviders();
+                    break;
+                case 'bookings':
+                    await loadBookings();
+                    break;
+                case 'transactions':
+                    await loadTransactions();
+                    break;
+            }
+        }
+
+        // Load users section
+        async function loadUsers() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <h2 class="section-title">User Management</h2>
+                <div class="loading">Loading users...</div>
+            `;
+
+            try {
+                const { data: users } = await supabaseClient
+                    .from('profiles')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                contentArea.innerHTML = `
+                    <h2 class="section-title">User Management</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${users.map(user => `
+                                <tr>
+                                    <td>${user.full_name || 'N/A'}</td>
+                                    <td>${user.email}</td>
+                                    <td>${user.role}</td>
+                                    <td>${user.is_active ? '✅ Active' : '❌ Inactive'}</td>
+                                    <td>${formatDate(user.created_at)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                contentArea.innerHTML = `
+                    <h2 class="section-title">User Management</h2>
+                    <div class="error-message">Failed to load users: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Load providers section
+        async function loadProviders() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <h2 class="section-title">Provider Management</h2>
+                <div class="loading">Loading providers...</div>
+            `;
+
+            try {
+                const { data: providers } = await supabaseClient
+                    .from('providers')
+                    .select(`
+                        *,
+                        profiles:user_id (
+                            full_name,
+                            email
+                        )
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                contentArea.innerHTML = `
+                    <h2 class="section-title">Provider Management</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Business Name</th>
+                                <th>Owner</th>
+                                <th>Category</th>
+                                <th>Rating</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${providers.map(provider => `
+                                <tr>
+                                    <td>${provider.business_name}</td>
+                                    <td>${provider.profiles?.full_name || 'N/A'}</td>
+                                    <td>${provider.category}</td>
+                                    <td>⭐ ${provider.rating.toFixed(1)}</td>
+                                    <td>${provider.is_active ? '✅ Active' : '❌ Inactive'}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                contentArea.innerHTML = `
+                    <h2 class="section-title">Provider Management</h2>
+                    <div class="error-message">Failed to load providers: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Load bookings section
+        async function loadBookings() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <h2 class="section-title">Booking Management</h2>
+                <div class="loading">Loading bookings...</div>
+            `;
+
+            try {
+                const { data: bookings } = await supabaseClient
+                    .from('bookings')
+                    .select(`
+                        *,
+                        customer:customer_id (full_name),
+                        provider:provider_id (business_name)
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                contentArea.innerHTML = `
+                    <h2 class="section-title">Booking Management</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Customer</th>
+                                <th>Provider</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${bookings.map(booking => `
+                                <tr>
+                                    <td>${booking.service_name}</td>
+                                    <td>${booking.customer?.full_name || 'N/A'}</td>
+                                    <td>${booking.provider?.business_name || 'N/A'}</td>
+                                    <td>${booking.total_amount?.toLocaleString()} XAF</td>
+                                    <td>${getStatusBadge(booking.status)}</td>
+                                    <td>${formatDate(booking.scheduled_date)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                contentArea.innerHTML = `
+                    <h2 class="section-title">Booking Management</h2>
+                    <div class="error-message">Failed to load bookings: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Load transactions section
+        async function loadTransactions() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <h2 class="section-title">Transaction Management</h2>
+                <div class="loading">Loading transactions...</div>
+            `;
+
+            try {
+                const { data: transactions } = await supabaseClient
+                    .from('transactions')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(20);
+
+                contentArea.innerHTML = `
+                    <h2 class="section-title">Transaction Management</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${transactions.map(tx => `
+                                <tr>
+                                    <td>${tx.amount?.toLocaleString()} ${tx.currency}</td>
+                                    <td>${tx.payment_method}</td>
+                                    <td>${tx.transaction_type}</td>
+                                    <td>${getStatusBadge(tx.status)}</td>
+                                    <td>${formatDate(tx.created_at)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                contentArea.innerHTML = `
+                    <h2 class="section-title">Transaction Management</h2>
+                    <div class="error-message">Failed to load transactions: ${error.message}</div>
+                `;
+            }
+        }
+
+        // Utility functions
+        function formatAction(action) {
+            const actions = {
+                'admin_login': 'Admin logged in',
+                'admin_session_created': 'Session created',
+                'mfa_setup_completed': 'MFA setup completed',
+                'session_validated': 'Session validated'
+            };
+            return actions[action] || action;
+        }
+
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleString();
+        }
+
+        function formatDate(timestamp) {
+            return new Date(timestamp).toLocaleDateString();
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                'pending': '🟡 Pending',
+                'confirmed': '🟢 Confirmed',
+                'completed': '✅ Completed',
+                'cancelled': '🔴 Cancelled',
+                'paid': '💚 Paid',
+                'failed': '❌ Failed'
+            };
+            return badges[status] || status;
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await window.adminAuth.logout();
+                window.location.href = './index.html';
+            } catch (error) {
+                console.error('Logout failed:', error);
+                window.location.href = './index.html';
+            }
+        }
+    </script>
+</body>
+</html>

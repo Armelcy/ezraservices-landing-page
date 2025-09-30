@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .user-role {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .logout-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #DC2626;
+            transform: translateY(-1px);
+        }
+
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .welcome h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome p {
+            color: var(--gray-600);
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border-left: 4px solid var(--ezra-orange);
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-change {
+            font-size: 0.875rem;
+            color: var(--success);
+            font-weight: 500;
+        }
+
+        .quick-actions {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .quick-actions h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            color: white;
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--gray-700);
+            border: 2px solid var(--gray-200);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--ezra-orange);
+            color: var(--ezra-orange);
+        }
+
+        .recent-activity {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .recent-activity h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gray-100);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-weight: 500;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 1rem;
+            }
+            
+            .header {
+                padding: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">🛡️</div>
+            <span>Ezra Admin Dashboard</span>
+        </div>
+        <div class="user-menu">
+            <div class="user-info">
+                <div class="user-name" id="user-name">Loading...</div>
+                <div class="user-role">Administrator</div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="welcome">
+            <h1>Welcome to Ezra Admin Dashboard</h1>
+            <p>Manage your service marketplace platform with secure multi-factor authentication.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="stat-number" id="total-users">Loading...</div>
+                <div class="stat-change">+12% from last month</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Providers</h3>
+                <div class="stat-number" id="total-providers">Loading...</div>
+                <div class="stat-change">+8% from last month</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Bookings</h3>
+                <div class="stat-number" id="total-bookings">Loading...</div>
+                <div class="stat-change">+25% from last month</div>
+            </div>
+            <div class="stat-card">
+                <h3>Revenue (XAF)</h3>
+                <div class="stat-number" id="total-revenue">Loading...</div>
+                <div class="stat-change">+18% from last month</div>
+            </div>
+        </div>
+
+        <div class="quick-actions">
+            <h2>Quick Actions</h2>
+            <div class="actions-grid">
+                <button class="action-btn" onclick="manageUsers()">👥 Manage Users</button>
+                <button class="action-btn" onclick="manageProviders()">🏢 Manage Providers</button>
+                <button class="action-btn" onclick="viewBookings()">📅 View Bookings</button>
+                <button class="action-btn" onclick="viewTransactions()">💰 Transactions</button>
+                <button class="action-btn secondary" onclick="viewReports()">📊 Reports</button>
+                <button class="action-btn secondary" onclick="systemSettings()">⚙️ Settings</button>
+            </div>
+        </div>
+
+        <div class="recent-activity">
+            <h2>Recent Activity</h2>
+            <div id="activity-list">
+                <div class="loading">Loading recent activity...</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js?v=2"></script>
+    <script>
+        let currentUser = null;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check authentication
+            const isAuthenticated = await window.adminAuth.validateSession();
+            if (!isAuthenticated) {
+                window.location.href = './index.html';
+                return;
+            }
+
+            await loadUserInfo();
+            await loadDashboardData();
+        });
+
+        // Load user information
+        async function loadUserInfo() {
+            try {
+                const { data: { user } } = await window.adminAuth.supabase.auth.getUser();
+                if (user) {
+                    const { data: profile } = await window.adminAuth.supabase
+                        .from('profiles')
+                        .select('full_name, email')
+                        .eq('id', user.id)
+                        .single();
+
+                    document.getElementById('user-name').textContent = 
+                        profile?.full_name || user.email || 'Admin User';
+                    currentUser = user;
+                }
+            } catch (error) {
+                console.error('Failed to load user info:', error);
+                document.getElementById('user-name').textContent = 'Admin User';
+            }
+        }
+
+        // Load dashboard statistics
+        async function loadDashboardData() {
+            try {
+                // Load basic statistics
+                const [usersResult, providersResult, bookingsResult] = await Promise.all([
+                    window.adminAuth.supabase.from('profiles').select('id', { count: 'exact' }),
+                    window.adminAuth.supabase.from('providers').select('id', { count: 'exact' }),
+                    window.adminAuth.supabase.from('bookings').select('id, total_amount', { count: 'exact' })
+                ]);
+
+                // Update stats
+                document.getElementById('total-users').textContent = usersResult.count || '0';
+                document.getElementById('total-providers').textContent = providersResult.count || '0';
+                document.getElementById('total-bookings').textContent = bookingsResult.count || '0';
+
+                // Calculate total revenue
+                if (bookingsResult.data) {
+                    const totalRevenue = bookingsResult.data.reduce((sum, booking) => sum + (booking.total_amount || 0), 0);
+                    document.getElementById('total-revenue').textContent = totalRevenue.toLocaleString();
+                } else {
+                    document.getElementById('total-revenue').textContent = '0';
+                }
+
+                await loadRecentActivity();
+
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                // Show placeholder data
+                document.getElementById('total-users').textContent = '--';
+                document.getElementById('total-providers').textContent = '--';
+                document.getElementById('total-bookings').textContent = '--';
+                document.getElementById('total-revenue').textContent = '--';
+            }
+        }
+
+        // Load recent activity
+        async function loadRecentActivity() {
+            try {
+                const { data: activities } = await window.adminAuth.supabase
+                    .from('admin_activity_log')
+                    .select('action, created_at, details')
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                const activityList = document.getElementById('activity-list');
+                
+                if (activities && activities.length > 0) {
+                    activityList.innerHTML = activities.map(activity => `
+                        <div class="activity-item">
+                            <div class="activity-icon">📋</div>
+                            <div class="activity-content">
+                                <div class="activity-text">${formatActivityAction(activity.action)}</div>
+                                <div class="activity-time">${formatTime(activity.created_at)}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    activityList.innerHTML = '<div class="loading">No recent activity</div>';
+                }
+
+            } catch (error) {
+                console.error('Failed to load activity:', error);
+                document.getElementById('activity-list').innerHTML = '<div class="loading">Failed to load activity</div>';
+            }
+        }
+
+        // Format activity action for display
+        function formatActivityAction(action) {
+            const actionMap = {
+                'admin_login': 'Admin logged in',
+                'admin_session_created': 'New admin session created',
+                'mfa_setup_completed': 'MFA setup completed',
+                'session_validated': 'Session validated'
+            };
+            return actionMap[action] || action;
+        }
+
+        // Format timestamp
+        function formatTime(timestamp) {
+            return new Date(timestamp).toLocaleString();
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                await window.adminAuth.logout();
+                window.location.href = './index.html';
+            } catch (error) {
+                console.error('Logout failed:', error);
+                window.location.href = './index.html';
+            }
+        }
+
+        // Quick action functions (placeholders for now)
+        function manageUsers() {
+            alert('👥 User management feature coming soon!\n\nThis will allow you to:\n• View all users\n• Manage user roles\n• Suspend/activate accounts');
+        }
+
+        function manageProviders() {
+            alert('🏢 Provider management feature coming soon!\n\nThis will allow you to:\n• Approve new providers\n• Manage provider profiles\n• Handle provider verification');
+        }
+
+        function viewBookings() {
+            alert('📅 Booking management feature coming soon!\n\nThis will allow you to:\n• View all bookings\n• Handle disputes\n• Monitor booking status');
+        }
+
+        function viewTransactions() {
+            alert('💰 Transaction management feature coming soon!\n\nThis will allow you to:\n• View payment history\n• Manage refunds\n• Monitor revenue');
+        }
+
+        function viewReports() {
+            alert('📊 Reports feature coming soon!\n\nThis will provide:\n• Analytics dashboard\n• Performance metrics\n• Financial reports');
+        }
+
+        function systemSettings() {
+            alert('⚙️ System settings feature coming soon!\n\nThis will allow you to:\n• Configure app settings\n• Manage payment gateways\n• Update system parameters');
+        }
+    </script>
+</body>
+</html>
