@@ -6,6 +6,7 @@
     <title>Ezra Admin - Secure Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
     <style>
         :root {
             --ezra-orange: #FF6B35;
@@ -508,17 +509,40 @@
             try {
                 const mfaData = await window.adminAuth.setupMFA();
                 
-                // Generate QR code
-                const qrCanvas = document.createElement('canvas');
-                await QRCode.toCanvas(qrCanvas, mfaData.qrCode, {
-                    width: 200,
-                    color: {
-                        dark: '#1B365D',
-                        light: '#FFFFFF'
-                    }
-                });
+                // Generate QR code with fallback
+                const qrContainer = document.getElementById('qr-code-container');
                 
-                document.getElementById('qr-code-container').appendChild(qrCanvas);
+                if (typeof QRCode !== 'undefined') {
+                    // QR Code library is available
+                    const qrCanvas = document.createElement('canvas');
+                    await QRCode.toCanvas(qrCanvas, mfaData.qrCode, {
+                        width: 200,
+                        color: {
+                            dark: '#1B365D',
+                            light: '#FFFFFF'
+                        }
+                    });
+                    qrContainer.appendChild(qrCanvas);
+                } else {
+                    // Fallback: Show QR code as text/link
+                    qrContainer.innerHTML = `
+                        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center;">
+                            <p style="font-weight: 600; margin-bottom: 12px;">🔗 QR Code Alternative</p>
+                            <p style="font-size: 0.875rem; color: #6B7280; margin-bottom: 16px;">
+                                Click this link or manually enter the code below:
+                            </p>
+                            <a href="${mfaData.qrCode}" target="_blank" style="
+                                color: #FF6B35; 
+                                text-decoration: underline; 
+                                font-weight: 600;
+                                word-break: break-all;
+                                display: block;
+                                margin-bottom: 16px;
+                            ">Open in Authenticator App</a>
+                        </div>
+                    `;
+                }
+                
                 document.getElementById('manual-code').textContent = mfaData.secret;
                 
                 currentFactorId = mfaData.factorId;
