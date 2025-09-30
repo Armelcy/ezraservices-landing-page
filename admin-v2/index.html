@@ -515,6 +515,9 @@
             try {
                 const mfaData = await window.adminAuth.setupMFA(existingFactor);
                 
+                // Debug: Log the MFA data
+                console.log('MFA Data received:', mfaData);
+                
                 // Generate QR code with fallback
                 const qrContainer = document.getElementById('qr-code-container');
                 
@@ -539,7 +542,7 @@
                             </p>
                             <div style="margin: 16px 0;">
                                 <strong>Account Name:</strong> Ezra Admin<br>
-                                <strong>Secret Key:</strong> <span style="font-family: monospace; background: white; padding: 4px 8px; border-radius: 4px;">${mfaData.secret}</span>
+                                <strong>Secret Key:</strong> <span id="fallback-secret" style="font-family: monospace; background: white; padding: 4px 8px; border-radius: 4px;">${mfaData.secret || 'Loading...'}</span>
                             </div>
                             <p style="font-size: 0.75rem; color: #9CA3AF;">
                                 💡 Tip: Copy the secret key and paste it into your authenticator app
@@ -548,7 +551,14 @@
                     `;
                 }
                 
+                // Set the manual code in both places
                 document.getElementById('manual-code').textContent = mfaData.secret;
+                
+                // Also update fallback secret if it exists
+                const fallbackSecret = document.getElementById('fallback-secret');
+                if (fallbackSecret) {
+                    fallbackSecret.textContent = mfaData.secret;
+                }
                 
                 currentFactorId = mfaData.factorId;
                 showStep('mfaSetup');

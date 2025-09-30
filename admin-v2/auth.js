@@ -96,6 +96,9 @@ class EzraAdminAuth {
         this.logSecurityEvent('mfa_setup_initiated');
       }
 
+      // Debug: Log the factor data
+      console.log('Factor data from Supabase:', factorData);
+      
       return {
         qrCode: factorData.qr_code,
         secret: factorData.secret,
