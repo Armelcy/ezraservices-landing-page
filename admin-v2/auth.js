@@ -99,18 +99,25 @@ class EzraAdminAuth {
       // Debug: Log the factor data
       console.log('Factor data from Supabase:', factorData);
       
+      // Extract secret and QR code from the correct locations
+      const secret = factorData.secret || factorData.totp?.secret;
+      const qrCode = factorData.qr_code || factorData.totp?.qr_code;
+      
       // Validate that we have the required data
-      if (!factorData.secret) {
-        throw new Error('No secret received from Supabase MFA enrollment');
+      if (!secret) {
+        throw new Error('No secret received from Supabase MFA enrollment. Data structure: ' + JSON.stringify(factorData));
       }
       
-      if (!factorData.qr_code) {
-        throw new Error('No QR code received from Supabase MFA enrollment');
+      if (!qrCode) {
+        throw new Error('No QR code received from Supabase MFA enrollment. Data structure: ' + JSON.stringify(factorData));
       }
+      
+      console.log('Extracted secret:', secret);
+      console.log('Extracted QR code:', qrCode);
       
       return {
-        qrCode: factorData.qr_code,
-        secret: factorData.secret,
+        qrCode: qrCode,
+        secret: secret,
         factorId: factorData.id
       };
 
