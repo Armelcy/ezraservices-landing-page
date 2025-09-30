@@ -77,12 +77,12 @@ class EzraAdminAuth {
     try {
       let factorData;
       
-      if (existingFactor) {
-        // Use existing factor that wasn't completed
+      if (existingFactor && existingFactor.secret) {
+        // Use existing factor that wasn't completed and has a secret
         factorData = existingFactor;
         this.logSecurityEvent('mfa_setup_resumed', { factorId: existingFactor.id });
       } else {
-        // Create new TOTP factor
+        // Create new TOTP factor (existing factor was invalid or doesn't exist)
         const { data, error } = await this.supabase.auth.mfa.enroll({
           factorType: 'totp',
           friendlyName: `Ezra Admin Authenticator ${Date.now()}` // Add timestamp to make unique
@@ -98,6 +98,15 @@ class EzraAdminAuth {
 
       // Debug: Log the factor data
       console.log('Factor data from Supabase:', factorData);
+      
+      // Validate that we have the required data
+      if (!factorData.secret) {
+        throw new Error('No secret received from Supabase MFA enrollment');
+      }
+      
+      if (!factorData.qr_code) {
+        throw new Error('No QR code received from Supabase MFA enrollment');
+      }
       
       return {
         qrCode: factorData.qr_code,
