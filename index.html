@@ -18,7 +18,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     
-    <link rel="icon" type="image/png" href="assets/images/ezra-logo.png">
+    <link rel="icon" type="image/png" href="assets/images/ezra-logo-new-transparent.png">
     
     <style>
         :root {
@@ -142,14 +142,21 @@
         .logo-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
-            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 800;
-            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .logo-image {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+
+        .logo:hover .logo-image {
+            transform: scale(1.05);
         }
 
         .nav-menu {
@@ -908,7 +915,9 @@
     <header class="header" id="header">
         <div class="nav-container">
             <a href="#home" class="logo">
-                <div class="logo-icon">E</div>
+                <div class="logo-icon">
+                    <img src="assets/images/ezra-logo-new-transparent.png" alt="Ezra Services" class="logo-image">
+                </div>
                 Ezra
             </a>
             
@@ -1172,7 +1181,9 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <a href="#home" class="logo" style="margin-bottom: var(--space-6);">
-                        <div class="logo-icon">E</div>
+                        <div class="logo-icon">
+                            <img src="assets/images/ezra-logo-new-transparent.png" alt="Ezra Services" class="logo-image">
+                        </div>
                         Ezra Services
                     </a>
                     <p style="color: var(--gray-400); margin-bottom: var(--space-6);">
