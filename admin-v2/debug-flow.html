@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login Flow</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script src="auth.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .log { background: #f5f5f5; padding: 10px; margin: 10px 0; border-radius: 4px; font-family: monospace; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .form-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; max-width: 300px; }
+        button { padding: 12px 20px; background: #FF6B35; color: white; border: none; border-radius: 4px; cursor: pointer; margin: 5px; }
+        button:hover { background: #E55A2B; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Login Flow</h1>
+    <p>This page will show every step of the login process to identify where the loop occurs.</p>
+    
+    <div id="logs"></div>
+    
+    <form id="loginForm">
+        <div class="form-group">
+            <label>Email:</label>
+            <input type="email" id="email" value="cyriac.leukam@gmail.com" required>
+        </div>
+        <div class="form-group">
+            <label>Password:</label>
+            <input type="password" id="password" required>
+        </div>
+        <button type="submit">🔐 Debug Full Login Flow</button>
+    </form>
+    
+    <button onclick="testSession()">📋 Test Current Session</button>
+    <button onclick="clearAll()">🗑️ Clear All Data</button>
+    
+    <script>
+        let adminAuth;
+        let logContainer = document.getElementById('logs');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `log ${type}`;
+            div.innerHTML = `<strong>[${new Date().toLocaleTimeString()}]</strong> ${message}`;
+            logContainer.appendChild(div);
+            logContainer.scrollTop = logContainer.scrollHeight;
+            console.log(`[DEBUG] ${message}`);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            log('🚀 Page loaded, initializing...', 'info');
+            
+            if (typeof window.EZRA_CONFIG === 'undefined') {
+                log('❌ EZRA_CONFIG not found', 'error');
+                return;
+            }
+            
+            log(`✅ Config loaded: ${window.EZRA_CONFIG.SUPABASE_URL}`, 'success');
+            
+            // Initialize admin auth
+            adminAuth = new EzraAdminAuth(
+                window.EZRA_CONFIG.SUPABASE_URL,
+                window.EZRA_CONFIG.SUPABASE_ANON_KEY
+            );
+            
+            log('✅ AdminAuth initialized', 'success');
+            
+            // Test session on page load
+            await testSession();
+        });
+        
+        // Test current session
+        async function testSession() {
+            log('🔍 Testing current session...', 'info');
+            
+            try {
+                const isValid = await adminAuth.validateSession();
+                log(`📋 Session validation result: ${isValid}`, isValid ? 'success' : 'error');
+                
+                if (isValid) {
+                    log('✅ User is already authenticated!', 'success');
+                    
+                    // Get current user details
+                    const { data: { session } } = await adminAuth.supabase.auth.getSession();
+                    if (session) {
+                        log(`👤 Current user: ${session.user.email}`, 'info');
+                        log(`🔑 User ID: ${session.user.id}`, 'info');
+                        log(`⏰ Session expires: ${new Date(session.expires_at * 1000).toLocaleString()}`, 'info');
+                    }
+                } else {
+                    log('❌ No valid session found', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Session test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        // Clear all data
+        function clearAll() {
+            log('🗑️ Clearing all data...', 'info');
+            localStorage.clear();
+            sessionStorage.clear();
+            log('✅ All storage cleared', 'success');
+            
+            // Sign out from Supabase
+            if (adminAuth) {
+                adminAuth.supabase.auth.signOut().then(() => {
+                    log('✅ Supabase session cleared', 'success');
+                });
+            }
+        }
+        
+        // Full login flow
+        async function debugLogin(email, password) {
+            log('🔐 Starting full login flow...', 'info');
+            
+            try {
+                log(`📧 Email: ${email}`, 'info');
+                log('🔑 Password: [HIDDEN]', 'info');
+                
+                // Step 1: Admin login
+                log('📝 Step 1: Calling adminLogin()...', 'info');
+                const result = await adminAuth.adminLogin(email, password);
+                
+                log(`✅ Login successful! Status: ${result.status}`, 'success');
+                log(`📋 Result: ${JSON.stringify(result, null, 2)}`, 'info');
+                
+                // Step 2: Check what type of response we got
+                if (result.status === 'mfa_setup_required') {
+                    log('🔧 MFA setup required - first time login', 'info');
+                    log('📱 Would normally show MFA setup form here', 'info');
+                    
+                } else if (result.status === 'mfa_challenge_required') {
+                    log('🔐 MFA challenge required - returning user', 'info');
+                    log('📱 Would normally show MFA challenge form here', 'info');
+                    
+                } else if (result.status === 'authenticated') {
+                    log('✅ Fully authenticated - no MFA needed', 'success');
+                    log('🎯 Would redirect to dashboard now', 'success');
+                    
+                } else {
+                    log(`❓ Unexpected status: ${result.status}`, 'error');
+                }
+                
+                // Step 3: Test session again after login
+                log('🔍 Step 3: Testing session after login...', 'info');
+                await testSession();
+                
+                // Step 4: Simulate what the main admin panel does
+                log('🔄 Step 4: Simulating main admin panel logic...', 'info');
+                
+                // This is what happens in the main admin panel after login
+                const sessionValid = await adminAuth.validateSession();
+                log(`📋 Session validation (like main panel): ${sessionValid}`, sessionValid ? 'success' : 'error');
+                
+                if (sessionValid) {
+                    log('✅ SUCCESS: Login flow completed successfully!', 'success');
+                    log('🎯 Main admin panel should NOT refresh/loop', 'success');
+                } else {
+                    log('❌ PROBLEM: Session not valid after login', 'error');
+                    log('🔄 This would cause the refresh loop in main panel', 'error');
+                }
+                
+            } catch (error) {
+                log(`❌ Login failed: ${error.message}`, 'error');
+                console.error('Full error:', error);
+            }
+        }
+        
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            debugLogin(email, password);
+        });
+    </script>
+</body>
+</html>
