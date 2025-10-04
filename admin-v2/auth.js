@@ -4,7 +4,6 @@
 class EzraAdminAuth {
   constructor(supabaseUrl, supabaseKey) {
     this.supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
-    this.sessionToken = localStorage.getItem('ezra_admin_session');
     this.mfaSetupCompleted = false;
   }
 
@@ -207,14 +206,10 @@ class EzraAdminAuth {
         throw new Error(`Session creation failed: ${error.message}`);
       }
 
-      this.sessionToken = data;
-      localStorage.setItem('ezra_admin_session', this.sessionToken);
-      
       this.logSecurityEvent('admin_session_created');
 
       return {
-        status: 'authenticated',
-        sessionToken: this.sessionToken
+        status: 'authenticated'
       };
 
     } catch (error) {
@@ -225,24 +220,27 @@ class EzraAdminAuth {
 
   // 7. Validate existing session
   async validateSession() {
-    if (!this.sessionToken) {
-      return false;
-    }
-
     try {
-      const { data, error } = await this.supabase.rpc('ezra_validate_admin_session', {
-        p_session_token: this.sessionToken
-      });
-
-      if (error || !data) {
-        this.clearSession();
+      // Use standard Supabase session validation instead of custom tokens
+      const { data: { session }, error } = await this.supabase.auth.getSession();
+      
+      if (error || !session) {
         return false;
       }
-
+      
+      // Check if user is admin
+      const { data: profile, error: profileError } = await this.supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+        
+      if (profileError || profile?.role !== 'admin') {
+        return false;
+      }
+      
       return true;
-
     } catch (error) {
-      this.clearSession();
       return false;
     }
   }
@@ -250,14 +248,7 @@ class EzraAdminAuth {
   // 8. Logout and revoke session
   async logout() {
     try {
-      if (this.sessionToken) {
-        await this.supabase.rpc('ezra_revoke_admin_session', {
-          p_session_token: this.sessionToken
-        });
-      }
-
       await this.supabase.auth.signOut();
-      this.clearSession();
       
       this.logSecurityEvent('admin_logout');
 
@@ -272,8 +263,7 @@ class EzraAdminAuth {
 
   // 9. Clear local session data
   clearSession() {
-    this.sessionToken = null;
-    localStorage.removeItem('ezra_admin_session');
+    // Session is now handled by Supabase automatically
   }
 
   // 10. Security event logging
