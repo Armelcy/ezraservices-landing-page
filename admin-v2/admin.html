@@ -369,21 +369,10 @@
                 return;
             }
 
-            // Initialize Supabase client - SECURE METHOD
-            let apiKey = window.EZRA_CONFIG.SUPABASE_ANON_KEY;
-            
-            // If no API key in config (secure for public repos), prompt for it
-            if (!apiKey) {
-                apiKey = prompt('Enter Supabase API Key for admin access:');
-                if (!apiKey) {
-                    alert('API key required for admin panel access');
-                    return;
-                }
-            }
-            
+            // Initialize Supabase client
             supabaseClient = window.supabase.createClient(
                 window.EZRA_CONFIG.SUPABASE_URL,
-                apiKey
+                window.EZRA_CONFIG.SUPABASE_ANON_KEY
             );
 
             await loadUserInfo();
