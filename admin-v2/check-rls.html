@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RLS Diagnostic Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #ff6b35;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        .test-title {
+            color: #ff6b35;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .result {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #0d4f1c;
+            border-left: 4px solid #00ff00;
+        }
+        .error {
+            background: #4f0d0d;
+            border-left: 4px solid #ff0000;
+        }
+        .warning {
+            background: #4f4f0d;
+            border-left: 4px solid #ffff00;
+        }
+        button {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #e55a2b;
+        }
+        .code {
+            background: #222;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 RLS Diagnostic Tool</h1>
+            <p>Checking Row Level Security policies and admin access</p>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔌 Connection Test</div>
+            <button onclick="testConnection()">Test Supabase Connection</button>
+            <div id="connection-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔐 Authentication Test</div>
+            <input type="email" id="test-email" placeholder="Admin email" style="margin: 5px; padding: 8px; background: #333; color: white; border: 1px solid #666;">
+            <input type="password" id="test-password" placeholder="Password" style="margin: 5px; padding: 8px; background: #333; color: white; border: 1px solid #666;">
+            <button onclick="testAuth()">Test Authentication</button>
+            <div id="auth-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">👤 Profile Access Test</div>
+            <button onclick="testProfileAccess()">Test Profile Query</button>
+            <div id="profile-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🛡️ RLS Policy Check</div>
+            <button onclick="checkRLSPolicies()">Check RLS Status</button>
+            <div id="rls-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">🔧 Fix RLS Issues</div>
+            <button onclick="generateRLSFix()">Generate RLS Fix SQL</button>
+            <div id="fix-result"></div>
+        </div>
+    </div>
+
+    <script>
+        let supabase;
+        let currentUser = null;
+
+        // Initialize Supabase
+        document.addEventListener('DOMContentLoaded', () => {
+            supabase = window.supabase.createClient(
+                window.EZRA_CONFIG.SUPABASE_URL,
+                window.EZRA_CONFIG.SUPABASE_ANON_KEY
+            );
+            log('connection-result', '✅ Supabase client initialized', 'success');
+        });
+
+        function log(elementId, message, type = 'result') {
+            const element = document.getElementById(elementId);
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `[${new Date().toLocaleTimeString()}] ${message}`;
+            element.appendChild(div);
+        }
+
+        async function testConnection() {
+            try {
+                const { data, error } = await supabase.from('profiles').select('count', { count: 'exact', head: true });
+                if (error) {
+                    log('connection-result', `❌ Connection failed: ${error.message}`, 'error');
+                } else {
+                    log('connection-result', `✅ Connection successful. Found ${data} profiles`, 'success');
+                }
+            } catch (error) {
+                log('connection-result', `❌ Connection error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAuth() {
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+
+            if (!email || !password) {
+                log('auth-result', '⚠️ Please enter email and password', 'warning');
+                return;
+            }
+
+            try {
+                log('auth-result', `🔄 Attempting login for: ${email}`, 'result');
+                
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (error) {
+                    log('auth-result', `❌ Auth failed: ${error.message}`, 'error');
+                } else {
+                    currentUser = data.user;
+                    log('auth-result', `✅ Auth successful! User ID: ${data.user.id}`, 'success');
+                    log('auth-result', `📧 Email: ${data.user.email}`, 'success');
+                }
+            } catch (error) {
+                log('auth-result', `❌ Auth error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testProfileAccess() {
+            if (!currentUser) {
+                log('profile-result', '⚠️ Please authenticate first', 'warning');
+                return;
+            }
+
+            try {
+                log('profile-result', `🔄 Querying profile for user: ${currentUser.id}`, 'result');
+                
+                // Test 1: Direct query with anon key
+                const { data: profile, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) {
+                    log('profile-result', `❌ Profile query failed: ${error.message}`, 'error');
+                    log('profile-result', `🔍 Error code: ${error.code}`, 'error');
+                    
+                    if (error.code === 'PGRST116') {
+                        log('profile-result', '🚨 RLS ISSUE: Row Level Security is blocking access!', 'error');
+                    }
+                } else {
+                    log('profile-result', `✅ Profile found: ${JSON.stringify(profile, null, 2)}`, 'success');
+                }
+
+                // Test 2: Check if we can read ANY profiles
+                const { data: allProfiles, error: allError } = await supabase
+                    .from('profiles')
+                    .select('id, email, role')
+                    .limit(5);
+
+                if (allError) {
+                    log('profile-result', `❌ Can't read any profiles: ${allError.message}`, 'error');
+                } else {
+                    log('profile-result', `✅ Can read ${allProfiles.length} profiles (RLS may be disabled or policy allows)`, 'success');
+                }
+
+            } catch (error) {
+                log('profile-result', `❌ Profile test error: ${error.message}`, 'error');
+            }
+        }
+
+        async function checkRLSPolicies() {
+            try {
+                log('rls-result', '🔄 Checking RLS policies...', 'result');
+                
+                // Try to query pg_policies (may not work with anon key)
+                const { data, error } = await supabase.rpc('check_rls_status');
+                
+                if (error) {
+                    log('rls-result', `❌ Can't check RLS directly: ${error.message}`, 'warning');
+                    log('rls-result', '💡 This is expected with anonymous key. Check Supabase dashboard instead.', 'warning');
+                } else {
+                    log('rls-result', `✅ RLS Status: ${JSON.stringify(data)}`, 'success');
+                }
+
+                // Alternative test: Try inserting a test record
+                const testInsert = await supabase
+                    .from('profiles')
+                    .insert([{ email: 'test@rls.com', full_name: 'RLS Test' }])
+                    .select();
+
+                if (testInsert.error) {
+                    log('rls-result', `❌ Insert test failed: ${testInsert.error.message}`, 'error');
+                    if (testInsert.error.code === '42501') {
+                        log('rls-result', '🚨 RLS is ENABLED and blocking inserts!', 'error');
+                    }
+                } else {
+                    log('rls-result', '⚠️ Insert succeeded - RLS may be disabled or policy allows', 'warning');
+                    // Clean up test record
+                    await supabase.from('profiles').delete().eq('email', 'test@rls.com');
+                }
+
+            } catch (error) {
+                log('rls-result', `❌ RLS check error: ${error.message}`, 'error');
+            }
+        }
+
+        function generateRLSFix() {
+            const fixSQL = `
+-- Option 1: Temporarily disable RLS for profiles table
+ALTER TABLE profiles DISABLE ROW LEVEL SECURITY;
+
+-- Option 2: Create admin policy (if you want to keep RLS enabled)
+CREATE POLICY "Admin can access all profiles" ON profiles
+    FOR ALL USING (
+        auth.email() IN (
+            'your-admin-email@example.com',
+            'another-admin@example.com'
+        )
+    );
+
+-- Option 3: Create policy for authenticated admin role
+CREATE POLICY "Authenticated admin access" ON profiles
+    FOR ALL USING (
+        auth.role() = 'authenticated' AND
+        (auth.jwt() ->> 'role') = 'admin'
+    );
+
+-- Option 4: Allow authenticated users to read their own profile + admins read all
+CREATE POLICY "Users can read own profile, admins read all" ON profiles
+    FOR SELECT USING (
+        auth.uid() = id OR 
+        EXISTS (
+            SELECT 1 FROM profiles 
+            WHERE id = auth.uid() AND role = 'admin'
+        )
+    );
+
+-- To check current RLS status:
+SELECT schemaname, tablename, rowsecurity 
+FROM pg_tables 
+WHERE tablename = 'profiles';
+
+-- To see current policies:
+SELECT * FROM pg_policies WHERE tablename = 'profiles';
+            `;
+
+            document.getElementById('fix-result').innerHTML = `
+                <div class="result success">
+                    <strong>🔧 RLS Fix Options:</strong>
+                    <div class="code">${fixSQL}</div>
+                    <p><strong>Recommendation:</strong> Try Option 1 first (disable RLS temporarily) to confirm this fixes the login issue.</p>
+                    <p><strong>In Supabase Dashboard:</strong> Go to Database → Tables → profiles → Settings → Row Level Security</p>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
