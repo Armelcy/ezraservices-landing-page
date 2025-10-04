@@ -7,7 +7,7 @@ class EzraAdminAuth {
     this.mfaSetupCompleted = false;
   }
 
-  // 1. Initial admin login (email + password)
+  // 1. Simple admin login (email + password only)
   async adminLogin(email, password) {
     try {
       // Step 1: Basic auth with email/password
@@ -32,38 +32,14 @@ class EzraAdminAuth {
         throw new Error('Access denied: Admin privileges required');
       }
 
-      // Step 3: Check if MFA is already set up
-      const { data: factors } = await this.supabase.auth.mfa.listFactors();
+      // Step 3: Create admin session (no MFA required)
+      this.logSecurityEvent('admin_login_success', { email });
       
-      if (factors && factors.length > 0) {
-        // Check if there are any verified factors
-        const verifiedFactors = factors.filter(factor => factor.status === 'verified');
-        
-        if (verifiedFactors.length > 0) {
-          // MFA is set up and verified, challenge required
-          return {
-            status: 'mfa_challenge_required',
-            user: data.user,
-            profile: profile,
-            factors: verifiedFactors
-          };
-        } else {
-          // MFA factors exist but not verified, need to complete setup
-          return {
-            status: 'mfa_setup_required',
-            user: data.user,
-            profile: profile,
-            existingFactor: factors[0]
-          };
-        }
-      } else {
-        // First time admin login - require MFA setup
-        return {
-          status: 'mfa_setup_required',
-          user: data.user,
-          profile: profile
-        };
-      }
+      return {
+        status: 'authenticated',
+        user: data.user,
+        profile: profile
+      };
 
     } catch (error) {
       this.logSecurityEvent('admin_login_failed', { email, error: error.message });
@@ -194,19 +170,14 @@ class EzraAdminAuth {
     }
   }
 
-  // 6. Create secure admin session
+  // 6. Create secure admin session (simplified)
   async createAdminSession() {
     try {
-      const { data, error } = await this.supabase.rpc('ezra_create_admin_session', {
-        p_ip_address: await this.getClientIP(),
-        p_user_agent: navigator.userAgent
+      // Simple session - just log the activity
+      this.logSecurityEvent('admin_session_created', {
+        ip_address: await this.getClientIP(),
+        user_agent: navigator.userAgent
       });
-
-      if (error) {
-        throw new Error(`Session creation failed: ${error.message}`);
-      }
-
-      this.logSecurityEvent('admin_session_created');
 
       return {
         status: 'authenticated'
@@ -214,7 +185,10 @@ class EzraAdminAuth {
 
     } catch (error) {
       this.logSecurityEvent('session_creation_failed', { error: error.message });
-      throw error;
+      // Don't fail if logging fails
+      return {
+        status: 'authenticated'
+      };
     }
   }
 

@@ -319,8 +319,8 @@
             </div>
 
             <div class="security-info">
-                <h3>🔐 Enhanced Security</h3>
-                <p>This admin portal uses multi-factor authentication to protect sensitive data. Please enter your credentials to begin the secure login process.</p>
+                <h3>🔐 Simple & Secure</h3>
+                <p>Enter your admin credentials to access the dashboard. Enhanced security features will be added in future updates.</p>
             </div>
 
             <div id="login-error" class="alert alert-error" style="display: none;"></div>
@@ -337,7 +337,7 @@
                 </div>
                 
                 <button type="submit" class="btn btn-primary" id="login-btn">
-                    Sign In Securely
+                    Sign In
                 </button>
             </form>
         </div>
@@ -425,14 +425,14 @@
                 <ul class="security-steps">
                     <li>Session-based authentication</li>
                     <li>Activity monitoring</li>
-                    <li>8-hour session timeout</li>
                     <li>Secure data encryption</li>
+                    <li>Admin access logging</li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <!-- Load MFA Client -->
+    <!-- Load Authentication Client -->
     <script src="auth.js?v=2"></script>
     
     <script>
@@ -491,7 +491,7 @@
             document.getElementById('challenge-code').addEventListener('input', formatMFACode);
         }
 
-        // Handle initial login
+        // Handle simple login (no MFA)
         async function handleLogin(e) {
             e.preventDefault();
             
@@ -505,21 +505,18 @@
                 const result = await window.adminAuth.adminLogin(email, password);
                 currentUser = result.user;
 
-                if (result.status === 'mfa_setup_required') {
-                    // TEMPORARY: Skip MFA setup to avoid refresh loop
-                    console.log('⚠️ TEMPORARY: Skipping MFA setup to access admin panel');
+                if (result.status === 'authenticated') {
+                    // Simple authentication successful
+                    console.log('✅ Simple authentication successful');
                     showStep('success');
-                    setTimeout(redirectToDashboard, 1000);
-                } else if (result.status === 'mfa_challenge_required') {
-                    // Returning user - challenge MFA
-                    await challengeMFA(result.factors[0].id);
-                } else if (result.status === 'authenticated') {
-                    // Already fully authenticated
-                    showStep('success');
-                    setTimeout(redirectToDashboard, 1000);
+                    setTimeout(redirectToDashboard, 1500);
+                } else {
+                    // Unexpected status
+                    throw new Error('Unexpected authentication status: ' + result.status);
                 }
 
             } catch (error) {
+                console.error('❌ Login failed:', error.message);
                 showError('login-error', error.message);
             }
 
