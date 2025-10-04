@@ -1,11 +1,12 @@
 /**
- * Ezra Admin Dashboard Configuration
+ * Ezra Admin Dashboard Configuration - SECURE VERSION
+ * NO CREDENTIALS STORED HERE (public repository)
  */
 
 const EZRA_CONFIG = {
-    // Supabase configuration
+    // Supabase configuration - SET AT RUNTIME FOR SECURITY
     SUPABASE_URL: 'https://zouyaaeincpprkdkofgf.supabase.co',
-    SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvdXlhYWVpbmNwcHJrZGtvZmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcxMjc2NjYsImV4cCI6MjA3MjcwMzY2Nn0.igi2uZTcC19q0ZmvTHz0L3E28ZnzVSVtaVbqRmhk2jQ',
+    SUPABASE_ANON_KEY: null, // Will be set securely at runtime
     
     // App configuration
     APP_NAME: 'Ezra Admin Portal',

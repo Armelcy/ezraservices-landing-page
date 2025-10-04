@@ -20,9 +20,19 @@ class EzraAdminDashboard {
                 return;
             }
 
+            // Get API key securely (prompt if not in config for public repo security)
+            let apiKey = window.EZRA_CONFIG.SUPABASE_ANON_KEY;
+            if (!apiKey) {
+                apiKey = prompt('Enter Supabase API Key for admin access:');
+                if (!apiKey) {
+                    this.showError('API Key Required', 'API key is required for admin panel access');
+                    return;
+                }
+            }
+            
             this.supabase = window.supabase.createClient(
                 window.EZRA_CONFIG.SUPABASE_URL,
-                window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                apiKey
             );
 
             // Check authentication state
