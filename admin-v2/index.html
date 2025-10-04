@@ -459,6 +459,12 @@
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize admin authentication
+            window.adminAuth = new EzraAdminAuth(
+                window.EZRA_CONFIG.SUPABASE_URL,
+                window.EZRA_CONFIG.SUPABASE_ANON_KEY
+            );
+            
             // Check if already authenticated
             const isAuthenticated = await window.adminAuth.validateSession();
             if (isAuthenticated) {
