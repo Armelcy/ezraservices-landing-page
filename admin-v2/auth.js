@@ -221,26 +221,44 @@ class EzraAdminAuth {
   // 7. Validate existing session
   async validateSession() {
     try {
-      // Use standard Supabase session validation instead of custom tokens
+      // Use standard Supabase session validation
       const { data: { session }, error } = await this.supabase.auth.getSession();
       
       if (error || !session) {
+        console.log('❌ No session found:', error?.message || 'No session');
         return false;
       }
       
-      // Check if user is admin
+      console.log('✅ Session found for user:', session.user.email);
+      
+      // Check if user is admin - with better error handling
       const { data: profile, error: profileError } = await this.supabase
         .from('profiles')
-        .select('role')
+        .select('role, email')
         .eq('id', session.user.id)
         .single();
         
-      if (profileError || profile?.role !== 'admin') {
+      if (profileError) {
+        console.log('❌ Profile query error:', profileError.message);
         return false;
       }
       
+      if (!profile) {
+        console.log('❌ No profile found for user');
+        return false;
+      }
+      
+      console.log('👤 Profile found:', profile.email, 'Role:', profile.role);
+      
+      if (profile.role !== 'admin') {
+        console.log('❌ User is not admin. Role:', profile.role);
+        return false;
+      }
+      
+      console.log('✅ Admin session validated successfully');
       return true;
     } catch (error) {
+      console.log('❌ Session validation error:', error.message);
       return false;
     }
   }

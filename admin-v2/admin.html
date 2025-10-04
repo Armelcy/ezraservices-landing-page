@@ -362,15 +362,25 @@
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', async () => {
-            // TEMPORARY: Skip authentication check to access dashboard
-            console.log('🚨 TEMPORARY: Bypassing auth check to access admin dashboard');
+            // Initialize admin authentication first
+            window.adminAuth = new EzraAdminAuth(
+                window.EZRA_CONFIG.SUPABASE_URL,
+                window.EZRA_CONFIG.SUPABASE_ANON_KEY
+            );
             
-            // Check MFA authentication first - COMMENTED OUT TO STOP LOOP
-            // const isAuthenticated = await window.adminAuth.validateSession();
-            // if (!isAuthenticated) {
-            //     window.location.href = './index.html';
-            //     return;
-            // }
+            console.log('🔧 Checking admin authentication...');
+            
+            // Check authentication with detailed logging
+            const isAuthenticated = await window.adminAuth.validateSession();
+            console.log('🔍 Authentication result:', isAuthenticated);
+            
+            if (!isAuthenticated) {
+                console.log('❌ Not authenticated, redirecting to login...');
+                window.location.href = './index.html';
+                return;
+            }
+            
+            console.log('✅ Authentication successful, loading dashboard...');
 
             // Initialize Supabase client
             supabaseClient = window.supabase.createClient(
