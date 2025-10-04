@@ -465,8 +465,12 @@
                 window.EZRA_CONFIG.SUPABASE_ANON_KEY
             );
             
+            // CRITICAL DEBUG: Log the initialization state
+            console.log('🔧 Admin panel initialized, checking session...');
+            
             // Check if already authenticated
             const isAuthenticated = await window.adminAuth.validateSession();
+            console.log('📋 Session validation result:', isAuthenticated);
             if (isAuthenticated) {
                 redirectToDashboard();
                 return;
