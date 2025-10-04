@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin - Direct Access</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .access-notice {
+            background: var(--warning);
+            color: white;
+            padding: 12px 24px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--ezra-navy);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            text-align: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+            border-color: var(--ezra-orange);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .action-description {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            border-left: 4px solid var(--ezra-orange);
+        }
+
+        .stat-card h3 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+    </style>
+</head>
+<body>
+    <div class="access-notice">
+        ⚠️ TEMPORARY DIRECT ACCESS - Authentication bypass active for development
+    </div>
+
+    <div class="header">
+        <div class="logo">
+            <div class="logo-icon">🛡️</div>
+            <span>Ezra Admin Dashboard</span>
+        </div>
+        <div class="user-menu">
+            <div class="user-info">
+                <div class="user-name">Admin User (Direct Access)</div>
+                <div class="user-role">Administrator</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="welcome-card">
+            <h1 class="welcome-title">🎉 Welcome to Ezra Admin</h1>
+            <p class="welcome-subtitle">
+                Direct access dashboard - Authentication system will be properly configured later
+            </p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>System Status</h3>
+                <div class="stat-number">✅ Online</div>
+            </div>
+            <div class="stat-card">
+                <h3>Access Level</h3>
+                <div class="stat-number">🔓 Full</div>
+            </div>
+            <div class="stat-card">
+                <h3>Environment</h3>
+                <div class="stat-number">🧪 Development</div>
+            </div>
+            <div class="stat-card">
+                <h3>Auth Status</h3>
+                <div class="stat-number">⏭️ Bypassed</div>
+            </div>
+        </div>
+
+        <div class="actions-grid">
+            <div class="action-card" onclick="showMessage('Users', 'User management functionality will be available once authentication is properly configured.')">
+                <div class="action-icon">👥</div>
+                <div class="action-title">Manage Users</div>
+                <div class="action-description">View and manage platform users</div>
+            </div>
+
+            <div class="action-card" onclick="showMessage('Providers', 'Provider management functionality will be available once authentication is properly configured.')">
+                <div class="action-icon">🏢</div>
+                <div class="action-title">Manage Providers</div>
+                <div class="action-description">Oversee service providers</div>
+            </div>
+
+            <div class="action-card" onclick="showMessage('Bookings', 'Booking management functionality will be available once authentication is properly configured.')">
+                <div class="action-icon">📅</div>
+                <div class="action-title">View Bookings</div>
+                <div class="action-description">Monitor service bookings</div>
+            </div>
+
+            <div class="action-card" onclick="showMessage('Transactions', 'Transaction monitoring functionality will be available once authentication is properly configured.')">
+                <div class="action-icon">💰</div>
+                <div class="action-title">Transactions</div>
+                <div class="action-description">Financial transaction oversight</div>
+            </div>
+
+            <div class="action-card" onclick="showMessage('Legal Documents', 'Legal document management is ready! This shows the legal framework that has been implemented for the mobile app.')">
+                <div class="action-icon">📋</div>
+                <div class="action-title">Legal Documents</div>
+                <div class="action-description">Compliance and legal framework</div>
+            </div>
+
+            <div class="action-card" onclick="window.open('https://github.com/Armelcy/ezraservices-landing-page', '_blank')">
+                <div class="action-icon">🔧</div>
+                <div class="action-title">Repository</div>
+                <div class="action-description">View source code and configuration</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showMessage(title, message) {
+            alert(`${title}\n\n${message}`);
+        }
+
+        // Add some basic functionality
+        console.log('🎯 Ezra Admin Direct Access Dashboard Loaded');
+        console.log('📝 Status: Authentication bypassed for immediate access');
+        console.log('🔧 Next Steps: Implement proper authentication system');
+    </script>
+</body>
+</html>
