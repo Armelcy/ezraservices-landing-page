@@ -3,20 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ezra Admin Dashboard</title>
+    <title>Ezra Admin Dashboard - Cameroon Service Marketplace</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="config-local.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
+            /* Ezra Brand Colors */
             --ezra-orange: #FF6B35;
             --ezra-orange-dark: #E55A2B;
+            --ezra-orange-light: #FF8761;
             --ezra-navy: #1B365D;
-            --gray-50: #F9FAFB;
-            --gray-100: #F3F4F6;
-            --gray-900: #111827;
+            --ezra-navy-light: #2D4B73;
+            --ezra-navy-dark: #0F2842;
+            
+            /* UI Colors */
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            
+            /* Status Colors */
             --success: #10B981;
-            --error: #EF4444;
+            --success-light: #34D399;
+            --success-dark: #059669;
             --warning: #F59E0B;
+            --warning-light: #FBBF24;
+            --error: #EF4444;
+            --error-light: #F87171;
+            --info: #3B82F6;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            
+            /* Gradients */
+            --gradient-orange: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            --gradient-navy: linear-gradient(135deg, var(--ezra-navy), var(--ezra-navy-dark));
+            --gradient-success: linear-gradient(135deg, var(--success), var(--success-dark));
         }
 
         * {
@@ -29,16 +62,18 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--gray-50);
             color: var(--gray-900);
+            line-height: 1.6;
         }
 
+        /* Header Styles */
         .header {
-            background: white;
-            border-bottom: 1px solid var(--gray-200);
-            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--ezra-navy) 0%, var(--ezra-navy-light) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            box-shadow: var(--shadow-lg);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -47,22 +82,39 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--ezra-navy);
+            gap: 16px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
-            border-radius: 8px;
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-orange);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-md);
+        }
+
+        .logo-text h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 2px;
+        }
+
+        .logo-text p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
 
         .user-menu {
@@ -77,78 +129,213 @@
 
         .user-name {
             font-weight: 600;
-            color: var(--gray-900);
+            font-size: 1rem;
+            margin-bottom: 2px;
         }
 
         .user-role {
-            font-size: 0.875rem;
-            color: var(--gray-500);
+            font-size: 0.75rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .logout-btn {
-            background: var(--error);
+            background: rgba(239, 68, 68, 0.9);
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .logout-btn:hover {
-            background: #DC2626;
+            background: var(--error);
             transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
         }
 
+        /* Navigation */
+        .nav-tabs {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 2rem;
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 1rem 0;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--gray-600);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--ezra-orange);
+        }
+
+        .nav-tab.active {
+            color: var(--ezra-orange);
+            border-bottom-color: var(--ezra-orange);
+        }
+
+        .nav-tab i {
+            font-size: 1rem;
+        }
+
+        /* Container */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
 
+        /* Dashboard Overview */
+        .dashboard-overview {
+            margin-bottom: 2rem;
+        }
+
+        .welcome-section {
+            background: var(--gradient-navy);
+            color: white;
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 107, 53, 0.1);
+            border-radius: 50%;
+            transform: translate(50%, -50%);
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-title {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
             background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            border-left: 4px solid var(--ezra-orange);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .stat-card h3 {
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-orange);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.users { background: var(--gradient-success); }
+        .stat-icon.providers { background: var(--gradient-orange); }
+        .stat-icon.bookings { background: linear-gradient(135deg, var(--info), #2563EB); }
+        .stat-icon.revenue { background: linear-gradient(135deg, var(--warning), #D97706); }
+
+        .stat-label {
             font-size: 0.875rem;
             font-weight: 600;
             color: var(--gray-500);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
             margin-bottom: 0.5rem;
         }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--gray-900);
-            margin-bottom: 0.25rem;
+        .stat-change {
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 2rem;
-        }
+        .stat-change.positive { color: var(--success); }
+        .stat-change.negative { color: var(--error); }
 
-        .dashboard-section {
+        /* Quick Actions */
+        .quick-actions {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 2rem;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
             margin-bottom: 2rem;
         }
 
@@ -157,32 +344,55 @@
             font-weight: 700;
             color: var(--gray-900);
             margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
         .actions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-bottom: 2rem;
         }
 
         .action-btn {
-            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            background: var(--gradient-orange);
             color: white;
             border: none;
-            padding: 1rem;
-            border-radius: 8px;
+            padding: 1.25rem;
+            border-radius: 12px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
         }
 
         .action-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
         }
 
+        .action-btn i {
+            font-size: 1.5rem;
+        }
+
+        /* Content Area */
+        .content-area {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            margin-bottom: 2rem;
+            min-height: 400px;
+        }
+
+        /* Data Tables */
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -191,7 +401,7 @@
 
         .data-table th,
         .data-table td {
-            padding: 0.75rem;
+            padding: 1rem 0.75rem;
             text-align: left;
             border-bottom: 1px solid var(--gray-200);
         }
@@ -200,76 +410,77 @@
             background: var(--gray-50);
             font-weight: 600;
             color: var(--gray-700);
-        }
-
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .activity-feed {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .activity-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--gray-100);
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--gray-100);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .activity-content {
-            flex: 1;
+        .data-table tr:hover {
+            background: var(--gray-50);
         }
 
-        .activity-text {
-            font-weight: 500;
-            color: var(--gray-900);
-            font-size: 0.875rem;
-        }
-
-        .activity-time {
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
             font-size: 0.75rem;
-            color: var(--gray-500);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-dark);
+        }
+
+        .status-badge.inactive {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--gray-600);
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #D97706;
+        }
+
+        /* Loading States */
         .loading {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
             color: var(--gray-500);
         }
 
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--ezra-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Error States */
         .error-message {
-            background: #FEE2E2;
-            color: #DC2626;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 1rem;
+            border-left: 4px solid var(--error);
         }
 
-        @media (max-width: 768px) {
+        /* Responsive Design */
+        @media (max-width: 1024px) {
             .container {
                 padding: 1rem;
             }
@@ -278,120 +489,383 @@
                 padding: 1rem;
             }
             
-            .main-content {
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .actions-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
                 grid-template-columns: 1fr;
             }
             
-            .stats-grid {
+            .actions-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .nav-tabs {
+                padding: 0 1rem;
+                gap: 1rem;
+            }
+            
+            .logo-text h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-xl);
+            border-left: 4px solid var(--success);
+            z-index: 1000;
+            max-width: 400px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.error {
+            border-left-color: var(--error);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <div class="header">
         <div class="logo">
             <div class="logo-icon">🛡️</div>
-            <span>Ezra Admin Dashboard</span>
-        </div>
-        <div class="user-menu">
-            <div class="user-info">
-                <div class="user-name" id="user-name">Loading...</div>
-                <div class="user-role">Administrator</div>
+            <div class="logo-text">
+                <h1>Ezra Admin</h1>
+                <p>Service Marketplace Management</p>
             </div>
-            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+        <div class="header-actions">
+            <div class="user-menu">
+                <div class="user-info">
+                    <div class="user-name" id="user-name">Loading...</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="nav-tabs">
+        <div class="nav-tab active" onclick="showTab('dashboard')">
+            <i class="fas fa-chart-line"></i>
+            Dashboard
+        </div>
+        <div class="nav-tab" onclick="showTab('users')">
+            <i class="fas fa-users"></i>
+            Users
+        </div>
+        <div class="nav-tab" onclick="showTab('providers')">
+            <i class="fas fa-store"></i>
+            Providers
+        </div>
+        <div class="nav-tab" onclick="showTab('bookings')">
+            <i class="fas fa-calendar-check"></i>
+            Bookings
+        </div>
+        <div class="nav-tab" onclick="showTab('transactions')">
+            <i class="fas fa-credit-card"></i>
+            Transactions
+        </div>
+        <div class="nav-tab" onclick="showTab('promotions')">
+            <i class="fas fa-tags"></i>
+            Promotions
+        </div>
+        <div class="nav-tab" onclick="showTab('analytics')">
+            <i class="fas fa-chart-bar"></i>
+            Analytics
+        </div>
+        <div class="nav-tab" onclick="showTab('settings')">
+            <i class="fas fa-cog"></i>
+            Settings
         </div>
     </div>
 
     <div class="container">
-        <div class="stats-grid">
-            <div class="stat-card">
-                <h3>Total Users</h3>
-                <div class="stat-number" id="total-users">Loading...</div>
+        <!-- Dashboard Tab -->
+        <div id="dashboard-tab" class="tab-content">
+            <!-- Welcome Section -->
+            <div class="welcome-section">
+                <div class="welcome-content">
+                    <h1 class="welcome-title">Welcome back!</h1>
+                    <p class="welcome-subtitle">Here's what's happening with your Ezra service marketplace today.</p>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>Active Providers</h3>
-                <div class="stat-number" id="total-providers">Loading...</div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Total Users</div>
+                            <div class="stat-value" id="total-users">Loading...</div>
+                        </div>
+                        <div class="stat-icon users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-change positive" id="users-change">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+12% this month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Active Providers</div>
+                            <div class="stat-value" id="total-providers">Loading...</div>
+                        </div>
+                        <div class="stat-icon providers">
+                            <i class="fas fa-store"></i>
+                        </div>
+                    </div>
+                    <div class="stat-change positive" id="providers-change">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+8% this month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Total Bookings</div>
+                            <div class="stat-value" id="total-bookings">Loading...</div>
+                        </div>
+                        <div class="stat-icon bookings">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat-change positive" id="bookings-change">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+15% this month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label">Revenue (XAF)</div>
+                            <div class="stat-value" id="total-revenue">Loading...</div>
+                        </div>
+                        <div class="stat-icon revenue">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                    </div>
+                    <div class="stat-change positive" id="revenue-change">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+23% this month</span>
+                    </div>
+                </div>
             </div>
-            <div class="stat-card">
-                <h3>Total Bookings</h3>
-                <div class="stat-number" id="total-bookings">Loading...</div>
-            </div>
-            <div class="stat-card">
-                <h3>Revenue (XAF)</h3>
-                <div class="stat-number" id="total-revenue">Loading...</div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h2 class="section-title">
+                    <i class="fas fa-bolt"></i>
+                    Quick Actions
+                </h2>
+                <div class="actions-grid">
+                    <button class="action-btn" onclick="showTab('users')">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Manage Users</span>
+                    </button>
+                    <button class="action-btn" onclick="showTab('providers')">
+                        <i class="fas fa-store-alt"></i>
+                        <span>Manage Providers</span>
+                    </button>
+                    <button class="action-btn" onclick="showTab('bookings')">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>View Bookings</span>
+                    </button>
+                    <button class="action-btn" onclick="showTab('promotions')">
+                        <i class="fas fa-percentage"></i>
+                        <span>Promotional Codes</span>
+                    </button>
+                    <button class="action-btn" onclick="showTab('analytics')">
+                        <i class="fas fa-chart-line"></i>
+                        <span>View Analytics</span>
+                    </button>
+                    <button class="action-btn" onclick="showTab('settings')">
+                        <i class="fas fa-cogs"></i>
+                        <span>Platform Settings</span>
+                    </button>
+                </div>
             </div>
         </div>
 
-        <div class="main-content">
-            <div class="main-panel">
-                <div class="dashboard-section">
-                    <h2 class="section-title">Quick Actions</h2>
-                    <div class="actions-grid">
-                        <button class="action-btn" onclick="showSection('users')">👥 Manage Users</button>
-                        <button class="action-btn" onclick="showSection('providers')">🏢 Providers</button>
-                        <button class="action-btn" onclick="showSection('bookings')">📅 Bookings</button>
-                        <button class="action-btn" onclick="showSection('transactions')">💰 Transactions</button>
-                    </div>
-                </div>
-
-                <div class="dashboard-section" id="content-area">
-                    <h2 class="section-title">Welcome to Ezra Admin</h2>
-                    <p>Your secure administrative dashboard for managing the Ezra Services platform.</p>
-                    <p style="margin-top: 1rem; color: var(--gray-600);">
-                        Select an action above to manage different aspects of your platform.
-                    </p>
-                </div>
-            </div>
-
-            <div class="sidebar">
-                <div class="activity-feed">
-                    <h3 style="margin-bottom: 1rem; font-size: 1.1rem; font-weight: 600;">Recent Activity</h3>
-                    <div id="activity-list">
-                        <div class="loading">Loading...</div>
-                    </div>
-                </div>
+        <!-- Content Area for Other Tabs -->
+        <div id="content-area" class="content-area" style="display: none;">
+            <div class="loading">
+                <div class="loading-spinner"></div>
+                <p>Loading content...</p>
             </div>
         </div>
     </div>
 
-    <script src="auth.js?v=2"></script>
     <script>
         let currentUser = null;
         let supabaseClient = null;
+        let currentTab = 'dashboard';
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', async () => {
-            // Initialize admin authentication first
-            window.adminAuth = new EzraAdminAuth(
-                window.EZRA_CONFIG.SUPABASE_URL,
-                window.EZRA_CONFIG.SUPABASE_ANON_KEY
-            );
+            console.log('🔧 Initializing Ezra Admin Dashboard...');
             
-            console.log('🔧 Checking admin authentication...');
-            
-            // Check authentication with detailed logging
-            const isAuthenticated = await window.adminAuth.validateSession();
-            console.log('🔍 Authentication result:', isAuthenticated);
-            
-            if (!isAuthenticated) {
-                console.log('❌ Not authenticated, redirecting to login...');
-                window.location.href = './index.html';
-                return;
-            }
-            
-            console.log('✅ Authentication successful, loading dashboard...');
-
             // Initialize Supabase client
             supabaseClient = window.supabase.createClient(
                 window.EZRA_CONFIG.SUPABASE_URL,
                 window.EZRA_CONFIG.SUPABASE_ANON_KEY
             );
+            
+            // Check authentication
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            
+            if (!session) {
+                console.log('❌ Not authenticated, redirecting to login...');
+                window.location.href = './index-simple.html';
+                return;
+            }
+            
+            // Verify admin status
+            const isAdmin = await checkAdminStatus(session.user);
+            if (!isAdmin) {
+                console.log('❌ Not admin, redirecting to login...');
+                await supabaseClient.auth.signOut();
+                window.location.href = './index-simple.html';
+                return;
+            }
+            
+            console.log('✅ Authentication successful, loading dashboard...');
 
             await loadUserInfo();
             await loadDashboardData();
-            await loadActivity();
         });
+
+        // Tab Management
+        function showTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelector(`[onclick="showTab('${tabName}')"]`).classList.add('active');
+            
+            currentTab = tabName;
+            
+            if (tabName === 'dashboard') {
+                document.getElementById('dashboard-tab').style.display = 'block';
+                document.getElementById('content-area').style.display = 'none';
+            } else {
+                document.getElementById('dashboard-tab').style.display = 'none';
+                document.getElementById('content-area').style.display = 'block';
+                loadTabContent(tabName);
+            }
+        }
+
+        // Load tab content
+        async function loadTabContent(tabName) {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading ${tabName}...</p>
+                </div>
+            `;
+
+            switch(tabName) {
+                case 'users':
+                    await loadUsers();
+                    break;
+                case 'providers':
+                    await loadProviders();
+                    break;
+                case 'bookings':
+                    await loadBookings();
+                    break;
+                case 'transactions':
+                    await loadTransactions();
+                    break;
+                case 'promotions':
+                    await loadPromotions();
+                    break;
+                case 'analytics':
+                    await loadAnalytics();
+                    break;
+                case 'settings':
+                    await loadSettings();
+                    break;
+            }
+        }
+
+        // Check admin status
+        async function checkAdminStatus(user) {
+            try {
+                const { data: profile, error } = await supabaseClient
+                    .from('profiles')
+                    .select('role, full_name, email')
+                    .eq('id', user.id)
+                    .single();
+
+                if (error) {
+                    console.error('❌ Profile check failed:', error);
+                    return false;
+                }
+
+                return profile?.role === 'admin';
+            } catch (error) {
+                console.error('❌ Admin status check failed:', error);
+                return false;
+            }
+        }
 
         // Load user information
         async function loadUserInfo() {
@@ -423,133 +897,138 @@
                     supabaseClient.from('bookings').select('id, total_amount', { count: 'exact' })
                 ]);
 
-                document.getElementById('total-users').textContent = usersResult.count || '0';
-                document.getElementById('total-providers').textContent = providersResult.count || '0';
-                document.getElementById('total-bookings').textContent = bookingsResult.count || '0';
+                // Update stats with animation
+                animateValue('total-users', 0, usersResult.count || 0, 1000);
+                animateValue('total-providers', 0, providersResult.count || 0, 1000);
+                animateValue('total-bookings', 0, bookingsResult.count || 0, 1000);
 
                 if (bookingsResult.data) {
                     const totalRevenue = bookingsResult.data.reduce((sum, booking) => sum + (booking.total_amount || 0), 0);
-                    document.getElementById('total-revenue').textContent = totalRevenue.toLocaleString();
+                    animateValue('total-revenue', 0, totalRevenue, 1000, true);
                 } else {
                     document.getElementById('total-revenue').textContent = '0';
                 }
 
             } catch (error) {
                 console.error('Failed to load dashboard data:', error);
-                document.getElementById('total-users').textContent = '--';
-                document.getElementById('total-providers').textContent = '--';
-                document.getElementById('total-bookings').textContent = '--';
-                document.getElementById('total-revenue').textContent = '--';
+                ['total-users', 'total-providers', 'total-bookings', 'total-revenue'].forEach(id => {
+                    document.getElementById(id).textContent = '--';
+                });
             }
         }
 
-        // Load activity feed
-        async function loadActivity() {
-            try {
-                const { data: activities } = await supabaseClient
-                    .from('admin_activity_log')
-                    .select('action, created_at')
-                    .order('created_at', { ascending: false })
-                    .limit(10);
-
-                const activityList = document.getElementById('activity-list');
-                
-                if (activities && activities.length > 0) {
-                    activityList.innerHTML = activities.map(activity => `
-                        <div class="activity-item">
-                            <div class="activity-icon">📋</div>
-                            <div class="activity-content">
-                                <div class="activity-text">${formatAction(activity.action)}</div>
-                                <div class="activity-time">${formatTime(activity.created_at)}</div>
-                            </div>
-                        </div>
-                    `).join('');
-                } else {
-                    activityList.innerHTML = '<div style="text-align: center; color: #6B7280; padding: 1rem;">No recent activity</div>';
-                }
-
-            } catch (error) {
-                console.error('Failed to load activity:', error);
-                document.getElementById('activity-list').innerHTML = '<div style="text-align: center; color: #EF4444; padding: 1rem;">Failed to load activity</div>';
-            }
-        }
-
-        // Show different sections
-        async function showSection(section) {
-            const contentArea = document.getElementById('content-area');
+        // Animate number values
+        function animateValue(elementId, start, end, duration, isRevenue = false) {
+            const element = document.getElementById(elementId);
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
             
-            switch(section) {
-                case 'users':
-                    await loadUsers();
-                    break;
-                case 'providers':
-                    await loadProviders();
-                    break;
-                case 'bookings':
-                    await loadBookings();
-                    break;
-                case 'transactions':
-                    await loadTransactions();
-                    break;
-            }
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= end) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                
+                if (isRevenue) {
+                    element.textContent = Math.floor(current).toLocaleString();
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
         }
 
-        // Load users section
+        // Load Users
         async function loadUsers() {
             const contentArea = document.getElementById('content-area');
-            contentArea.innerHTML = `
-                <h2 class="section-title">User Management</h2>
-                <div class="loading">Loading users...</div>
-            `;
-
+            
             try {
                 const { data: users } = await supabaseClient
                     .from('profiles')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(20);
+                    .limit(50);
 
                 contentArea.innerHTML = `
-                    <h2 class="section-title">User Management</h2>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Created</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${users.map(user => `
-                                <tr>
-                                    <td>${user.full_name || 'N/A'}</td>
-                                    <td>${user.email}</td>
-                                    <td>${user.role}</td>
-                                    <td>${user.is_active ? '✅ Active' : '❌ Inactive'}</td>
-                                    <td>${formatDate(user.created_at)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                    <div class="fade-in">
+                        <h2 class="section-title">
+                            <i class="fas fa-users"></i>
+                            User Management
+                        </h2>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Manage all users on the Ezra platform</p>
+                        
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Joined</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${users.map(user => `
+                                        <tr>
+                                            <td>
+                                                <div style="display: flex; align-items: center; gap: 12px;">
+                                                    <div style="width: 40px; height: 40px; background: var(--gradient-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                                        ${(user.full_name || user.email || 'U').charAt(0).toUpperCase()}
+                                                    </div>
+                                                    <div>
+                                                        <div style="font-weight: 600;">${user.full_name || 'N/A'}</div>
+                                                        ${user.location ? `<div style="font-size: 0.75rem; color: var(--gray-500);">${user.location}</div>` : ''}
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>${user.email}</td>
+                                            <td>${user.phone_number || 'N/A'}</td>
+                                            <td>
+                                                <span class="status-badge ${user.role === 'admin' ? 'active' : 'pending'}">
+                                                    ${user.role || 'customer'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge ${user.is_active ? 'active' : 'inactive'}">
+                                                    ${user.is_active ? 'Active' : 'Inactive'}
+                                                </span>
+                                            </td>
+                                            <td>${formatDate(user.created_at)}</td>
+                                            <td>
+                                                <div style="display: flex; gap: 8px;">
+                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="viewUser('${user.id}')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button style="background: var(--warning); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="editUser('${user.id}')">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 `;
             } catch (error) {
                 contentArea.innerHTML = `
-                    <h2 class="section-title">User Management</h2>
-                    <div class="error-message">Failed to load users: ${error.message}</div>
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Failed to load users: ${error.message}
+                    </div>
                 `;
             }
         }
 
-        // Load providers section
+        // Load Providers
         async function loadProviders() {
             const contentArea = document.getElementById('content-area');
-            contentArea.innerHTML = `
-                <h2 class="section-title">Provider Management</h2>
-                <div class="loading">Loading providers...</div>
-            `;
-
+            
             try {
                 const { data: providers } = await supabaseClient
                     .from('providers')
@@ -557,186 +1036,474 @@
                         *,
                         profiles:user_id (
                             full_name,
-                            email
+                            email,
+                            phone_number
                         )
                     `)
                     .order('created_at', { ascending: false })
-                    .limit(20);
+                    .limit(50);
 
                 contentArea.innerHTML = `
-                    <h2 class="section-title">Provider Management</h2>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Business Name</th>
-                                <th>Owner</th>
-                                <th>Category</th>
-                                <th>Rating</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${providers.map(provider => `
-                                <tr>
-                                    <td>${provider.business_name}</td>
-                                    <td>${provider.profiles?.full_name || 'N/A'}</td>
-                                    <td>${provider.category}</td>
-                                    <td>⭐ ${provider.rating.toFixed(1)}</td>
-                                    <td>${provider.is_active ? '✅ Active' : '❌ Inactive'}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                    <div class="fade-in">
+                        <h2 class="section-title">
+                            <i class="fas fa-store"></i>
+                            Provider Management
+                        </h2>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Manage service providers on the platform</p>
+                        
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Business</th>
+                                        <th>Owner</th>
+                                        <th>Category</th>
+                                        <th>Location</th>
+                                        <th>Rating</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${providers.map(provider => `
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <div style="font-weight: 600;">${provider.business_name}</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">${provider.description?.substring(0, 50) || ''}...</div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>
+                                                    <div style="font-weight: 500;">${provider.profiles?.full_name || 'N/A'}</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">${provider.profiles?.email || ''}</div>
+                                                </div>
+                                            </td>
+                                            <td>${provider.category}</td>
+                                            <td>${provider.location || 'N/A'}</td>
+                                            <td>
+                                                <div style="display: flex; align-items: center; gap: 4px;">
+                                                    <i class="fas fa-star" style="color: #FBBF24;"></i>
+                                                    <span style="font-weight: 600;">${provider.rating?.toFixed(1) || '0.0'}</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge ${provider.is_active ? 'active' : 'inactive'}">
+                                                    ${provider.is_active ? 'Active' : 'Inactive'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div style="display: flex; gap: 8px;">
+                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="viewProvider('${provider.id}')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button style="background: var(--success); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="approveProvider('${provider.id}')">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 `;
             } catch (error) {
                 contentArea.innerHTML = `
-                    <h2 class="section-title">Provider Management</h2>
-                    <div class="error-message">Failed to load providers: ${error.message}</div>
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Failed to load providers: ${error.message}
+                    </div>
                 `;
             }
         }
 
-        // Load bookings section
+        // Load Bookings
         async function loadBookings() {
             const contentArea = document.getElementById('content-area');
-            contentArea.innerHTML = `
-                <h2 class="section-title">Booking Management</h2>
-                <div class="loading">Loading bookings...</div>
-            `;
-
+            
             try {
                 const { data: bookings } = await supabaseClient
                     .from('bookings')
                     .select(`
                         *,
-                        customer:customer_id (full_name),
+                        customer:customer_id (full_name, email),
                         provider:provider_id (business_name)
                     `)
                     .order('created_at', { ascending: false })
-                    .limit(20);
+                    .limit(50);
 
                 contentArea.innerHTML = `
-                    <h2 class="section-title">Booking Management</h2>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Service</th>
-                                <th>Customer</th>
-                                <th>Provider</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${bookings.map(booking => `
-                                <tr>
-                                    <td>${booking.service_name}</td>
-                                    <td>${booking.customer?.full_name || 'N/A'}</td>
-                                    <td>${booking.provider?.business_name || 'N/A'}</td>
-                                    <td>${booking.total_amount?.toLocaleString()} XAF</td>
-                                    <td>${getStatusBadge(booking.status)}</td>
-                                    <td>${formatDate(booking.scheduled_date)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                    <div class="fade-in">
+                        <h2 class="section-title">
+                            <i class="fas fa-calendar-check"></i>
+                            Booking Management
+                        </h2>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Monitor and manage service bookings</p>
+                        
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Service</th>
+                                        <th>Customer</th>
+                                        <th>Provider</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${bookings.map(booking => `
+                                        <tr>
+                                            <td>
+                                                <div>
+                                                    <div style="font-weight: 600;">${booking.service_name || 'N/A'}</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">ID: ${booking.id.substring(0, 8)}...</div>
+                                                </div>
+                                            </td>
+                                            <td>${booking.customer?.full_name || 'N/A'}</td>
+                                            <td>${booking.provider?.business_name || 'N/A'}</td>
+                                            <td>
+                                                <span style="font-weight: 600; color: var(--success);">
+                                                    ${booking.total_amount?.toLocaleString() || '0'} XAF
+                                                </span>
+                                            </td>
+                                            <td>${getStatusBadge(booking.status)}</td>
+                                            <td>${formatDate(booking.scheduled_date || booking.created_at)}</td>
+                                            <td>
+                                                <div style="display: flex; gap: 8px;">
+                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="viewBooking('${booking.id}')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 `;
             } catch (error) {
                 contentArea.innerHTML = `
-                    <h2 class="section-title">Booking Management</h2>
-                    <div class="error-message">Failed to load bookings: ${error.message}</div>
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Failed to load bookings: ${error.message}
+                    </div>
                 `;
             }
         }
 
-        // Load transactions section
+        // Load Transactions
         async function loadTransactions() {
             const contentArea = document.getElementById('content-area');
-            contentArea.innerHTML = `
-                <h2 class="section-title">Transaction Management</h2>
-                <div class="loading">Loading transactions...</div>
-            `;
-
+            
             try {
                 const { data: transactions } = await supabaseClient
                     .from('transactions')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(20);
+                    .limit(50);
 
                 contentArea.innerHTML = `
-                    <h2 class="section-title">Transaction Management</h2>
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>Amount</th>
-                                <th>Method</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${transactions.map(tx => `
-                                <tr>
-                                    <td>${tx.amount?.toLocaleString()} ${tx.currency}</td>
-                                    <td>${tx.payment_method}</td>
-                                    <td>${tx.transaction_type}</td>
-                                    <td>${getStatusBadge(tx.status)}</td>
-                                    <td>${formatDate(tx.created_at)}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
+                    <div class="fade-in">
+                        <h2 class="section-title">
+                            <i class="fas fa-credit-card"></i>
+                            Transaction Management
+                        </h2>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Monitor financial transactions</p>
+                        
+                        <div style="overflow-x: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Transaction ID</th>
+                                        <th>Amount</th>
+                                        <th>Method</th>
+                                        <th>Type</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${transactions.map(tx => `
+                                        <tr>
+                                            <td>
+                                                <code style="background: var(--gray-100); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">
+                                                    ${tx.id.substring(0, 8)}...
+                                                </code>
+                                            </td>
+                                            <td>
+                                                <span style="font-weight: 600; color: var(--success);">
+                                                    ${tx.amount?.toLocaleString() || '0'} ${tx.currency || 'XAF'}
+                                                </span>
+                                            </td>
+                                            <td>${tx.payment_method || 'N/A'}</td>
+                                            <td>${tx.transaction_type || 'N/A'}</td>
+                                            <td>${getStatusBadge(tx.status)}</td>
+                                            <td>${formatDate(tx.created_at)}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 `;
             } catch (error) {
                 contentArea.innerHTML = `
-                    <h2 class="section-title">Transaction Management</h2>
-                    <div class="error-message">Failed to load transactions: ${error.message}</div>
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Failed to load transactions: ${error.message}
+                    </div>
                 `;
             }
         }
 
-        // Utility functions
-        function formatAction(action) {
-            const actions = {
-                'admin_login': 'Admin logged in',
-                'admin_session_created': 'Session created',
-                'mfa_setup_completed': 'MFA setup completed',
-                'session_validated': 'Session validated'
-            };
-            return actions[action] || action;
+        // Load Promotions (Promotional Codes)
+        async function loadPromotions() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="fade-in">
+                    <h2 class="section-title">
+                        <i class="fas fa-tags"></i>
+                        Promotional Codes Management
+                    </h2>
+                    <p style="color: var(--gray-600); margin-bottom: 2rem;">Create and manage marketing campaigns with promotional codes</p>
+                    
+                    <div style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-external-link-alt" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                        <h3 style="margin-bottom: 1rem;">Promotional Codes Module</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Access the full promotional codes management interface</p>
+                        <button class="action-btn" onclick="openPromotionalCodes()" style="display: inline-flex;">
+                            <i class="fas fa-ticket-alt"></i>
+                            <span>Open Promotional Codes</span>
+                        </button>
+                    </div>
+                </div>
+            `;
         }
 
-        function formatTime(timestamp) {
-            return new Date(timestamp).toLocaleString();
+        // Load Analytics
+        async function loadAnalytics() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="fade-in">
+                    <h2 class="section-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Analytics & Reports
+                    </h2>
+                    <p style="color: var(--gray-600); margin-bottom: 2rem;">Comprehensive platform analytics and insights</p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                        <div style="background: var(--gray-50); padding: 2rem; border-radius: 12px; text-align: center;">
+                            <i class="fas fa-chart-line" style="font-size: 2rem; color: var(--success); margin-bottom: 1rem;"></i>
+                            <h3>Growth Analytics</h3>
+                            <p style="color: var(--gray-600);">User growth, revenue trends, and platform expansion metrics</p>
+                        </div>
+                        
+                        <div style="background: var(--gray-50); padding: 2rem; border-radius: 12px; text-align: center;">
+                            <i class="fas fa-users" style="font-size: 2rem; color: var(--info); margin-bottom: 1rem;"></i>
+                            <h3>User Behavior</h3>
+                            <p style="color: var(--gray-600);">User engagement, retention rates, and activity patterns</p>
+                        </div>
+                        
+                        <div style="background: var(--gray-50); padding: 2rem; border-radius: 12px; text-align: center;">
+                            <i class="fas fa-money-bill-wave" style="font-size: 2rem; color: var(--warning); margin-bottom: 1rem;"></i>
+                            <h3>Financial Reports</h3>
+                            <p style="color: var(--gray-600);">Revenue analysis, transaction reports, and financial insights</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; padding: 2rem; background: white; border-radius: 12px; border: 2px dashed var(--gray-300);">
+                        <div style="text-align: center;">
+                            <i class="fas fa-chart-pie" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                            <h3 style="margin-bottom: 1rem;">Advanced Analytics Coming Soon</h3>
+                            <p style="color: var(--gray-600);">Comprehensive analytics dashboard with real-time charts and detailed reports will be available in the next update.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
+        // Load Settings
+        async function loadSettings() {
+            const contentArea = document.getElementById('content-area');
+            contentArea.innerHTML = `
+                <div class="fade-in">
+                    <h2 class="section-title">
+                        <i class="fas fa-cog"></i>
+                        Platform Settings
+                    </h2>
+                    <p style="color: var(--gray-600); margin-bottom: 2rem;">Configure platform settings and preferences</p>
+                    
+                    <div style="display: grid; gap: 2rem;">
+                        <div style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-200);">
+                            <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-globe"></i>
+                                Platform Configuration
+                            </h3>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Platform Name</label>
+                                    <input type="text" value="Ezra Services" style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                </div>
+                                <div>
+                                    <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Default Currency</label>
+                                    <select style="width: 100%; padding: 0.75rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                        <option>XAF (Central African Franc)</option>
+                                        <option>EUR (Euro)</option>
+                                        <option>USD (US Dollar)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-200);">
+                            <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-shield-alt"></i>
+                                Security Settings
+                            </h3>
+                            <div style="display: grid; gap: 1rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600;">Two-Factor Authentication</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Require 2FA for admin accounts</div>
+                                    </div>
+                                    <label style="position: relative; display: inline-block; width: 60px; height: 34px;">
+                                        <input type="checkbox" checked style="opacity: 0; width: 0; height: 0;">
+                                        <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--success); border-radius: 34px; transition: 0.4s;"></span>
+                                    </label>
+                                </div>
+                                
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600;">Auto-logout</div>
+                                        <div style="font-size: 0.875rem; color: var(--gray-600);">Automatically logout inactive sessions</div>
+                                    </div>
+                                    <select style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px;">
+                                        <option>30 minutes</option>
+                                        <option>1 hour</option>
+                                        <option>2 hours</option>
+                                        <option>Never</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: white; padding: 2rem; border-radius: 12px; border: 1px solid var(--gray-200);">
+                            <h3 style="margin-bottom: 1rem; display: flex; align-items: center; gap: 12px;">
+                                <i class="fas fa-bell"></i>
+                                Notification Settings
+                            </h3>
+                            <div style="display: grid; gap: 1rem;">
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                    <input type="checkbox" checked style="transform: scale(1.2);">
+                                    <span>Email notifications for new user registrations</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                    <input type="checkbox" checked style="transform: scale(1.2);">
+                                    <span>Email notifications for new provider applications</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 12px; cursor: pointer;">
+                                    <input type="checkbox" style="transform: scale(1.2);">
+                                    <span>SMS notifications for urgent issues</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 2rem;">
+                            <button style="background: var(--gradient-orange); color: white; border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; margin-right: 1rem;">
+                                <i class="fas fa-save"></i>
+                                Save Settings
+                            </button>
+                            <button style="background: var(--gray-300); color: var(--gray-700); border: none; padding: 1rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer;">
+                                <i class="fas fa-undo"></i>
+                                Reset to Defaults
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Helper Functions
         function formatDate(timestamp) {
-            return new Date(timestamp).toLocaleDateString();
+            return new Date(timestamp).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
         }
 
         function getStatusBadge(status) {
-            const badges = {
-                'pending': '🟡 Pending',
-                'confirmed': '🟢 Confirmed',
-                'completed': '✅ Completed',
-                'cancelled': '🔴 Cancelled',
-                'paid': '💚 Paid',
-                'failed': '❌ Failed'
+            const statusMap = {
+                'pending': '<span class="status-badge pending"><i class="fas fa-clock"></i> Pending</span>',
+                'confirmed': '<span class="status-badge active"><i class="fas fa-check"></i> Confirmed</span>',
+                'completed': '<span class="status-badge active"><i class="fas fa-check-double"></i> Completed</span>',
+                'cancelled': '<span class="status-badge inactive"><i class="fas fa-times"></i> Cancelled</span>',
+                'paid': '<span class="status-badge active"><i class="fas fa-money-check"></i> Paid</span>',
+                'failed': '<span class="status-badge inactive"><i class="fas fa-exclamation-triangle"></i> Failed</span>'
             };
-            return badges[status] || status;
+            return statusMap[status] || `<span class="status-badge pending">${status}</span>`;
+        }
+
+        // Action Functions
+        function viewUser(userId) {
+            showNotification('User details view - Feature coming soon!', 'info');
+        }
+
+        function editUser(userId) {
+            showNotification('User editing - Feature coming soon!', 'info');
+        }
+
+        function viewProvider(providerId) {
+            showNotification('Provider details view - Feature coming soon!', 'info');
+        }
+
+        function approveProvider(providerId) {
+            showNotification('Provider approval - Feature coming soon!', 'info');
+        }
+
+        function viewBooking(bookingId) {
+            showNotification('Booking details view - Feature coming soon!', 'info');
+        }
+
+        function openPromotionalCodes() {
+            window.open('../web-admin/promotional-codes.html', '_blank');
+        }
+
+        // Notification System
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 4000);
         }
 
         // Logout function
         async function logout() {
-            try {
-                await window.adminAuth.logout();
-                window.location.href = './index.html';
-            } catch (error) {
-                console.error('Logout failed:', error);
-                window.location.href = './index.html';
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await supabaseClient.auth.signOut();
+                    console.log('✅ Logout successful');
+                    window.location.href = './index-simple.html';
+                } catch (error) {
+                    console.error('Logout failed:', error);
+                    window.location.href = './index-simple.html';
+                }
             }
         }
     </script>

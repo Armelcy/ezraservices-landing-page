@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ezra Admin - Secure Login</title>
+    <title>Ezra Admin - Login</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="config-local.js"></script>
     <style>
         :root {
             --ezra-orange: #FF6B35;
@@ -82,14 +81,6 @@
             font-size: 0.875rem;
         }
 
-        .auth-step {
-            display: none;
-        }
-
-        .auth-step.active {
-            display: block;
-        }
-
         .form-group {
             margin-bottom: 20px;
         }
@@ -148,16 +139,6 @@
             transform: none;
         }
 
-        .btn-secondary {
-            background: white;
-            color: var(--gray-900);
-            border: 2px solid #E5E7EB;
-        }
-
-        .btn-secondary:hover {
-            background: var(--gray-50);
-        }
-
         .alert {
             padding: 12px 16px;
             border-radius: 8px;
@@ -178,68 +159,6 @@
             border: 1px solid #A7F3D0;
         }
 
-        .alert-warning {
-            background: #FEF3C7;
-            color: #D97706;
-            border: 1px solid #FDE68A;
-        }
-
-        .qr-container {
-            text-align: center;
-            margin: 24px 0;
-        }
-
-        .qr-code {
-            background: white;
-            padding: 16px;
-            border-radius: 8px;
-            display: inline-block;
-            margin-bottom: 16px;
-        }
-
-        .security-info {
-            background: var(--gray-50);
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .security-info h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--gray-900);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .security-info p {
-            font-size: 0.875rem;
-            color: #6B7280;
-            line-height: 1.5;
-        }
-
-        .security-steps {
-            list-style: none;
-            padding: 0;
-        }
-
-        .security-steps li {
-            padding: 8px 0;
-            font-size: 0.875rem;
-            color: #6B7280;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .security-steps li::before {
-            content: "✓";
-            color: var(--success);
-            font-weight: bold;
-        }
-
         .loading {
             display: inline-block;
             width: 20px;
@@ -255,50 +174,29 @@
             100% { transform: rotate(360deg); }
         }
 
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 24px;
+        .security-info {
+            background: var(--gray-50);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        .step-dot {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #E5E7EB;
+        .security-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
+        }
+
+        .security-info p {
             font-size: 0.875rem;
-            font-weight: 600;
             color: #6B7280;
-            margin: 0 8px;
-            position: relative;
-        }
-
-        .step-dot.active {
-            background: var(--ezra-orange);
-            color: white;
-        }
-
-        .step-dot.completed {
-            background: var(--success);
-            color: white;
-        }
-
-        .step-dot:not(:last-child)::after {
-            content: "";
-            position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 16px;
-            height: 2px;
-            background: #E5E7EB;
-        }
-
-        .step-dot.completed:not(:last-child)::after {
-            background: var(--success);
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -307,395 +205,174 @@
         <div class="logo">
             <div class="logo-icon">🛡️</div>
             <h1>Ezra Admin</h1>
-            <p>Secure Administrative Portal</p>
+            <p>Administrative Portal</p>
         </div>
 
-        <!-- Step 1: Email/Password Login -->
-        <div id="step-login" class="auth-step active">
-            <div class="step-indicator">
-                <div class="step-dot active">1</div>
-                <div class="step-dot">2</div>
-                <div class="step-dot">3</div>
-            </div>
-
-            <div class="security-info">
-                <h3>🔐 Simple & Secure</h3>
-                <p>Enter your admin credentials to access the dashboard. Enhanced security features will be added in future updates.</p>
-            </div>
-
-            <div id="login-error" class="alert alert-error" style="display: none;"></div>
-
-            <form id="login-form">
-                <div class="form-group">
-                    <label class="form-label" for="email">Admin Email</label>
-                    <input type="email" id="email" class="form-input" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label" for="password">Password</label>
-                    <input type="password" id="password" class="form-input" required>
-                </div>
-                
-                <button type="submit" class="btn btn-primary" id="login-btn">
-                    Sign In
-                </button>
-            </form>
+        <div class="security-info">
+            <h3>🔐 Secure Login</h3>
+            <p>Enter your admin credentials to access the dashboard</p>
         </div>
 
-        <!-- Step 2: MFA Setup (First Time) -->
-        <div id="step-mfa-setup" class="auth-step">
-            <div class="step-indicator">
-                <div class="step-dot completed">1</div>
-                <div class="step-dot active">2</div>
-                <div class="step-dot">3</div>
-            </div>
+        <div id="error-message" class="alert alert-error" style="display: none;"></div>
+        <div id="success-message" class="alert alert-success" style="display: none;"></div>
 
-            <div class="security-info">
-                <h3>📱 Setup Authenticator</h3>
-                <p>Set up multi-factor authentication using your authenticator app:</p>
-                <ol style="text-align: left; font-size: 0.875rem; margin-top: 12px; padding-left: 20px;">
-                    <li>Open Google Authenticator, Authy, or similar app</li>
-                    <li>Tap "+" or "Add Account"</li>
-                    <li>Scan the QR code below OR enter the secret key manually</li>
-                    <li>Enter the 6-digit code from your app</li>
-                </ol>
-            </div>
-
-            <div class="qr-container">
-                <div class="qr-code" id="qr-code-container"></div>
-                <p style="font-size: 0.875rem; color: #6B7280;">
-                    Can't scan? Enter this code manually:<br>
-                    <code id="manual-code" style="background: #F3F4F6; padding: 4px 8px; border-radius: 4px;"></code>
-                </p>
-            </div>
-
+        <form id="login-form">
             <div class="form-group">
-                <label class="form-label" for="setup-code">Enter 6-digit code from your app</label>
-                <input type="text" id="setup-code" class="form-input" placeholder="123456" maxlength="6" pattern="[0-9]{6}">
+                <label class="form-label" for="email">Admin Email</label>
+                <input type="email" id="email" class="form-input" required>
             </div>
-
-            <button id="verify-setup-btn" class="btn btn-primary">
-                Complete Setup
-            </button>
-        </div>
-
-        <!-- Step 3: MFA Challenge (Returning Users) -->
-        <div id="step-mfa-challenge" class="auth-step">
-            <div class="step-indicator">
-                <div class="step-dot completed">1</div>
-                <div class="step-dot active">2</div>
-                <div class="step-dot">3</div>
-            </div>
-
-            <div class="security-info">
-                <h3>🔑 Authentication Required</h3>
-                <p>Open your authenticator app and enter the 6-digit code to complete login.</p>
-            </div>
-
-            <div id="challenge-error" class="alert alert-error" style="display: none;"></div>
-
+            
             <div class="form-group">
-                <label class="form-label" for="challenge-code">6-digit authentication code</label>
-                <input type="text" id="challenge-code" class="form-input" placeholder="123456" maxlength="6" pattern="[0-9]{6}">
+                <label class="form-label" for="password">Password</label>
+                <input type="password" id="password" class="form-input" required>
             </div>
-
-            <button id="verify-challenge-btn" class="btn btn-primary">
-                Verify & Sign In
+            
+            <button type="submit" class="btn btn-primary" id="login-btn">
+                Sign In
             </button>
-
-            <button id="back-to-login-btn" class="btn btn-secondary" style="margin-top: 12px;">
-                Back to Login
-            </button>
-        </div>
-
-        <!-- Step 4: Success/Dashboard Access -->
-        <div id="step-success" class="auth-step">
-            <div class="step-indicator">
-                <div class="step-dot completed">1</div>
-                <div class="step-dot completed">2</div>
-                <div class="step-dot completed">3</div>
-            </div>
-
-            <div class="alert alert-success">
-                ✅ Authentication successful! Redirecting to admin dashboard...
-            </div>
-
-            <div class="security-info">
-                <h3>🛡️ Security Features Active</h3>
-                <ul class="security-steps">
-                    <li>Session-based authentication</li>
-                    <li>Activity monitoring</li>
-                    <li>Secure data encryption</li>
-                    <li>Admin access logging</li>
-                </ul>
-            </div>
-        </div>
+        </form>
     </div>
 
-    <!-- Load Authentication Client -->
-    <script src="auth.js?v=2"></script>
-    
     <script>
-        // Global state
-        let currentUser = null;
-        let currentFactorId = null;
-        let currentChallengeId = null;
-
-        // DOM Elements
-        const steps = {
-            login: document.getElementById('step-login'),
-            mfaSetup: document.getElementById('step-mfa-setup'),
-            mfaChallenge: document.getElementById('step-mfa-challenge'),
-            success: document.getElementById('step-success')
-        };
-
-        const forms = {
-            loginForm: document.getElementById('login-form'),
-            loginBtn: document.getElementById('login-btn'),
-            verifySetupBtn: document.getElementById('verify-setup-btn'),
-            verifyChallengeBtn: document.getElementById('verify-challenge-btn'),
-            backToLoginBtn: document.getElementById('back-to-login-btn')
-        };
+        let supabaseClient = null;
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', async () => {
-            // Initialize admin authentication
-            window.adminAuth = new EzraAdminAuth(
+            console.log('🚀 Initializing simple admin login...');
+            
+            // Initialize Supabase client
+            supabaseClient = window.supabase.createClient(
                 window.EZRA_CONFIG.SUPABASE_URL,
                 window.EZRA_CONFIG.SUPABASE_ANON_KEY
             );
             
-            // CRITICAL DEBUG: Log the initialization state
-            console.log('🔧 Admin panel initialized, checking session...');
-            
             // Check if already authenticated
-            const isAuthenticated = await window.adminAuth.validateSession();
-            console.log('📋 Session validation result:', isAuthenticated);
-            if (isAuthenticated) {
-                redirectToDashboard();
-                return;
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                console.log('✅ Already authenticated, checking admin status...');
+                const isAdmin = await checkAdminStatus(session.user);
+                if (isAdmin) {
+                    redirectToDashboard();
+                    return;
+                }
             }
 
             setupEventListeners();
         });
 
-        // Setup all event listeners
         function setupEventListeners() {
-            forms.loginForm.addEventListener('submit', handleLogin);
-            forms.verifySetupBtn.addEventListener('click', handleMFASetupVerify);
-            forms.verifyChallengeBtn.addEventListener('click', handleMFAChallenge);
-            forms.backToLoginBtn.addEventListener('click', () => showStep('login'));
-
-            // Auto-format MFA codes
-            document.getElementById('setup-code').addEventListener('input', formatMFACode);
-            document.getElementById('challenge-code').addEventListener('input', formatMFACode);
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
         }
 
-        // Handle simple login (no MFA)
         async function handleLogin(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             
-            setLoading(forms.loginBtn, true);
-            hideError('login-error');
-
-            try {
-                const result = await window.adminAuth.adminLogin(email, password);
-                currentUser = result.user;
-
-                if (result.status === 'authenticated') {
-                    // Simple authentication successful
-                    console.log('✅ Simple authentication successful');
-                    showStep('success');
-                    setTimeout(redirectToDashboard, 1500);
-                } else {
-                    // Unexpected status
-                    throw new Error('Unexpected authentication status: ' + result.status);
-                }
-
-            } catch (error) {
-                console.error('❌ Login failed:', error.message);
-                showError('login-error', error.message);
+            if (!email || !password) {
+                showError('Please enter both email and password');
+                return;
             }
+            
+            setLoading(true);
+            hideMessages();
 
-            setLoading(forms.loginBtn, false);
-        }
-
-        // Setup MFA for first-time users
-        async function setupMFA(existingFactor = null) {
             try {
-                const mfaData = await window.adminAuth.setupMFA(existingFactor);
+                console.log('🔐 Attempting login for:', email);
                 
-                // Debug: Log the MFA data
-                console.log('MFA Data received:', mfaData);
-                
-                // Generate QR code with fallback
-                const qrContainer = document.getElementById('qr-code-container');
-                
-                if (typeof QRCode !== 'undefined') {
-                    // QR Code library is available
-                    const qrCanvas = document.createElement('canvas');
-                    await QRCode.toCanvas(qrCanvas, mfaData.qrCode, {
-                        width: 200,
-                        color: {
-                            dark: '#1B365D',
-                            light: '#FFFFFF'
-                        }
-                    });
-                    qrContainer.appendChild(qrCanvas);
-                } else {
-                    // Fallback: Show manual setup instructions
-                    qrContainer.innerHTML = `
-                        <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; text-align: center;">
-                            <p style="font-weight: 600; margin-bottom: 12px;">📱 Manual Setup</p>
-                            <p style="font-size: 0.875rem; color: #6B7280; margin-bottom: 16px;">
-                                Open your authenticator app and add account manually:
-                            </p>
-                            <div style="margin: 16px 0;">
-                                <strong>Account Name:</strong> Ezra Admin<br>
-                                <strong>Secret Key:</strong> <span id="fallback-secret" style="font-family: monospace; background: white; padding: 4px 8px; border-radius: 4px;">${mfaData.secret || 'Loading...'}</span>
-                            </div>
-                            <p style="font-size: 0.75rem; color: #9CA3AF;">
-                                💡 Tip: Copy the secret key and paste it into your authenticator app
-                            </p>
-                        </div>
-                    `;
-                }
-                
-                // Set the manual code in both places
-                document.getElementById('manual-code').textContent = mfaData.secret;
-                
-                // Also update fallback secret if it exists
-                const fallbackSecret = document.getElementById('fallback-secret');
-                if (fallbackSecret) {
-                    fallbackSecret.textContent = mfaData.secret;
-                }
-                
-                currentFactorId = mfaData.factorId;
-                showStep('mfaSetup');
-
-            } catch (error) {
-                console.error('MFA setup failed:', error);
-                showError('login-error', 'Failed to setup MFA: ' + error.message);
-                
-                // CRITICAL DEBUG: Log the exact error that's causing the loop
-                console.error('CRITICAL: MFA setup error details:', {
-                    message: error.message,
-                    stack: error.stack,
-                    error: error
+                // Step 1: Authenticate with Supabase
+                const { data, error } = await supabaseClient.auth.signInWithPassword({
+                    email,
+                    password
                 });
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                // Step 2: Check admin status
+                const isAdmin = await checkAdminStatus(data.user);
+                if (!isAdmin) {
+                    await supabaseClient.auth.signOut();
+                    throw new Error('Access denied: Admin privileges required');
+                }
+
+                console.log('✅ Admin login successful');
+                showSuccess('Login successful! Redirecting to dashboard...');
                 
-                // If MFA setup fails, go back to login
-                setTimeout(() => {
-                    showStep('login');
-                }, 3000);
-            }
-        }
-
-        // Challenge existing MFA
-        async function challengeMFA(factorId) {
-            try {
-                const challenge = await window.adminAuth.challengeMFA(factorId);
-                currentFactorId = factorId;
-                currentChallengeId = challenge.challengeId;
-                showStep('mfaChallenge');
+                setTimeout(redirectToDashboard, 1500);
 
             } catch (error) {
-                showError('login-error', 'Failed to challenge MFA: ' + error.message);
+                console.error('❌ Login failed:', error);
+                let errorMessage = error.message;
+                
+                // User-friendly error messages
+                if (errorMessage.includes('Invalid login credentials')) {
+                    errorMessage = 'Invalid email or password. Please check your credentials.';
+                } else if (errorMessage.includes('Admin privileges required')) {
+                    errorMessage = 'Access denied: This account does not have admin privileges.';
+                }
+                
+                showError(errorMessage);
             }
+
+            setLoading(false);
         }
 
-        // Verify MFA setup
-        async function handleMFASetupVerify() {
-            const code = document.getElementById('setup-code').value;
-            
-            if (code.length !== 6) {
-                showError('login-error', 'Please enter a 6-digit code');
-                return;
-            }
-
-            setLoading(forms.verifySetupBtn, true);
-
+        async function checkAdminStatus(user) {
             try {
-                await window.adminAuth.verifyMFASetup(currentFactorId, code);
-                showStep('success');
-                setTimeout(redirectToDashboard, 2000);
+                const { data: profile, error } = await supabaseClient
+                    .from('profiles')
+                    .select('role, full_name, email')
+                    .eq('id', user.id)
+                    .single();
+
+                if (error) {
+                    console.error('❌ Profile check failed:', error);
+                    return false;
+                }
+
+                console.log('👤 User profile:', profile);
+                return profile?.role === 'admin';
 
             } catch (error) {
-                showError('login-error', 'Invalid code. Please try again.');
+                console.error('❌ Admin status check failed:', error);
+                return false;
             }
-
-            setLoading(forms.verifySetupBtn, false);
         }
 
-        // Verify MFA challenge
-        async function handleMFAChallenge() {
-            const code = document.getElementById('challenge-code').value;
-            
-            if (code.length !== 6) {
-                showError('challenge-error', 'Please enter a 6-digit code');
-                return;
-            }
-
-            setLoading(forms.verifyChallengeBtn, true);
-            hideError('challenge-error');
-
-            try {
-                await window.adminAuth.verifyMFAChallenge(currentChallengeId, code);
-                showStep('success');
-                setTimeout(redirectToDashboard, 2000);
-
-            } catch (error) {
-                showError('challenge-error', 'Invalid code. Please try again.');
-            }
-
-            setLoading(forms.verifyChallengeBtn, false);
-        }
-
-        // Utility functions
-        function showStep(stepName) {
-            Object.values(steps).forEach(step => step.classList.remove('active'));
-            steps[stepName].classList.add('active');
-        }
-
-        function showError(elementId, message) {
-            const errorElement = document.getElementById(elementId);
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
             errorElement.textContent = message;
             errorElement.style.display = 'block';
         }
 
-        function hideError(elementId) {
-            const errorElement = document.getElementById(elementId);
-            errorElement.style.display = 'none';
+        function showSuccess(message) {
+            const successElement = document.getElementById('success-message');
+            successElement.textContent = message;
+            successElement.style.display = 'block';
         }
 
-        function setLoading(button, loading) {
+        function hideMessages() {
+            document.getElementById('error-message').style.display = 'none';
+            document.getElementById('success-message').style.display = 'none';
+        }
+
+        function setLoading(loading) {
+            const loginBtn = document.getElementById('login-btn');
             if (loading) {
-                button.disabled = true;
-                button.innerHTML = '<span class="loading"></span> Processing...';
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<span class="loading"></span> Signing In...';
             } else {
-                button.disabled = false;
-                button.innerHTML = button.dataset.originalText || button.textContent;
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = 'Sign In';
             }
         }
 
-        function formatMFACode(e) {
-            const value = e.target.value.replace(/\D/g, '').slice(0, 6);
-            e.target.value = value;
-        }
-
         function redirectToDashboard() {
-            // Redirect to the main admin dashboard
             window.location.href = './admin.html';
         }
-
-        // Security: Clear sensitive data on page unload
-        window.addEventListener('beforeunload', () => {
-            currentFactorId = null;
-            currentChallengeId = null;
-        });
     </script>
 </body>
 </html>
