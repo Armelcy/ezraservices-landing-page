@@ -1030,18 +1030,43 @@
             const contentArea = document.getElementById('content-area');
             
             try {
-                const { data: providers } = await supabaseClient
+                console.log('🔍 Loading providers...');
+                
+                // First, try simple query to check if providers table exists
+                const { data: providers, error } = await supabaseClient
                     .from('providers')
-                    .select(`
-                        *,
-                        profiles:user_id (
-                            full_name,
-                            email,
-                            phone_number
-                        )
-                    `)
+                    .select('*')
                     .order('created_at', { ascending: false })
                     .limit(50);
+
+                if (error) {
+                    console.error('❌ Providers query error:', error);
+                    throw error;
+                }
+
+                console.log('📊 Providers data:', providers);
+
+                // Handle null or empty data
+                const providerList = providers || [];
+
+                if (providerList.length === 0) {
+                    contentArea.innerHTML = `
+                        <div class="fade-in">
+                            <h2 class="section-title">
+                                <i class="fas fa-store"></i>
+                                Provider Management
+                            </h2>
+                            <p style="color: var(--gray-600); margin-bottom: 2rem;">Manage service providers on the platform</p>
+                            
+                            <div style="text-align: center; padding: 3rem; background: white; border-radius: 12px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);">
+                                <i class="fas fa-store" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                                <h3 style="margin-bottom: 1rem; color: var(--gray-700);">No Providers Found</h3>
+                                <p style="color: var(--gray-500);">No service providers have registered yet or the providers table may not be set up.</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
 
                 contentArea.innerHTML = `
                     <div class="fade-in">
@@ -1056,7 +1081,7 @@
                                 <thead>
                                     <tr>
                                         <th>Business</th>
-                                        <th>Owner</th>
+                                        <th>User ID</th>
                                         <th>Category</th>
                                         <th>Location</th>
                                         <th>Rating</th>
@@ -1065,21 +1090,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${providers.map(provider => `
+                                    ${providerList.map(provider => `
                                         <tr>
                                             <td>
                                                 <div>
-                                                    <div style="font-weight: 600;">${provider.business_name}</div>
-                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">${provider.description?.substring(0, 50) || ''}...</div>
+                                                    <div style="font-weight: 600;">${provider.business_name || 'N/A'}</div>
+                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">${provider.description?.substring(0, 50) || 'No description'}...</div>
                                                 </div>
                                             </td>
                                             <td>
-                                                <div>
-                                                    <div style="font-weight: 500;">${provider.profiles?.full_name || 'N/A'}</div>
-                                                    <div style="font-size: 0.75rem; color: var(--gray-500);">${provider.profiles?.email || ''}</div>
-                                                </div>
+                                                <code style="background: var(--gray-100); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">
+                                                    ${provider.user_id?.substring(0, 8) || 'N/A'}...
+                                                </code>
                                             </td>
-                                            <td>${provider.category}</td>
+                                            <td>${provider.category || 'N/A'}</td>
                                             <td>${provider.location || 'N/A'}</td>
                                             <td>
                                                 <div style="display: flex; align-items: center; gap: 4px;">
@@ -1110,10 +1134,12 @@
                     </div>
                 `;
             } catch (error) {
+                console.error('❌ Failed to load providers:', error);
                 contentArea.innerHTML = `
                     <div class="error-message">
                         <i class="fas fa-exclamation-triangle"></i>
-                        Failed to load providers: ${error.message}
+                        <strong>Failed to load providers:</strong> ${error.message}
+                        <br><small>Check console for more details. This may indicate the providers table doesn't exist or needs proper permissions.</small>
                     </div>
                 `;
             }
@@ -1472,7 +1498,7 @@
         }
 
         function openPromotionalCodes() {
-            window.open('../web-admin/promotional-codes.html', '_blank');
+            window.open('./promotional-codes.html', '_blank');
         }
 
         // Notification System
