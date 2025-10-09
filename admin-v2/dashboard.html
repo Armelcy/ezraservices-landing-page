@@ -352,29 +352,45 @@
         </div>
     </div>
 
-    <script src="auth.js?v=2"></script>
+    <script src="config-local.js"></script>
+    <script src="auth-simple.js"></script>
     <script>
         let currentUser = null;
+        let simpleAuth = null;
 
         // Initialize dashboard
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check authentication
-            const isAuthenticated = await window.adminAuth.validateSession();
-            if (!isAuthenticated) {
-                window.location.href = './index.html';
-                return;
-            }
+            try {
+                // Initialize simple auth
+                simpleAuth = new SimpleAdminAuth(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
 
-            await loadUserInfo();
-            await loadDashboardData();
+                // Check authentication
+                const session = await simpleAuth.getCurrentSession();
+                if (!session) {
+                    console.log('❌ No session found, redirecting to login');
+                    window.location.href = './simple-login.html';
+                    return;
+                }
+
+                console.log('✅ Session found, loading dashboard');
+                await loadUserInfo();
+                await loadDashboardData();
+
+            } catch (error) {
+                console.error('❌ Dashboard initialization error:', error);
+                window.location.href = './simple-login.html';
+            }
         });
 
         // Load user information
         async function loadUserInfo() {
             try {
-                const { data: { user } } = await window.adminAuth.supabase.auth.getUser();
+                const { data: { user } } = await simpleAuth.supabase.auth.getUser();
                 if (user) {
-                    const { data: profile } = await window.adminAuth.supabase
+                    const { data: profile } = await simpleAuth.supabase
                         .from('profiles')
                         .select('full_name, email')
                         .eq('id', user.id)
@@ -395,9 +411,9 @@
             try {
                 // Load basic statistics
                 const [usersResult, providersResult, bookingsResult] = await Promise.all([
-                    window.adminAuth.supabase.from('profiles').select('id', { count: 'exact' }),
-                    window.adminAuth.supabase.from('providers').select('id', { count: 'exact' }),
-                    window.adminAuth.supabase.from('bookings').select('id, total_amount', { count: 'exact' })
+                    simpleAuth.supabase.from('profiles').select('id', { count: 'exact' }),
+                    simpleAuth.supabase.from('providers').select('id', { count: 'exact' }),
+                    simpleAuth.supabase.from('bookings').select('id, total_amount', { count: 'exact' })
                 ]);
 
                 // Update stats
@@ -428,7 +444,7 @@
         // Load recent activity
         async function loadRecentActivity() {
             try {
-                const { data: activities } = await window.adminAuth.supabase
+                const { data: activities } = await simpleAuth.supabase
                     .from('admin_activity_log')
                     .select('action, created_at, details')
                     .order('created_at', { ascending: false })
@@ -475,11 +491,11 @@
         // Logout function
         async function logout() {
             try {
-                await window.adminAuth.logout();
-                window.location.href = './index.html';
+                await simpleAuth.logout();
+                window.location.href = './simple-login.html';
             } catch (error) {
                 console.error('Logout failed:', error);
-                window.location.href = './index.html';
+                window.location.href = './simple-login.html';
             }
         }
 

@@ -939,7 +939,7 @@
             }, 16);
         }
 
-        // Load Users
+        // Load Users with Search and Filtering
         async function loadUsers() {
             const contentArea = document.getElementById('content-area');
             
@@ -948,7 +948,7 @@
                     .from('profiles')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(50);
+                    .limit(100);
 
                 contentArea.innerHTML = `
                     <div class="fade-in">
@@ -957,6 +957,32 @@
                             User Management
                         </h2>
                         <p style="color: var(--gray-600); margin-bottom: 2rem;">Manage all users on the Ezra platform</p>
+                        
+                        <!-- Search and Filter Controls -->
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);">
+                            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 250px; position: relative;">
+                                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                                    <input type="text" id="user-search" placeholder="Search by name, email, or phone..." 
+                                           style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.875rem;"
+                                           onkeyup="filterUsers()">
+                                </div>
+                                <select id="user-role-filter" onchange="filterUsers()" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px;">
+                                    <option value="">All Roles</option>
+                                    <option value="customer">Customers</option>
+                                    <option value="provider">Providers</option>
+                                    <option value="admin">Admins</option>
+                                </select>
+                                <select id="user-status-filter" onchange="filterUsers()" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px;">
+                                    <option value="">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                                <button onclick="exportUsers()" style="background: var(--info); color: white; border: none; padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer;">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
                         
                         <div style="overflow-x: auto;">
                             <table class="data-table">
@@ -971,9 +997,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="users-table-body">
                                     ${users.map(user => `
-                                        <tr>
+                                        <tr data-user-name="${user.full_name || ''}" data-user-email="${user.email || ''}" data-user-phone="${user.phone_number || ''}" data-user-role="${user.role || 'customer'}" data-user-status="${user.is_active ? 'active' : 'inactive'}">
                                             <td>
                                                 <div style="display: flex; align-items: center; gap: 12px;">
                                                     <div style="width: 40px; height: 40px; background: var(--gradient-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
@@ -999,13 +1025,21 @@
                                             </td>
                                             <td>${formatDate(user.created_at)}</td>
                                             <td>
-                                                <div style="display: flex; gap: 8px;">
-                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="viewUser('${user.id}')">
+                                                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="viewUser('${user.id}', '${user.full_name || user.email}')">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
-                                                    <button style="background: var(--warning); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="editUser('${user.id}')">
+                                                    <button style="background: var(--warning); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="editUser('${user.id}', '${user.full_name || user.email}')">
                                                         <i class="fas fa-edit"></i>
                                                     </button>
+                                                    ${user.is_active ? 
+                                                        `<button style="background: var(--error); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="banUser('${user.id}', '${user.full_name || user.email}')">
+                                                            <i class="fas fa-ban"></i>
+                                                        </button>` : 
+                                                        `<button style="background: var(--success); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="unbanUser('${user.id}', '${user.full_name || user.email}')">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>`
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>
@@ -1013,8 +1047,17 @@
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <div id="no-users-found" style="text-align: center; padding: 2rem; display: none;">
+                            <i class="fas fa-search" style="font-size: 2rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                            <p style="color: var(--gray-600);">No users found matching your search criteria.</p>
+                        </div>
                     </div>
                 `;
+
+                // Store original data for filtering
+                window.originalUsersData = users;
+                
             } catch (error) {
                 contentArea.innerHTML = `
                     <div class="error-message">
@@ -1076,6 +1119,36 @@
                         </h2>
                         <p style="color: var(--gray-600); margin-bottom: 2rem;">Manage service providers on the platform</p>
                         
+                        <!-- Search and Filter Controls -->
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);">
+                            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 250px; position: relative;">
+                                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                                    <input type="text" id="provider-search" placeholder="Search by business name, category, or location..." 
+                                           style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.875rem;"
+                                           onkeyup="filterProviders()">
+                                </div>
+                                <select id="provider-status-filter" onchange="filterProviders()" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px;">
+                                    <option value="">All Status</option>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                    <option value="pending">Pending Approval</option>
+                                </select>
+                                <select id="provider-category-filter" onchange="filterProviders()" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px;">
+                                    <option value="">All Categories</option>
+                                    <option value="cleaning">Cleaning</option>
+                                    <option value="plumbing">Plumbing</option>
+                                    <option value="electrical">Electrical</option>
+                                    <option value="beauty">Beauty</option>
+                                    <option value="tutoring">Tutoring</option>
+                                    <option value="other">Other</option>
+                                </select>
+                                <button onclick="exportProviders()" style="background: var(--info); color: white; border: none; padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer;">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                        
                         <div style="overflow-x: auto;">
                             <table class="data-table">
                                 <thead>
@@ -1089,9 +1162,9 @@
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="providers-table-body">
                                     ${providerList.map(provider => `
-                                        <tr>
+                                        <tr data-provider-name="${provider.business_name || ''}" data-provider-category="${provider.category || ''}" data-provider-location="${provider.location || ''}" data-provider-status="${provider.is_active ? 'active' : 'inactive'}">
                                             <td>
                                                 <div>
                                                     <div style="font-weight: 600;">${provider.business_name || 'N/A'}</div>
@@ -1117,13 +1190,26 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                <div style="display: flex; gap: 8px;">
-                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="viewProvider('${provider.id}')">
+                                                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="viewProvider('${provider.id}', '${provider.business_name}')">
                                                         <i class="fas fa-eye"></i>
                                                     </button>
-                                                    <button style="background: var(--success); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;" onclick="approveProvider('${provider.id}')">
-                                                        <i class="fas fa-check"></i>
+                                                    ${!provider.is_active ? 
+                                                        `<button style="background: var(--success); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="approveProvider('${provider.id}', '${provider.business_name}')">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>` : ''
+                                                    }
+                                                    <button style="background: var(--warning); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="editProvider('${provider.id}', '${provider.business_name}')">
+                                                        <i class="fas fa-edit"></i>
                                                     </button>
+                                                    ${provider.is_active ? 
+                                                        `<button style="background: var(--error); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="suspendProvider('${provider.id}', '${provider.business_name}')">
+                                                            <i class="fas fa-ban"></i>
+                                                        </button>` : 
+                                                        `<button style="background: var(--success); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="activateProvider('${provider.id}', '${provider.business_name}')">
+                                                            <i class="fas fa-play"></i>
+                                                        </button>`
+                                                    }
                                                 </div>
                                             </td>
                                         </tr>
@@ -1131,8 +1217,16 @@
                                 </tbody>
                             </table>
                         </div>
+                        
+                        <div id="no-providers-found" style="text-align: center; padding: 2rem; display: none;">
+                            <i class="fas fa-search" style="font-size: 2rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                            <p style="color: var(--gray-600);">No providers found matching your search criteria.</p>
+                        </div>
                     </div>
                 `;
+
+                // Store original data for filtering
+                window.originalProvidersData = providerList;
             } catch (error) {
                 console.error('❌ Failed to load providers:', error);
                 contentArea.innerHTML = `
@@ -1232,7 +1326,9 @@
                     .from('transactions')
                     .select('*')
                     .order('created_at', { ascending: false })
-                    .limit(50);
+                    .limit(100);
+
+                const transactionList = transactions || [];
 
                 contentArea.innerHTML = `
                     <div class="fade-in">
@@ -1240,7 +1336,43 @@
                             <i class="fas fa-credit-card"></i>
                             Transaction Management
                         </h2>
-                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Monitor financial transactions</p>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;">Monitor and manage financial transactions</p>
+                        
+                        <!-- Search and Filter Controls -->
+                        <div style="background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);">
+                            <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                                <div style="flex: 1; min-width: 250px; position: relative;">
+                                    <i class="fas fa-search" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                                    <input type="text" id="transaction-search" placeholder="Search by transaction ID or amount..." 
+                                           style="width: 100%; padding: 0.75rem 0.75rem 0.75rem 2.5rem; border: 2px solid var(--gray-200); border-radius: 8px; font-size: 0.875rem;"
+                                           onkeyup="filterTransactions()">
+                                </div>
+                                <select id="transaction-status-filter" onchange="filterTransactions()" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px;">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="completed">Completed</option>
+                                    <option value="failed">Failed</option>
+                                    <option value="refunded">Refunded</option>
+                                </select>
+                                <select id="transaction-method-filter" onchange="filterTransactions()" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px;">
+                                    <option value="">All Methods</option>
+                                    <option value="mtn_momo">MTN Mobile Money</option>
+                                    <option value="orange_money">Orange Money</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                    <option value="cash">Cash</option>
+                                </select>
+                                <select id="transaction-type-filter" onchange="filterTransactions()" style="padding: 0.75rem; border: 2px solid var(--gray-200); border-radius: 8px;">
+                                    <option value="">All Types</option>
+                                    <option value="payment">Payment</option>
+                                    <option value="refund">Refund</option>
+                                    <option value="payout">Payout</option>
+                                    <option value="fee">Fee</option>
+                                </select>
+                                <button onclick="exportTransactions()" style="background: var(--info); color: white; border: none; padding: 0.75rem 1rem; border-radius: 8px; cursor: pointer;">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
                         
                         <div style="overflow-x: auto;">
                             <table class="data-table">
@@ -1252,14 +1384,15 @@
                                         <th>Type</th>
                                         <th>Status</th>
                                         <th>Date</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    ${transactions.map(tx => `
-                                        <tr>
+                                <tbody id="transactions-table-body">
+                                    ${transactionList.map(tx => `
+                                        <tr data-tx-id="${tx.id || ''}" data-tx-amount="${tx.amount || 0}" data-tx-method="${tx.payment_method || ''}" data-tx-type="${tx.transaction_type || ''}" data-tx-status="${tx.status || ''}">
                                             <td>
                                                 <code style="background: var(--gray-100); padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">
-                                                    ${tx.id.substring(0, 8)}...
+                                                    ${tx.id?.substring(0, 8) || 'N/A'}...
                                                 </code>
                                             </td>
                                             <td>
@@ -1271,18 +1404,56 @@
                                             <td>${tx.transaction_type || 'N/A'}</td>
                                             <td>${getStatusBadge(tx.status)}</td>
                                             <td>${formatDate(tx.created_at)}</td>
+                                            <td>
+                                                <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                                    <button style="background: var(--info); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="viewTransaction('${tx.id}')">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    ${tx.status === 'pending' ? 
+                                                        `<button style="background: var(--success); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="approveTransaction('${tx.id}')">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>
+                                                        <button style="background: var(--error); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="rejectTransaction('${tx.id}')">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>` : ''
+                                                    }
+                                                    ${tx.status === 'completed' ? 
+                                                        `<button style="background: var(--warning); color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.75rem;" onclick="refundTransaction('${tx.id}')">
+                                                            <i class="fas fa-undo"></i>
+                                                        </button>` : ''
+                                                    }
+                                                </div>
+                                            </td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
                             </table>
                         </div>
+                        
+                        ${transactionList.length === 0 ? `
+                            <div style="text-align: center; padding: 3rem; background: white; border-radius: 12px; box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);">
+                                <i class="fas fa-credit-card" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                                <h3 style="margin-bottom: 1rem; color: var(--gray-700);">No Transactions Found</h3>
+                                <p style="color: var(--gray-500);">No financial transactions have been recorded yet or the transactions table may not be set up.</p>
+                            </div>
+                        ` : ''}
+                        
+                        <div id="no-transactions-found" style="text-align: center; padding: 2rem; display: none;">
+                            <i class="fas fa-search" style="font-size: 2rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+                            <p style="color: var(--gray-600);">No transactions found matching your search criteria.</p>
+                        </div>
                     </div>
                 `;
+
+                // Store original data for filtering
+                window.originalTransactionsData = transactionList;
+                
             } catch (error) {
                 contentArea.innerHTML = `
                     <div class="error-message">
                         <i class="fas fa-exclamation-triangle"></i>
-                        Failed to load transactions: ${error.message}
+                        <strong>Failed to load transactions:</strong> ${error.message}
+                        <br><small>Check console for more details. This may indicate the transactions table doesn't exist or needs proper permissions.</small>
                     </div>
                 `;
             }
@@ -1474,6 +1645,324 @@
                 'failed': '<span class="status-badge inactive"><i class="fas fa-exclamation-triangle"></i> Failed</span>'
             };
             return statusMap[status] || `<span class="status-badge pending">${status}</span>`;
+        }
+
+        // Search and Filter Functions
+        function filterUsers() {
+            const searchTerm = document.getElementById('user-search')?.value.toLowerCase() || '';
+            const roleFilter = document.getElementById('user-role-filter')?.value || '';
+            const statusFilter = document.getElementById('user-status-filter')?.value || '';
+            const tableBody = document.getElementById('users-table-body');
+            const noResults = document.getElementById('no-users-found');
+            
+            if (!tableBody) return;
+            
+            const rows = tableBody.querySelectorAll('tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const name = (row.dataset.userName || '').toLowerCase();
+                const email = (row.dataset.userEmail || '').toLowerCase();
+                const phone = (row.dataset.userPhone || '').toLowerCase();
+                const role = row.dataset.userRole || '';
+                const status = row.dataset.userStatus || '';
+                
+                const matchesSearch = !searchTerm || name.includes(searchTerm) || email.includes(searchTerm) || phone.includes(searchTerm);
+                const matchesRole = !roleFilter || role === roleFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+                
+                if (matchesSearch && matchesRole && matchesStatus) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        function filterProviders() {
+            const searchTerm = document.getElementById('provider-search')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('provider-status-filter')?.value || '';
+            const categoryFilter = document.getElementById('provider-category-filter')?.value || '';
+            const tableBody = document.getElementById('providers-table-body');
+            const noResults = document.getElementById('no-providers-found');
+            
+            if (!tableBody) return;
+            
+            const rows = tableBody.querySelectorAll('tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const name = (row.dataset.providerName || '').toLowerCase();
+                const category = (row.dataset.providerCategory || '').toLowerCase();
+                const location = (row.dataset.providerLocation || '').toLowerCase();
+                const status = row.dataset.providerStatus || '';
+                
+                const matchesSearch = !searchTerm || name.includes(searchTerm) || category.includes(searchTerm) || location.includes(searchTerm);
+                const matchesStatus = !statusFilter || status === statusFilter;
+                const matchesCategory = !categoryFilter || category === categoryFilter;
+                
+                if (matchesSearch && matchesStatus && matchesCategory) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        function filterTransactions() {
+            const searchTerm = document.getElementById('transaction-search')?.value.toLowerCase() || '';
+            const statusFilter = document.getElementById('transaction-status-filter')?.value || '';
+            const methodFilter = document.getElementById('transaction-method-filter')?.value || '';
+            const typeFilter = document.getElementById('transaction-type-filter')?.value || '';
+            const tableBody = document.getElementById('transactions-table-body');
+            const noResults = document.getElementById('no-transactions-found');
+            
+            if (!tableBody) return;
+            
+            const rows = tableBody.querySelectorAll('tr');
+            let visibleCount = 0;
+            
+            rows.forEach(row => {
+                const txId = (row.dataset.txId || '').toLowerCase();
+                const amount = row.dataset.txAmount || '';
+                const method = row.dataset.txMethod || '';
+                const type = row.dataset.txType || '';
+                const status = row.dataset.txStatus || '';
+                
+                const matchesSearch = !searchTerm || txId.includes(searchTerm) || amount.includes(searchTerm);
+                const matchesStatus = !statusFilter || status === statusFilter;
+                const matchesMethod = !methodFilter || method === methodFilter;
+                const matchesType = !typeFilter || type === typeFilter;
+                
+                if (matchesSearch && matchesStatus && matchesMethod && matchesType) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            if (noResults) {
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+
+        // User Moderation Functions
+        async function banUser(userId, userName) {
+            if (!confirm(`Are you sure you want to ban user "${userName}"? This will deactivate their account.`)) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('profiles')
+                    .update({ is_active: false })
+                    .eq('id', userId);
+                
+                if (error) throw error;
+                
+                showNotification(`User "${userName}" has been banned successfully.`, 'success');
+                loadUsers(); // Refresh the user list
+                
+            } catch (error) {
+                console.error('Failed to ban user:', error);
+                showNotification(`Failed to ban user: ${error.message}`, 'error');
+            }
+        }
+
+        async function unbanUser(userId, userName) {
+            if (!confirm(`Are you sure you want to unban user "${userName}"? This will reactivate their account.`)) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('profiles')
+                    .update({ is_active: true })
+                    .eq('id', userId);
+                
+                if (error) throw error;
+                
+                showNotification(`User "${userName}" has been unbanned successfully.`, 'success');
+                loadUsers(); // Refresh the user list
+                
+            } catch (error) {
+                console.error('Failed to unban user:', error);
+                showNotification(`Failed to unban user: ${error.message}`, 'error');
+            }
+        }
+
+        // Provider Moderation Functions
+        async function suspendProvider(providerId, businessName) {
+            if (!confirm(`Are you sure you want to suspend provider "${businessName}"? This will deactivate their business.`)) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('providers')
+                    .update({ is_active: false })
+                    .eq('id', providerId);
+                
+                if (error) throw error;
+                
+                showNotification(`Provider "${businessName}" has been suspended successfully.`, 'success');
+                loadProviders(); // Refresh the provider list
+                
+            } catch (error) {
+                console.error('Failed to suspend provider:', error);
+                showNotification(`Failed to suspend provider: ${error.message}`, 'error');
+            }
+        }
+
+        async function activateProvider(providerId, businessName) {
+            if (!confirm(`Are you sure you want to activate provider "${businessName}"? This will make their business active.`)) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('providers')
+                    .update({ is_active: true })
+                    .eq('id', providerId);
+                
+                if (error) throw error;
+                
+                showNotification(`Provider "${businessName}" has been activated successfully.`, 'success');
+                loadProviders(); // Refresh the provider list
+                
+            } catch (error) {
+                console.error('Failed to activate provider:', error);
+                showNotification(`Failed to activate provider: ${error.message}`, 'error');
+            }
+        }
+
+        async function approveProvider(providerId, businessName) {
+            if (!confirm(`Are you sure you want to approve provider "${businessName}"?`)) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('providers')
+                    .update({ 
+                        is_active: true,
+                        approved_at: new Date().toISOString(),
+                        approved_by: currentUser?.id
+                    })
+                    .eq('id', providerId);
+                
+                if (error) throw error;
+                
+                showNotification(`Provider "${businessName}" has been approved successfully.`, 'success');
+                loadProviders(); // Refresh the provider list
+                
+            } catch (error) {
+                console.error('Failed to approve provider:', error);
+                showNotification(`Failed to approve provider: ${error.message}`, 'error');
+            }
+        }
+
+        // Transaction Management Functions
+        async function approveTransaction(transactionId) {
+            if (!confirm('Are you sure you want to approve this transaction?')) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('transactions')
+                    .update({ 
+                        status: 'completed',
+                        approved_at: new Date().toISOString(),
+                        approved_by: currentUser?.id
+                    })
+                    .eq('id', transactionId);
+                
+                if (error) throw error;
+                
+                showNotification('Transaction approved successfully.', 'success');
+                loadTransactions(); // Refresh the transaction list
+                
+            } catch (error) {
+                console.error('Failed to approve transaction:', error);
+                showNotification(`Failed to approve transaction: ${error.message}`, 'error');
+            }
+        }
+
+        async function rejectTransaction(transactionId) {
+            if (!confirm('Are you sure you want to reject this transaction?')) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('transactions')
+                    .update({ 
+                        status: 'failed',
+                        rejected_at: new Date().toISOString(),
+                        rejected_by: currentUser?.id
+                    })
+                    .eq('id', transactionId);
+                
+                if (error) throw error;
+                
+                showNotification('Transaction rejected successfully.', 'success');
+                loadTransactions(); // Refresh the transaction list
+                
+            } catch (error) {
+                console.error('Failed to reject transaction:', error);
+                showNotification(`Failed to reject transaction: ${error.message}`, 'error');
+            }
+        }
+
+        async function refundTransaction(transactionId) {
+            if (!confirm('Are you sure you want to process a refund for this transaction?')) {
+                return;
+            }
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('transactions')
+                    .update({ 
+                        status: 'refunded',
+                        refunded_at: new Date().toISOString(),
+                        refunded_by: currentUser?.id
+                    })
+                    .eq('id', transactionId);
+                
+                if (error) throw error;
+                
+                showNotification('Transaction refunded successfully.', 'success');
+                loadTransactions(); // Refresh the transaction list
+                
+            } catch (error) {
+                console.error('Failed to refund transaction:', error);
+                showNotification(`Failed to refund transaction: ${error.message}`, 'error');
+            }
+        }
+
+        // Export Functions
+        function exportUsers() {
+            showNotification('User export functionality coming soon!', 'info');
+        }
+
+        function exportProviders() {
+            showNotification('Provider export functionality coming soon!', 'info');
+        }
+
+        function exportTransactions() {
+            showNotification('Transaction export functionality coming soon!', 'info');
         }
 
         // Action Functions

@@ -7,9 +7,11 @@ class EzraAdminAuth {
     this.mfaSetupCompleted = false;
   }
 
-  // 1. Simple admin login (email + password only)
+  // 1. Simple admin login (email + password only) - SIMPLIFIED VERSION
   async adminLogin(email, password) {
     try {
+      console.log('🔐 Starting simple admin login for:', email);
+      
       // Step 1: Basic auth with email/password
       const { data, error } = await this.supabase.auth.signInWithPassword({
         email,
@@ -17,20 +19,38 @@ class EzraAdminAuth {
       });
 
       if (error) {
+        console.error('❌ Supabase auth error:', error);
         throw new Error(`Login failed: ${error.message}`);
       }
 
-      // Step 2: Simple success - skip profile check for now
-      console.log('✅ Authentication successful for:', email);
-      this.logSecurityEvent('admin_login_success', { email });
+      // Step 2: Verify admin role
+      const { data: profile, error: profileError } = await this.supabase
+        .from('profiles')
+        .select('role, full_name, email')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profileError) {
+        console.error('❌ Profile check failed:', profileError);
+        throw new Error('Could not verify admin privileges');
+      }
+
+      if (profile?.role !== 'admin') {
+        console.error('❌ Access denied - not admin role:', profile?.role);
+        throw new Error('Access denied: Admin privileges required');
+      }
+
+      console.log('✅ Admin login successful:', profile.full_name);
+      this.logSecurityEvent('admin_login_success', { email, role: profile.role });
       
       return {
         status: 'authenticated',
         user: data.user,
-        profile: { email: email }
+        profile: profile
       };
 
     } catch (error) {
+      console.error('❌ Login error:', error);
       this.logSecurityEvent('admin_login_failed', { email, error: error.message });
       throw error;
     }
