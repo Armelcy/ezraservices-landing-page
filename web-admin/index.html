@@ -502,29 +502,29 @@
                 <div class="action-description">Valider les prestataires</div>
             </a>
 
-            <div class="action-card" onclick="showTransactions()">
+            <a href="transactions.html" class="action-card">
                 <div class="action-icon" style="background: var(--warning);">
                     <i class="fas fa-credit-card"></i>
                 </div>
                 <div class="action-title">Transactions</div>
                 <div class="action-description">Surveiller les paiements</div>
-            </div>
+            </a>
 
-            <div class="action-card" onclick="showReports()">
+            <a href="reports.html" class="action-card">
                 <div class="action-icon" style="background: var(--gray-600);">
                     <i class="fas fa-chart-bar"></i>
                 </div>
                 <div class="action-title">Rapports</div>
                 <div class="action-description">Analytics et statistiques</div>
-            </div>
+            </a>
 
-            <div class="action-card" onclick="showSettings()">
+            <a href="settings.html" class="action-card">
                 <div class="action-icon" style="background: var(--gray-700);">
                     <i class="fas fa-cog"></i>
                 </div>
                 <div class="action-title">Paramètres</div>
                 <div class="action-description">Configuration système</div>
-            </div>
+            </a>
         </div>
 
         <!-- Charts Section -->
@@ -762,19 +762,7 @@
             }, 30000); // Update every 30 seconds
         }
 
-        // Quick action functions
-
-        function showTransactions() {
-            alert('Module de surveillance des transactions en cours de développement');
-        }
-
-        function showReports() {
-            alert('Module de rapports en cours de développement');
-        }
-
-        function showSettings() {
-            alert('Module de paramètres en cours de développement');
-        }
+        // Quick action functions - all modules now have dedicated pages
 
         async function logout() {
             if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {

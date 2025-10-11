@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin - Rapports & Analytics</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="config-local.js"></script>
+    <script src="admin-auth-simple.js"></script>
+    <script src="enhanced-security.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--ezra-navy) 0%, #2C4B73 100%);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            padding: 1rem 2rem;
+            box-shadow: 0 8px 32px rgba(27, 54, 93, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .page-title i {
+            background: linear-gradient(135deg, var(--ezra-orange), #ff8a5b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3));
+        }
+
+        .nav-link {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-link:hover {
+            background: var(--ezra-orange);
+            color: white;
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .report-controls {
+            background: linear-gradient(135deg, white 0%, #fafbff 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-controls::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ezra-orange), var(--ezra-navy));
+        }
+
+        .controls-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .controls-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .export-btn {
+            background: var(--ezra-orange);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-btn:hover {
+            background: var(--ezra-orange-dark);
+            transform: translateY(-2px);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .filter-select, .filter-input {
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            background: white;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            border-color: var(--ezra-orange);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .analytics-card {
+            background: linear-gradient(135deg, white 0%, #fafbff 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ezra-orange), var(--ezra-navy));
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-weight: 700;
+            color: var(--gray-900);
+            font-size: 1.125rem;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+
+        .leaderboard {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .leaderboard-item:hover {
+            background: var(--gray-100);
+            transform: translateX(4px);
+        }
+
+        .leaderboard-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .leaderboard-rank {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--ezra-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .leaderboard-details h4 {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 2px;
+        }
+
+        .leaderboard-details p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        .leaderboard-value {
+            font-weight: 700;
+            color: var(--ezra-navy);
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .kpi-item {
+            text-align: center;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 12px;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 500;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fas fa-chart-bar"></i>
+                Rapports & Analytics
+            </h1>
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Report Controls -->
+        <div class="report-controls">
+            <div class="controls-header">
+                <h3 class="controls-title">Paramètres de Rapport</h3>
+                <button class="export-btn" onclick="exportReport()">
+                    <i class="fas fa-download"></i>
+                    Exporter CSV
+                </button>
+            </div>
+            
+            <div class="filters-grid">
+                <div class="filter-group">
+                    <label class="filter-label">Période</label>
+                    <select class="filter-select" id="period-filter">
+                        <option value="7">7 derniers jours</option>
+                        <option value="30" selected>30 derniers jours</option>
+                        <option value="90">3 derniers mois</option>
+                        <option value="365">Année</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Date de début</label>
+                    <input type="date" class="filter-input" id="start-date">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Date de fin</label>
+                    <input type="date" class="filter-input" id="end-date">
+                </div>
+                
+                <div class="filter-group">
+                    <label class="filter-label">Catégorie</label>
+                    <select class="filter-select" id="category-filter">
+                        <option value="">Toutes les catégories</option>
+                        <option value="home-cleaning">Nettoyage</option>
+                        <option value="plumbing">Plomberie</option>
+                        <option value="electrical">Électricité</option>
+                        <option value="gardening">Jardinage</option>
+                        <option value="beauty">Beauté</option>
+                        <option value="tutoring">Cours particuliers</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Grid -->
+        <div class="analytics-grid">
+            <!-- User Growth Chart -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">Croissance Utilisateurs</h3>
+                    <div class="card-icon" style="background: var(--success);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="userGrowthChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Booking Conversion Funnel -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">Entonnoir de Conversion</h3>
+                    <div class="card-icon" style="background: var(--info);">
+                        <i class="fas fa-funnel-dollar"></i>
+                    </div>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-item">
+                        <div class="kpi-value">1,247</div>
+                        <div class="kpi-label">Visiteurs</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">834</div>
+                        <div class="kpi-label">Inscriptions</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">456</div>
+                        <div class="kpi-label">Recherches</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">342</div>
+                        <div class="kpi-label">Réservations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Service Categories -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">Top Catégories</h3>
+                    <div class="card-icon" style="background: var(--ezra-orange);">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="categoriesChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top Performing Providers -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">Top Prestataires</h3>
+                    <div class="card-icon" style="background: var(--warning);">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                </div>
+                <div class="leaderboard">
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-rank">1</div>
+                            <div class="leaderboard-details">
+                                <h4>Marie Kouam</h4>
+                                <p>Nettoyage • ⭐ 4.9</p>
+                            </div>
+                        </div>
+                        <div class="leaderboard-value">156 services</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-rank">2</div>
+                            <div class="leaderboard-details">
+                                <h4>Paul Mbarga</h4>
+                                <p>Électricité • ⭐ 4.8</p>
+                            </div>
+                        </div>
+                        <div class="leaderboard-value">142 services</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-rank">3</div>
+                            <div class="leaderboard-details">
+                                <h4>Sophie Ndongo</h4>
+                                <p>Beauté • ⭐ 4.7</p>
+                            </div>
+                        </div>
+                        <div class="leaderboard-value">128 services</div>
+                    </div>
+                    <div class="leaderboard-item">
+                        <div class="leaderboard-info">
+                            <div class="leaderboard-rank">4</div>
+                            <div class="leaderboard-details">
+                                <h4>Jean Fotso</h4>
+                                <p>Plomberie • ⭐ 4.6</p>
+                            </div>
+                        </div>
+                        <div class="leaderboard-value">115 services</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue by Payment Method -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">Revenus par Méthode</h3>
+                    <div class="card-icon" style="background: var(--info);">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="paymentMethodChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Customer Retention -->
+            <div class="analytics-card">
+                <div class="card-header">
+                    <h3 class="card-title">Rétention Clients</h3>
+                    <div class="card-icon" style="background: var(--success);">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+                <div class="kpi-grid">
+                    <div class="kpi-item">
+                        <div class="kpi-value">67%</div>
+                        <div class="kpi-label">Clients récurrents</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">2.3</div>
+                        <div class="kpi-label">Services par client</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">12j</div>
+                        <div class="kpi-label">Intervalle moyen</div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-value">4.2%</div>
+                        <div class="kpi-label">Taux d'annulation</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let supabase;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Initialize Supabase
+                supabase = window.supabase.createClient(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
+
+                // Check authentication
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Initialize charts and data
+                initializeCharts();
+                setupFilters();
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                alert('Erreur de chargement: ' + error.message);
+            }
+        });
+
+        function initializeCharts() {
+            // User Growth Chart
+            const ctx1 = document.getElementById('userGrowthChart').getContext('2d');
+            const gradient1 = ctx1.createLinearGradient(0, 0, 0, 300);
+            gradient1.addColorStop(0, 'rgba(16, 185, 129, 0.2)');
+            gradient1.addColorStop(1, 'rgba(16, 185, 129, 0.02)');
+
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4'],
+                    datasets: [{
+                        label: 'Nouveaux utilisateurs',
+                        data: [45, 78, 92, 156],
+                        borderColor: '#10B981',
+                        backgroundColor: gradient1,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#10B981',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { beginAtZero: true, grid: { color: 'rgba(107, 114, 128, 0.1)' } }
+                    }
+                }
+            });
+
+            // Service Categories Chart
+            const ctx2 = document.getElementById('categoriesChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Nettoyage', 'Beauté', 'Plomberie', 'Électricité', 'Jardinage', 'Autres'],
+                    datasets: [{
+                        data: [28, 22, 18, 15, 12, 5],
+                        backgroundColor: [
+                            '#4CAF50', '#F44336', '#2196F3', '#FF9800', '#8BC34A', '#9E9E9E'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                usePointStyle: true,
+                                font: { size: 11 }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Payment Method Revenue Chart
+            const ctx3 = document.getElementById('paymentMethodChart').getContext('2d');
+            new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: ['MTN Mobile Money', 'Orange Money'],
+                    datasets: [{
+                        label: 'Revenus (FCFA)',
+                        data: [9750000, 5250000],
+                        backgroundColor: ['#FFCD00', '#FF6600'],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(107, 114, 128, 0.1)' },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value / 1000000).toFixed(1) + 'M FCFA';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function setupFilters() {
+            document.getElementById('period-filter').addEventListener('change', updateReports);
+            document.getElementById('start-date').addEventListener('change', updateReports);
+            document.getElementById('end-date').addEventListener('change', updateReports);
+            document.getElementById('category-filter').addEventListener('change', updateReports);
+        }
+
+        function updateReports() {
+            // This would typically trigger a data refresh
+            console.log('Updating reports with new filters...');
+        }
+
+        function exportReport() {
+            // Generate CSV data
+            const csvData = [
+                ['Date', 'Utilisateur', 'Service', 'Montant', 'Statut'],
+                ['2025-01-10', 'Marie Kouam', 'Nettoyage', '15000', 'Complété'],
+                ['2025-01-10', 'Paul Mbarga', 'Électricité', '25000', 'Complété'],
+                ['2025-01-09', 'Sophie Ndongo', 'Beauté', '12000', 'Complété'],
+                // Add more data...
+            ];
+
+            // Convert to CSV string
+            const csvString = csvData.map(row => row.join(',')).join('\n');
+            
+            // Create and download file
+            const blob = new Blob([csvString], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ezra-report-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            // Show success message
+            alert('Rapport exporté avec succès!');
+        }
+    </script>
+</body>
+</html>
