@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin - Gestion Utilisateurs</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script src="admin-auth-simple.js"></script>
+    <script src="enhanced-security.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+        }
+
+        .nav-link {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--ezra-orange);
+            color: white;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--ezra-orange);
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--ezra-orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #E55A2B;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .results-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-count {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th {
+            background: var(--gray-50);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .user-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .user-table tr:hover {
+            background: var(--gray-50);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--ezra-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-details h4 {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--gray-900);
+        }
+
+        .user-details p {
+            margin: 2px 0 0 0;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .role-customer {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .role-provider {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .role-admin {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-pending {
+            background: #FEF3CD;
+            color: #92400E;
+        }
+
+        .status-suspended {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .cni-display {
+            font-family: 'Courier New', monospace;
+            background: var(--gray-100);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--gray-700);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+        }
+
+        .btn-reject {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #DC2626;
+        }
+
+        .btn-view {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-view:hover {
+            background: var(--gray-200);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fas fa-users-cog"></i>
+                Gestion Utilisateurs
+            </h1>
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    class="search-input" 
+                    placeholder="Rechercher par nom, email, téléphone ou CNI..."
+                >
+                <select id="role-filter" class="filter-select">
+                    <option value="">Tous les rôles</option>
+                    <option value="customer">Clients</option>
+                    <option value="provider">Prestataires</option>
+                    <option value="admin">Administrateurs</option>
+                </select>
+                <select id="status-filter" class="filter-select">
+                    <option value="">Tous les statuts</option>
+                    <option value="active">Actif</option>
+                    <option value="pending">En attente</option>
+                    <option value="suspended">Suspendu</option>
+                </select>
+                <button class="btn btn-primary" onclick="searchUsers()">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <div class="results-header">
+                <h3>Résultats de recherche</h3>
+                <span class="results-count" id="results-count">0 utilisateurs trouvés</span>
+            </div>
+            
+            <div id="users-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Chargement des utilisateurs...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Details Modal -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Détails Utilisateur</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- User details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUsers = [];
+        let supabase;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Initialize Supabase
+                supabase = window.supabase.createClient(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
+
+                // Check authentication
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Load initial users
+                await loadUsers();
+
+                // Setup search functionality
+                document.getElementById('search-input').addEventListener('input', debounce(searchUsers, 300));
+                document.getElementById('role-filter').addEventListener('change', searchUsers);
+                document.getElementById('status-filter').addEventListener('change', searchUsers);
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                alert('Erreur de chargement: ' + error.message);
+            }
+        });
+
+        async function loadUsers() {
+            try {
+                const { data: users, error } = await supabase
+                    .from('profiles')
+                    .select(`
+                        id,
+                        full_name,
+                        email,
+                        phone,
+                        role,
+                        provider_verified,
+                        cni_number,
+                        created_at,
+                        avatar_url
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+
+                if (error) throw error;
+
+                currentUsers = users || [];
+                displayUsers(currentUsers);
+
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('users-container').innerHTML = 
+                    '<div class="loading">Erreur de chargement des utilisateurs</div>';
+            }
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('users-container');
+            const countElement = document.getElementById('results-count');
+            
+            countElement.textContent = `${users.length} utilisateur(s) trouvé(s)`;
+
+            if (users.length === 0) {
+                container.innerHTML = '<div class="loading">Aucun utilisateur trouvé</div>';
+                return;
+            }
+
+            const tableHTML = `
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Rôle</th>
+                            <th>Statut</th>
+                            <th>CNI</th>
+                            <th>Inscription</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => createUserRow(user)).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        function createUserRow(user) {
+            const initials = user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+            const roleClass = `role-${user.role || 'customer'}`;
+            const statusClass = getStatusClass(user);
+            const statusText = getStatusText(user);
+            const cniDisplay = user.cni_number ? `****${user.cni_number.slice(-4)}` : 'Non renseigné';
+            const createdDate = new Date(user.created_at).toLocaleDateString('fr-FR');
+
+            return `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">${initials}</div>
+                            <div class="user-details">
+                                <h4>${user.full_name || 'Nom non renseigné'}</h4>
+                                <p>${user.email}</p>
+                                <p>${user.phone || 'Téléphone non renseigné'}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="role-badge ${roleClass}">
+                            ${getRoleText(user.role)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="cni-display">${cniDisplay}</span>
+                    </td>
+                    <td>${createdDate}</td>
+                    <td>
+                        <button class="action-btn btn-view" onclick="viewUser('${user.id}')">
+                            <i class="fas fa-eye"></i> Voir
+                        </button>
+                        ${user.role === 'provider' && !user.provider_verified ? `
+                            <button class="action-btn btn-approve" onclick="approveProvider('${user.id}')">
+                                <i class="fas fa-check"></i> Approuver
+                            </button>
+                            <button class="action-btn btn-reject" onclick="rejectProvider('${user.id}')">
+                                <i class="fas fa-times"></i> Rejeter
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `;
+        }
+
+        function getStatusClass(user) {
+            if (user.role === 'provider') {
+                return user.provider_verified ? 'status-active' : 'status-pending';
+            }
+            return 'status-active';
+        }
+
+        function getStatusText(user) {
+            if (user.role === 'provider') {
+                return user.provider_verified ? 'Vérifié' : 'En attente';
+            }
+            return 'Actif';
+        }
+
+        function getRoleText(role) {
+            switch (role) {
+                case 'customer': return 'Client';
+                case 'provider': return 'Prestataire';
+                case 'admin': return 'Admin';
+                default: return 'Client';
+            }
+        }
+
+        function searchUsers() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const roleFilter = document.getElementById('role-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+
+            let filteredUsers = currentUsers.filter(user => {
+                // Text search
+                const matchesSearch = !searchTerm || 
+                    (user.full_name && user.full_name.toLowerCase().includes(searchTerm)) ||
+                    (user.email && user.email.toLowerCase().includes(searchTerm)) ||
+                    (user.phone && user.phone.includes(searchTerm)) ||
+                    (user.cni_number && user.cni_number.includes(searchTerm));
+
+                // Role filter
+                const matchesRole = !roleFilter || user.role === roleFilter;
+
+                // Status filter
+                let matchesStatus = true;
+                if (statusFilter) {
+                    if (statusFilter === 'active') {
+                        matchesStatus = user.role !== 'provider' || user.provider_verified;
+                    } else if (statusFilter === 'pending') {
+                        matchesStatus = user.role === 'provider' && !user.provider_verified;
+                    } else if (statusFilter === 'suspended') {
+                        matchesStatus = false; // No suspension logic yet
+                    }
+                }
+
+                return matchesSearch && matchesRole && matchesStatus;
+            });
+
+            displayUsers(filteredUsers);
+        }
+
+        async function viewUser(userId) {
+            try {
+                const { data: user, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                if (error) throw error;
+
+                const modalBody = document.getElementById('modal-body');
+                modalBody.innerHTML = `
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <strong>Nom complet:</strong> ${user.full_name || 'Non renseigné'}
+                        </div>
+                        <div>
+                            <strong>Email:</strong> ${user.email}
+                        </div>
+                        <div>
+                            <strong>Téléphone:</strong> ${user.phone || 'Non renseigné'}
+                        </div>
+                        <div>
+                            <strong>Rôle:</strong> ${getRoleText(user.role)}
+                        </div>
+                        <div>
+                            <strong>CNI:</strong> ${user.cni_number ? `****${user.cni_number.slice(-4)}` : 'Non renseigné'}
+                        </div>
+                        <div>
+                            <strong>Date d'inscription:</strong> ${new Date(user.created_at).toLocaleString('fr-FR')}
+                        </div>
+                        ${user.role === 'provider' ? `
+                            <div>
+                                <strong>Statut prestataire:</strong> ${user.provider_verified ? 'Vérifié' : 'En attente de vérification'}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                document.getElementById('user-modal').style.display = 'flex';
+
+            } catch (error) {
+                console.error('Error loading user details:', error);
+                alert('Erreur lors du chargement des détails utilisateur');
+            }
+        }
+
+        async function approveProvider(userId) {
+            if (!confirm('Êtes-vous sûr de vouloir approuver ce prestataire?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({ provider_verified: true })
+                    .eq('id', userId);
+
+                if (error) throw error;
+
+                alert('Prestataire approuvé avec succès!');
+                await loadUsers(); // Refresh the list
+
+            } catch (error) {
+                console.error('Error approving provider:', error);
+                alert('Erreur lors de l\'approbation: ' + error.message);
+            }
+        }
+
+        async function rejectProvider(userId) {
+            if (!confirm('Êtes-vous sûr de vouloir rejeter ce prestataire?')) return;
+
+            try {
+                const { error } = await supabase
+                    .from('profiles')
+                    .update({ 
+                        provider_verified: false,
+                        role: 'customer' // Revert to customer role
+                    })
+                    .eq('id', userId);
+
+                if (error) throw error;
+
+                alert('Prestataire rejeté. Il a été rétrogradé au statut client.');
+                await loadUsers(); // Refresh the list
+
+            } catch (error) {
+                console.error('Error rejecting provider:', error);
+                alert('Erreur lors du rejet: ' + error.message);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('user-modal').style.display = 'none';
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('user-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
