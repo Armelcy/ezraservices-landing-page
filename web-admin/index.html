@@ -39,20 +39,20 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--gray-50);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             color: var(--gray-900);
             line-height: 1.6;
         }
 
         /* Header */
         .header {
-            background: white;
-            border-bottom: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, var(--ezra-navy) 0%, #2C4B73 100%);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
             padding: 1rem 2rem;
             position: sticky;
             top: 0;
             z-index: 100;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            box-shadow: 0 8px 32px rgba(27, 54, 93, 0.15);
         }
 
         .header-content {
@@ -69,7 +69,15 @@
             gap: 12px;
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--ezra-navy);
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .logo i {
+            background: linear-gradient(135deg, var(--ezra-orange), #ff8a5b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3));
         }
 
         .user-info {
@@ -127,23 +135,35 @@
         /* Stats Grid */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
             margin-bottom: 2rem;
         }
 
         .stat-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            border: 1px solid var(--gray-200);
-            transition: transform 0.2s, box-shadow 0.2s;
+            background: linear-gradient(135deg, white 0%, #fafbff 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ezra-orange), var(--ezra-navy));
         }
 
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
         .stat-header {
@@ -200,22 +220,39 @@
         }
 
         .action-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, white 0%, #fafbff 100%);
+            border-radius: 20px;
+            padding: 2rem;
             text-align: center;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            border: 1px solid var(--gray-200);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 107, 53, 0.1);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             color: inherit;
+            position: relative;
+            overflow: hidden;
         }
 
         .action-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1), 0 8px 24px rgba(255, 107, 53, 0.15);
             border-color: var(--ezra-orange);
+        }
+        
+        .action-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transition: left 0.6s;
+        }
+        
+        .action-card:hover::after {
+            left: 100%;
         }
 
         .action-icon {
@@ -245,16 +282,28 @@
         .charts-section {
             display: grid;
             grid-template-columns: 2fr 1fr;
-            gap: 1.5rem;
+            gap: 2rem;
             margin-bottom: 2rem;
         }
 
         .chart-card {
-            background: white;
-            border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
-            border: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, white 0%, #fafbff 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ezra-orange), var(--ezra-navy));
         }
 
         .chart-header {
@@ -365,8 +414,8 @@
             <div class="user-info">
                 <div class="user-avatar" id="user-avatar">A</div>
                 <div>
-                    <div id="user-name" style="font-weight: 600;">Admin</div>
-                    <div id="session-timer" style="font-size: 0.75rem; color: var(--gray-500);">Session active</div>
+                    <div id="user-name" style="font-weight: 600; color: white;">Admin</div>
+                    <div id="session-timer" style="font-size: 0.75rem; color: rgba(255,255,255,0.7);">Session active</div>
                 </div>
                 <button class="logout-btn" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i> Logout
@@ -485,7 +534,9 @@
                     <div class="chart-title">Revenus des 7 derniers jours</div>
                     <div class="chart-period">Cette semaine</div>
                 </div>
-                <canvas id="revenueChart" width="400" height="200"></canvas>
+                <div style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
 
             <div class="chart-card">
@@ -625,6 +676,12 @@
 
         function initializeCharts() {
             const ctx = document.getElementById('revenueChart').getContext('2d');
+            
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(255, 107, 53, 0.2)');
+            gradient.addColorStop(1, 'rgba(255, 107, 53, 0.02)');
+            
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -633,7 +690,13 @@
                         label: 'Revenus (FCFA)',
                         data: [120000, 190000, 300000, 250000, 200000, 300000, 450000],
                         borderColor: '#FF6B35',
-                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#FF6B35',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
                         tension: 0.4,
                         fill: true
                     }]
@@ -641,15 +704,47 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(27, 54, 93, 0.9)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#FF6B35',
+                            borderWidth: 1,
+                            cornerRadius: 12,
+                            displayColors: false
                         }
                     },
                     scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#6B7280',
+                                font: {
+                                    weight: '500'
+                                }
+                            }
+                        },
                         y: {
                             beginAtZero: true,
+                            grid: {
+                                color: 'rgba(107, 114, 128, 0.1)',
+                                drawBorder: false
+                            },
                             ticks: {
+                                color: '#6B7280',
+                                font: {
+                                    weight: '500'
+                                },
                                 callback: function(value) {
                                     return value.toLocaleString() + ' FCFA';
                                 }
