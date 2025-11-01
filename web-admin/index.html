@@ -474,24 +474,37 @@
                 <div class="stat-label">Note Moyenne</div>
                 <div class="stat-change positive" id="rating-change">Stable</div>
             </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--error);">
+                        <i class="fas fa-gavel"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="total-disputes">-</div>
+                <div class="stat-label">Réclamations</div>
+                <div class="stat-change" id="disputes-change">
+                    <span id="open-disputes">0</span> en cours
+                </div>
+            </div>
         </div>
 
         <!-- Quick Actions -->
         <div class="quick-actions">
-            <a href="promotional-codes.html" class="action-card">
+            <a href="advanced-promotional-campaigns.html" class="action-card">
                 <div class="action-icon" style="background: var(--ezra-orange);">
-                    <i class="fas fa-ticket-alt"></i>
+                    <i class="fas fa-bullhorn"></i>
                 </div>
-                <div class="action-title">Codes Promotionnels</div>
-                <div class="action-description">Gérer les campagnes et codes promo</div>
+                <div class="action-title">Campagnes Avancées</div>
+                <div class="action-description">Gestion complète des promotions</div>
             </a>
 
-            <a href="user-management.html" class="action-card">
+            <a href="enhanced-user-management.html" class="action-card">
                 <div class="action-icon" style="background: var(--success);">
                     <i class="fas fa-users-cog"></i>
                 </div>
                 <div class="action-title">Gestion Utilisateurs</div>
-                <div class="action-description">Administrer les comptes utilisateurs</div>
+                <div class="action-description">Interface avancée de gestion</div>
             </a>
 
             <a href="user-management.html?filter=pending" class="action-card">
@@ -502,6 +515,14 @@
                 <div class="action-description">Valider les prestataires</div>
             </a>
 
+            <a href="dispute-management.html" class="action-card">
+                <div class="action-icon" style="background: var(--error);">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <div class="action-title">Réclamations</div>
+                <div class="action-description">Gérer les litiges clients</div>
+            </a>
+
             <a href="transactions.html" class="action-card">
                 <div class="action-icon" style="background: var(--warning);">
                     <i class="fas fa-credit-card"></i>
@@ -510,12 +531,12 @@
                 <div class="action-description">Surveiller les paiements</div>
             </a>
 
-            <a href="reports.html" class="action-card">
+            <a href="comprehensive-analytics-dashboard.html" class="action-card">
                 <div class="action-icon" style="background: var(--gray-600);">
-                    <i class="fas fa-chart-bar"></i>
+                    <i class="fas fa-chart-line"></i>
                 </div>
-                <div class="action-title">Rapports</div>
-                <div class="action-description">Analytics et statistiques</div>
+                <div class="action-title">Analytics Avancé</div>
+                <div class="action-description">Tableau de bord complet</div>
             </a>
 
             <a href="category-management.html" class="action-card">
@@ -526,12 +547,60 @@
                 <div class="action-description">Gestion des catégories de services</div>
             </a>
 
+            <a href="dispute-management.html" class="action-card">
+                <div class="action-icon" style="background: var(--error);">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <div class="action-title">Litiges</div>
+                <div class="action-description">Gestion des réclamations</div>
+            </a>
+
             <a href="settings.html" class="action-card">
                 <div class="action-icon" style="background: var(--gray-700);">
                     <i class="fas fa-cog"></i>
                 </div>
                 <div class="action-title">Paramètres</div>
                 <div class="action-description">Configuration système</div>
+            </a>
+
+            <a href="dispute-resolution-management.html" class="action-card">
+                <div class="action-icon" style="background: var(--warning);">
+                    <i class="fas fa-gavel"></i>
+                </div>
+                <div class="action-title">Résolution Litiges</div>
+                <div class="action-description">Système avancé de résolution</div>
+            </a>
+
+            <a href="refund-management.html" class="action-card">
+                <div class="action-icon" style="background: var(--error);">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <div class="action-title">Gestion Remboursements</div>
+                <div class="action-description">Traitement des remboursements</div>
+            </a>
+
+            <a href="real-time-monitoring-alerts.html" class="action-card">
+                <div class="action-icon" style="background: var(--info);">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="action-title">Monitoring Temps Réel</div>
+                <div class="action-description">Alertes et surveillance</div>
+            </a>
+
+            <a href="bulk-operations-management.html" class="action-card">
+                <div class="action-icon" style="background: #8B5CF6;">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <div class="action-title">Opérations Groupées</div>
+                <div class="action-description">Actions en lot</div>
+            </a>
+
+            <a href="create-admin.html" class="action-card">
+                <div class="action-icon" style="background: #10B981;">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="action-title">Créer Admin</div>
+                <div class="action-description">Nouveau compte administrateur</div>
             </a>
         </div>
 
@@ -655,6 +724,21 @@
                     console.log(`✅ Found ${totalBookings} bookings`);
                 }
 
+                // Get disputes data
+                let totalDisputes = 0;
+                let openDisputes = 0;
+                const { data: disputes, error: disputesError } = await supabase
+                    .from('disputes')
+                    .select('status');
+
+                if (!disputesError && disputes) {
+                    totalDisputes = disputes.length;
+                    openDisputes = disputes.filter(d => !['resolved', 'closed'].includes(d.status)).length;
+                    console.log(`✅ Found ${totalDisputes} disputes (${openDisputes} open)`);
+                } else {
+                    console.log('⚠️ Disputes table access failed:', disputesError);
+                }
+
                 // Try to get revenue data
                 let totalRevenue = 0;
                 const { data: payments, error: paymentsError } = await supabase
@@ -686,7 +770,8 @@
                     users: { total: totalUsers, change: totalUsers > 0 ? 12 : 0 },
                     bookings: { total: totalBookings, change: totalBookings > 0 ? 8 : 0 },
                     revenue: { total: totalRevenue, change: totalRevenue > 0 ? 15 : 0 },
-                    rating: { average: avgRating, change: 0 }
+                    rating: { average: avgRating, change: 0 },
+                    disputes: { total: totalDisputes, open: openDisputes }
                 };
 
             } catch (error) {
@@ -695,7 +780,8 @@
                     users: { total: 0, change: 0 },
                     bookings: { total: 0, change: 0 },
                     revenue: { total: 0, change: 0 },
-                    rating: { average: 0, change: 0 }
+                    rating: { average: 0, change: 0 },
+                    disputes: { total: 0, open: 0 }
                 };
             }
         }
@@ -711,6 +797,18 @@
             document.getElementById('revenue-change').textContent = `+${stats.revenue.change}% ce mois`;
             
             document.getElementById('avg-rating').textContent = stats.rating.average.toFixed(1);
+            
+            // Update disputes stats
+            document.getElementById('total-disputes').textContent = stats.disputes.total.toLocaleString();
+            document.getElementById('open-disputes').textContent = stats.disputes.open.toLocaleString();
+            
+            // Update disputes change indicator
+            const disputesChangeElement = document.getElementById('disputes-change');
+            if (stats.disputes.open > 0) {
+                disputesChangeElement.innerHTML = `<span style="color: var(--warning);">${stats.disputes.open} en cours</span>`;
+            } else {
+                disputesChangeElement.innerHTML = `<span style="color: var(--success);">Aucune en cours</span>`;
+            }
         }
 
         async function loadRecentActivity(supabase) {

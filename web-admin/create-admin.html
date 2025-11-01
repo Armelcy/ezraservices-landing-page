@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un Administrateur - Ezra Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="hover:text-blue-200">
+                    <i class="fas fa-arrow-left mr-2"></i>Retour au tableau de bord
+                </a>
+            </div>
+            <h1 class="text-xl font-bold">Créer un Administrateur</h1>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <!-- Success/Error Messages -->
+        <div id="messageContainer" class="mb-6"></div>
+
+        <!-- Create Admin Form -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">
+                <i class="fas fa-user-shield text-blue-600 mr-2"></i>
+                Nouveau Compte Administrateur
+            </h2>
+
+            <form id="createAdminForm" class="space-y-6">
+                <!-- Personal Information -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-user mr-1"></i>Nom Complet *
+                        </label>
+                        <input type="text" id="fullName" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="Jean Dupont">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope mr-1"></i>Email *
+                        </label>
+                        <input type="email" id="email" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="admin@ezraservice.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-phone mr-1"></i>Téléphone *
+                        </label>
+                        <input type="tel" id="phone" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                               placeholder="+237 6XX XXX XXX">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock mr-1"></i>Mot de Passe *
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="password" required 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                   placeholder="Minimum 8 caractères">
+                            <button type="button" id="togglePassword" class="absolute right-3 top-2.5 text-gray-500">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-1">Minimum 8 caractères avec majuscules, minuscules et chiffres</p>
+                    </div>
+                </div>
+
+                <!-- Admin Role & Permissions -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">
+                        <i class="fas fa-key text-blue-600 mr-2"></i>
+                        Rôle et Permissions
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Niveau d'Administration *</label>
+                            <select id="adminLevel" required 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Sélectionner un niveau</option>
+                                <option value="super_admin">Super Administrateur (Accès complet)</option>
+                                <option value="admin">Administrateur (Accès standard)</option>
+                                <option value="moderator">Modérateur (Accès limité)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Département</label>
+                            <select id="department" 
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="">Sélectionner un département</option>
+                                <option value="operations">Opérations</option>
+                                <option value="customer_service">Service Client</option>
+                                <option value="finance">Finance</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="technical">Technique</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Specific Permissions -->
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Permissions Spécifiques</label>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_users" class="mr-2 text-blue-600">
+                                <span class="text-sm">Gestion des utilisateurs</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_providers" class="mr-2 text-blue-600">
+                                <span class="text-sm">Approbation des prestataires</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_payments" class="mr-2 text-blue-600">
+                                <span class="text-sm">Gestion des paiements</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_refunds" class="mr-2 text-blue-600">
+                                <span class="text-sm">Traitement des remboursements</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_disputes" class="mr-2 text-blue-600">
+                                <span class="text-sm">Résolution des litiges</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_analytics" class="mr-2 text-blue-600">
+                                <span class="text-sm">Accès aux analytics</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_promos" class="mr-2 text-blue-600">
+                                <span class="text-sm">Codes promotionnels</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" id="perm_settings" class="mr-2 text-blue-600">
+                                <span class="text-sm">Paramètres système</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Information -->
+                <div class="border-t pt-6">
+                    <h3 class="text-lg font-semibold mb-4 text-gray-800">
+                        <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                        Informations Complémentaires
+                    </h3>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Notes (optionnel)</label>
+                        <textarea id="notes" rows="3" 
+                                  class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  placeholder="Notes sur ce compte administrateur..."></textarea>
+                    </div>
+
+                    <div class="mt-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="sendWelcomeEmail" checked class="mr-2 text-blue-600">
+                            <span class="text-sm">Envoyer un email de bienvenue avec les informations de connexion</span>
+                        </label>
+                    </div>
+
+                    <div class="mt-2">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="requirePasswordChange" checked class="mr-2 text-blue-600">
+                            <span class="text-sm">Obliger à changer le mot de passe lors de la première connexion</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end space-x-4 pt-6 border-t">
+                    <button type="button" onclick="window.history.back()" 
+                            class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors">
+                        <i class="fas fa-times mr-2"></i>Annuler
+                    </button>
+                    <button type="submit" id="submitBtn"
+                            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-user-plus mr-2"></i>Créer l'Administrateur
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script>
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordField = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+
+        // Auto-set permissions based on admin level
+        document.getElementById('adminLevel').addEventListener('change', function() {
+            const level = this.value;
+            const permissions = ['perm_users', 'perm_providers', 'perm_payments', 'perm_refunds', 
+                               'perm_disputes', 'perm_analytics', 'perm_promos', 'perm_settings'];
+            
+            permissions.forEach(perm => {
+                const checkbox = document.getElementById(perm);
+                if (level === 'super_admin') {
+                    checkbox.checked = true;
+                } else if (level === 'admin') {
+                    checkbox.checked = !['perm_settings'].includes(perm);
+                } else if (level === 'moderator') {
+                    checkbox.checked = ['perm_users', 'perm_providers', 'perm_disputes'].includes(perm);
+                } else {
+                    checkbox.checked = false;
+                }
+            });
+        });
+
+        // Form submission
+        document.getElementById('createAdminForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Création en cours...';
+            submitBtn.disabled = true;
+
+            try {
+                // Collect form data
+                const formData = {
+                    full_name: document.getElementById('fullName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    password: document.getElementById('password').value,
+                    admin_level: document.getElementById('adminLevel').value,
+                    department: document.getElementById('department').value,
+                    notes: document.getElementById('notes').value,
+                    send_welcome_email: document.getElementById('sendWelcomeEmail').checked,
+                    require_password_change: document.getElementById('requirePasswordChange').checked
+                };
+
+                // Collect permissions
+                const permissions = [];
+                ['perm_users', 'perm_providers', 'perm_payments', 'perm_refunds', 
+                 'perm_disputes', 'perm_analytics', 'perm_promos', 'perm_settings'].forEach(perm => {
+                    if (document.getElementById(perm).checked) {
+                        permissions.push(perm.replace('perm_', ''));
+                    }
+                });
+
+                // Validate password strength
+                if (!validatePassword(formData.password)) {
+                    throw new Error('Le mot de passe doit contenir au moins 8 caractères avec majuscules, minuscules et chiffres');
+                }
+
+                // Create user account
+                const { data: authData, error: authError } = await supabase.auth.signUp({
+                    email: formData.email,
+                    password: formData.password,
+                    options: {
+                        data: {
+                            full_name: formData.full_name,
+                            phone: formData.phone
+                        }
+                    }
+                });
+
+                if (authError) throw authError;
+
+                // Create admin profile
+                const { data: profileData, error: profileError } = await supabase
+                    .from('profiles')
+                    .insert({
+                        id: authData.user.id,
+                        full_name: formData.full_name,
+                        email: formData.email,
+                        phone: formData.phone,
+                        role: 'admin',
+                        admin_level: formData.admin_level,
+                        department: formData.department,
+                        permissions: permissions,
+                        notes: formData.notes,
+                        require_password_change: formData.require_password_change,
+                        status: 'active',
+                        created_at: new Date().toISOString()
+                    });
+
+                if (profileError) throw profileError;
+
+                // Log admin action
+                await logAdminAction('create_admin', authData.user.id, 
+                    `Création d'un compte administrateur: ${formData.full_name} (${formData.email})`);
+
+                // Show success message
+                showMessage('success', `Administrateur créé avec succès! ${formData.send_welcome_email ? 'Un email de bienvenue a été envoyé.' : ''}`);
+                
+                // Reset form
+                document.getElementById('createAdminForm').reset();
+
+            } catch (error) {
+                console.error('Erreur lors de la création:', error);
+                showMessage('error', `Erreur: ${error.message}`);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Utility functions
+        function validatePassword(password) {
+            const minLength = password.length >= 8;
+            const hasUpper = /[A-Z]/.test(password);
+            const hasLower = /[a-z]/.test(password);
+            const hasNumber = /\d/.test(password);
+            return minLength && hasUpper && hasLower && hasNumber;
+        }
+
+        function showMessage(type, message) {
+            const container = document.getElementById('messageContainer');
+            const alertClass = type === 'success' ? 'bg-green-100 border-green-400 text-green-700' : 'bg-red-100 border-red-400 text-red-700';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+            
+            container.innerHTML = `
+                <div class="border-l-4 p-4 ${alertClass}">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas ${icon}"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm">${message}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        async function logAdminAction(actionType, targetUserId, description) {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                await supabase.from('admin_actions').insert({
+                    admin_id: user.id,
+                    action_type: actionType,
+                    target_user_id: targetUserId,
+                    description: description
+                });
+            } catch (error) {
+                console.error('Erreur lors de l\'enregistrement de l\'action:', error);
+            }
+        }
+
+        // Check admin authentication on page load
+        window.addEventListener('load', async function() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Verify admin permissions
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role, admin_level, permissions')
+                .eq('id', user.id)
+                .single();
+
+            if (!profile || profile.role !== 'admin') {
+                alert('Accès non autorisé');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Check if user can create admins
+            const canCreateAdmins = profile.admin_level === 'super_admin' || 
+                                  (profile.permissions && profile.permissions.includes('users'));
+            
+            if (!canCreateAdmins) {
+                alert('Vous n\'avez pas les permissions pour créer des administrateurs');
+                window.history.back();
+            }
+        });
+    </script>
+</body>
+</html>
