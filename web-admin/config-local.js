@@ -16,7 +16,7 @@ const EZRA_CONFIG = {
         REAL_TIME_UPDATES: true,
         ACTIVITY_FEED: true,
         AUTO_REFRESH: true,
-        DEBUG_MODE: false
+        DEBUG_MODE: true  // Enable debug mode to see connection issues
     },
     
     // Update intervals (in milliseconds)
