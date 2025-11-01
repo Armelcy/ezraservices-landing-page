@@ -346,6 +346,7 @@
             display: flex;
             align-items: center;
             gap: 1rem;
+            position: relative;
         }
         
         .theme-toggle {
@@ -1092,6 +1093,29 @@
                                 <div class="user-role">Administrateur</div>
                             </div>
                             <i class="fas fa-chevron-down"></i>
+                        </div>
+                        
+                        <!-- User Dropdown -->
+                        <div class="user-dropdown" id="userDropdown" style="display: none; position: absolute; top: calc(100% + 8px); right: 0; background: white; border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-md); padding: 1rem; min-width: 200px; z-index: 1000; margin-top: 0.5rem;">
+                            <div style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); margin-bottom: 0.75rem;">
+                                <div class="user-name" style="font-weight: 600; color: var(--text-primary);">Admin</div>
+                                <div class="user-email" style="font-size: 0.875rem; color: var(--text-secondary);">admin@ezraservice.com</div>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <button onclick="dashboard.showProfile()" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: none; border: none; border-radius: 6px; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s;">
+                                    <i class="fas fa-user"></i>
+                                    Profil
+                                </button>
+                                <button onclick="dashboard.showSettings()" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: none; border: none; border-radius: 6px; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s;">
+                                    <i class="fas fa-cog"></i>
+                                    Paramètres
+                                </button>
+                                <hr style="margin: 0.5rem 0; border: none; border-top: 1px solid var(--border);">
+                                <button onclick="dashboard.logout()" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem; background: none; border: none; border-radius: 6px; cursor: pointer; width: 100%; text-align: left; transition: background-color 0.2s; color: var(--error);">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Se déconnecter
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

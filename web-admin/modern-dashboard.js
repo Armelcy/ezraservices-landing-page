@@ -250,7 +250,27 @@ class EzraAdminDashboard {
         }
     }
     
+    toggleUserDropdown() {
+        const userDropdown = document.getElementById('userDropdown');
+        if (userDropdown) {
+            const isVisible = userDropdown.style.display !== 'none';
+            userDropdown.style.display = isVisible ? 'none' : 'block';
+        }
+    }
+
+    showProfile() {
+        this.showToast('Affichage du profil utilisateur', 'info');
+        document.getElementById('userDropdown').style.display = 'none';
+    }
+
+    showSettings() {
+        this.showToast('Ouverture des paramètres', 'info');
+        document.getElementById('userDropdown').style.display = 'none';
+    }
+
     logout() {
+        document.getElementById('userDropdown').style.display = 'none';
+        
         if (this.demoMode) {
             this.showToast('Déconnexion du mode démonstration', 'info');
         } else {
@@ -408,10 +428,21 @@ class EzraAdminDashboard {
             notificationsBtn.addEventListener('click', () => this.showNotifications());
         }
         
-        // User menu
+        // User menu dropdown
         const userMenu = document.getElementById('userMenu');
-        if (userMenu) {
-            userMenu.addEventListener('click', () => this.showUserMenu());
+        const userDropdown = document.getElementById('userDropdown');
+        if (userMenu && userDropdown) {
+            userMenu.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleUserDropdown();
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!userMenu.contains(e.target) && !userDropdown.contains(e.target)) {
+                    userDropdown.style.display = 'none';
+                }
+            });
         }
         
         // Mobile responsiveness
@@ -1605,6 +1636,33 @@ class EzraAdminDashboard {
             
             console.log('🔍 Attempting to load real data from Supabase...');
             
+            // First, test if we have actual data by trying a simple query
+            const { data: testData, error: testError } = await this.supabase
+                .from('profiles')
+                .select('id')
+                .limit(1);
+            
+            if (testError && testError.message.includes('relation "profiles" does not exist')) {
+                console.log('⚠️ Database tables do not exist, using demo data');
+                this.showToastOnce('demo-fallback', 'Tables non trouvées - Mode démonstration', 'warning');
+                this.loadDemoData();
+                return;
+            } else if (testError) {
+                console.error('❌ Database connection failed:', testError);
+                this.showToastOnce('db-error', 'Erreur de connexion - Mode démonstration', 'error');
+                this.loadDemoData();
+                return;
+            }
+            
+            if (!testData || testData.length === 0) {
+                console.log('📊 Database connected but empty, using demo data for presentation');
+                this.showToastOnce('empty-db', 'Base de données vide - Mode démonstration', 'info');
+                this.loadDemoData();
+                return;
+            }
+            
+            console.log('✅ Real data found! Loading from Supabase...');
+            
             // Load real data from Supabase with proper error handling
             const results = await Promise.allSettled([
                 this.supabase.from('profiles').select('*', { count: 'exact', head: true }),
@@ -1643,7 +1701,7 @@ class EzraAdminDashboard {
                     totalRevenue: totalRevenue,
                     averageRating: avgRating.toFixed(1)
                 });
-                this.showToast('Données réelles chargées', 'success');
+                this.showToastOnce('real-data', `✅ Données Supabase: ${usersCount} utilisateurs, ${bookingsCount} réservations`, 'success');
             } else {
                 console.log('⚠️ No real data available, using demo data');
                 this.loadDemoData();
