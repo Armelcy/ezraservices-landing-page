@@ -10,6 +10,8 @@ class EzraAdminDashboard {
         this.currentUser = null;
         this.notifications = [];
         this.commandPalette = new CommandPalette();
+        this.toastShown = new Set(); // Prevent duplicate toasts
+        this.demoMode = false;
         
         this.init();
     }
@@ -21,14 +23,14 @@ class EzraAdminDashboard {
             // Check if all dependencies are loaded
             if (!window.supabase) {
                 console.error('❌ Supabase client not loaded');
-                this.showToast('Erreur: Supabase client non disponible', 'error');
+                this.showToastOnce('demo-mode', 'Mode démonstration activé - Supabase non disponible', 'warning');
                 this.initDemoMode();
                 return;
             }
 
             if (!window.EZRA_CONFIG) {
                 console.error('❌ Configuration not loaded');
-                this.showToast('Erreur: Configuration non disponible', 'error');
+                this.showToastOnce('demo-mode', 'Mode démonstration activé - Configuration non disponible', 'warning');
                 this.initDemoMode();
                 return;
             }
@@ -57,9 +59,10 @@ class EzraAdminDashboard {
                 // Skip auth check for now to allow demo data
                 // await this.checkAuth();
                 
-                this.showToast('Supabase connecté avec succès', 'success');
+                this.showToastOnce('connection-success', 'Supabase connecté avec succès', 'success');
             } else {
                 console.warn('⚠️ Supabase configuration incomplete, using demo mode');
+                this.showToastOnce('demo-mode', 'Mode démonstration activé', 'info');
                 this.initDemoMode();
             }
             
@@ -69,13 +72,14 @@ class EzraAdminDashboard {
             
         } catch (error) {
             console.error('💥 Initialization error:', error);
-            this.showToast('Erreur de connexion - Mode démonstration activé', 'warning');
+            this.showToastOnce('demo-mode', 'Mode démonstration activé', 'info');
             this.initDemoMode();
         }
     }
 
     initDemoMode() {
         console.log('🎭 Initializing demo mode');
+        this.demoMode = true;
         this.supabase = null;
         this.currentUser = {
             id: 'demo-admin',
@@ -84,7 +88,10 @@ class EzraAdminDashboard {
             role: 'admin'
         };
         this.updateUserInterface();
-        this.showToast('Mode démonstration activé', 'info');
+        // Load demo data immediately
+        setTimeout(() => {
+            this.loadDemoUsers();
+        }, 500);
     }
 
     async testConnection() {
@@ -186,6 +193,7 @@ class EzraAdminDashboard {
             // Update user avatar and info
             const userAvatar = document.querySelector('.user-avatar');
             const userName = document.querySelector('.user-name');
+            const userEmail = document.querySelector('.user-email');
             
             if (userAvatar) {
                 userAvatar.textContent = this.currentUser.full_name 
@@ -196,7 +204,155 @@ class EzraAdminDashboard {
             if (userName) {
                 userName.textContent = this.currentUser.full_name || 'Admin';
             }
+            
+            if (userEmail) {
+                userEmail.textContent = this.currentUser.email || 'admin@ezraservice.com';
+            }
+            
+            // Ensure logout button is visible and functional
+            this.addLogoutButton();
         }
+    }
+    
+    addLogoutButton() {
+        const userDropdown = document.querySelector('.user-dropdown');
+        const userMenu = document.querySelector('.user-menu');
+        const targetContainer = userDropdown || userMenu;
+        
+        if (targetContainer && !targetContainer.querySelector('.logout-btn')) {
+            const logoutBtn = document.createElement('button');
+            logoutBtn.className = 'logout-btn';
+            logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> Se déconnecter';
+            logoutBtn.onclick = () => this.logout();
+            logoutBtn.style.cssText = `
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                padding: 0.75rem 1rem;
+                background: #dc3545;
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 0.875rem;
+                font-weight: 500;
+                transition: all 0.2s ease;
+                margin-top: 0.5rem;
+                width: 100%;
+            `;
+            logoutBtn.onmouseover = () => {
+                logoutBtn.style.background = '#c82333';
+            };
+            logoutBtn.onmouseout = () => {
+                logoutBtn.style.background = '#dc3545';
+            };
+            targetContainer.appendChild(logoutBtn);
+        }
+    }
+    
+    logout() {
+        if (this.demoMode) {
+            this.showToast('Déconnexion du mode démonstration', 'info');
+        } else {
+            this.showToast('Déconnexion...', 'info');
+        }
+        
+        // Clear current user and reset state
+        this.currentUser = null;
+        this.toastShown.clear();
+        
+        // Redirect to login or reload
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 1000);
+    }
+
+    showToastOnce(key, message, type = 'info') {
+        if (this.toastShown.has(key)) {
+            return; // Don't show duplicate toasts
+        }
+        this.toastShown.add(key);
+        this.showToast(message, type);
+    }
+
+    loadDemoUsers() {
+        console.log('🎭 Loading demo users data...');
+        
+        // Get demo users data
+        const demoUsers = this.getDemoUsers();
+        
+        // Update the users table
+        this.updateUsersTable(demoUsers);
+        
+        // Update stats
+        this.updateDashboardStats({
+            totalUsers: demoUsers.length,
+            activeUsers: demoUsers.filter(u => u.status === 'active').length,
+            providers: demoUsers.filter(u => u.role === 'provider').length,
+            customers: demoUsers.filter(u => u.role === 'customer').length
+        });
+        
+        this.showToastOnce('demo-loaded', 'Données de démonstration chargées', 'success');
+    }
+
+    updateUsersTable(users) {
+        const tbody = document.querySelector('#usersTable tbody');
+        if (!tbody) {
+            console.warn('Users table not found');
+            return;
+        }
+
+        tbody.innerHTML = '';
+
+        users.forEach((user, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <input type="checkbox" class="user-checkbox" data-user-id="${user.id}">
+                </td>
+                <td>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                        <div class="user-avatar-small" style="width: 32px; height: 32px; background: var(--primary-color); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.875rem; font-weight: 600;">
+                            ${user.full_name ? user.full_name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <div style="font-weight: 500; color: var(--text-primary);">${user.full_name || 'Utilisateur'}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">${user.email}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>${user.email}</td>
+                <td>
+                    <span class="role-badge ${user.role}" style="padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 500; text-transform: capitalize;">
+                        ${user.role === 'provider' ? 'Prestataire' : user.role === 'customer' ? 'Client' : 'Admin'}
+                    </span>
+                </td>
+                <td>
+                    <span class="status-badge ${user.status}" style="padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.75rem; font-weight: 500;">
+                        ${user.status === 'active' ? 'Actif' : user.status === 'pending' ? 'En attente' : 'Inactif'}
+                    </span>
+                </td>
+                <td>${new Date(user.created_at).toLocaleDateString('fr-FR')}</td>
+                <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button class="btn-icon" onclick="dashboard.editUser('${user.id}')" title="Modifier">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-icon btn-danger" onclick="dashboard.deleteUser('${user.id}')" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        ${user.role === 'provider' && user.status === 'pending' ? `
+                            <button class="btn-icon btn-success" onclick="dashboard.approveProvider('${user.id}')" title="Approuver">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        console.log(`✅ Updated users table with ${users.length} users`);
     }
     
     setupEventListeners() {
@@ -1861,48 +2017,91 @@ class EzraAdminDashboard {
         return [
             {
                 id: 'demo-1',
-                name: 'Jean Dupont',
+                full_name: 'Jean Dupont',
+                name: 'Jean Dupont', // For backward compatibility
                 email: 'jean.dupont@example.com',
-                role: 'client',
+                role: 'customer',
                 status: 'active',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(),
                 lastLogin: new Date(),
                 avatar: 'JD'
             },
             {
                 id: 'demo-2',
+                full_name: 'Marie Martin',
                 name: 'Marie Martin',
                 email: 'marie.martin@example.com',
                 role: 'provider',
                 status: 'pending',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 15).toISOString(),
                 lastLogin: new Date(Date.now() - 1000 * 60 * 60 * 24),
                 avatar: 'MM'
             },
             {
                 id: 'demo-3',
+                full_name: 'Pierre Durand',
                 name: 'Pierre Durand',
                 email: 'pierre.durand@example.com',
-                role: 'client',
+                role: 'customer',
                 status: 'active',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 20).toISOString(),
                 lastLogin: new Date(Date.now() - 1000 * 60 * 60 * 2),
                 avatar: 'PD'
             },
             {
                 id: 'demo-4',
+                full_name: 'Sophie Leroy',
                 name: 'Sophie Leroy',
                 email: 'sophie.leroy@example.com',
                 role: 'provider',
-                status: 'approved',
+                status: 'active',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 45).toISOString(),
                 lastLogin: new Date(Date.now() - 1000 * 60 * 60 * 12),
                 avatar: 'SL'
             },
             {
                 id: 'demo-5',
+                full_name: 'Paul Ngono',
                 name: 'Paul Ngono',
                 email: 'paul.ngono@example.com',
-                role: 'client',
+                role: 'customer',
                 status: 'active',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(),
                 lastLogin: new Date(Date.now() - 1000 * 60 * 30),
                 avatar: 'PN'
+            },
+            {
+                id: 'demo-6',
+                full_name: 'Claudine Essomba',
+                name: 'Claudine Essomba',
+                email: 'claudine.essomba@example.com',
+                role: 'provider',
+                status: 'pending',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toISOString(),
+                lastLogin: new Date(Date.now() - 1000 * 60 * 60 * 6),
+                avatar: 'CE'
+            },
+            {
+                id: 'demo-7',
+                full_name: 'Emmanuel Foka',
+                name: 'Emmanuel Foka',
+                email: 'emmanuel.foka@example.com',
+                role: 'customer',
+                status: 'active',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 8).toISOString(),
+                lastLogin: new Date(Date.now() - 1000 * 60 * 60),
+                avatar: 'EF'
+            },
+            {
+                id: 'demo-8',
+                full_name: 'Aminata Bah',
+                name: 'Aminata Bah',
+                email: 'aminata.bah@example.com',
+                role: 'provider',
+                status: 'active',
+                created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 25).toISOString(),
+                lastLogin: new Date(Date.now() - 1000 * 60 * 60 * 3),
+                avatar: 'AB'
             }
         ];
     }
