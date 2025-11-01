@@ -932,6 +932,128 @@
             background: rgba(30, 41, 59, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
+
+        /* Profile Page Styles */
+        .profile-section {
+            display: grid;
+            gap: 2rem;
+            max-width: 800px;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .profile-avatar {
+            position: relative;
+        }
+
+        .user-avatar.large {
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+        }
+
+        .btn-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--ezra-gold);
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .profile-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .profile-info p {
+            margin: 0.25rem 0;
+            color: var(--text-secondary);
+        }
+
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Settings Page Styles */
+        .settings-section {
+            max-width: 800px;
+        }
+
+        .settings-group {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border);
+        }
+
+        .settings-group h3 {
+            margin: 0 0 1.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-item label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .setting-item input[type="text"] {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--surface-hover);
+        }
+
+        .setting-item input[type="checkbox"] {
+            transform: scale(1.2);
+        }
+
+        .settings-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart-container {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            height: 400px;
+        }
     </style>
 </head>
 <body>
@@ -1293,6 +1415,175 @@
                                 <!-- Content will be loaded here -->
                             </tbody>
                         </table>
+                    </div>
+                </div>
+                
+                <!-- Users Page -->
+                <div id="users-page" class="page">
+                    <div class="page-header">
+                        <h1 class="page-title">Gestion des Utilisateurs</h1>
+                        <p class="page-subtitle">Administrer tous les comptes utilisateurs</p>
+                    </div>
+                    
+                    <div class="data-table">
+                        <div class="table-header">
+                            <h3 class="table-title">Utilisateurs</h3>
+                            <div class="table-actions">
+                                <button class="btn" onclick="dashboard.searchUsers()">
+                                    <i class="fas fa-search"></i>
+                                    Rechercher
+                                </button>
+                                <button class="btn" onclick="dashboard.createUser()">
+                                    <i class="fas fa-plus"></i>
+                                    Nouvel utilisateur
+                                </button>
+                            </div>
+                        </div>
+                        <table id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="selectAll"></th>
+                                    <th>Utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
+                                    <th>Statut</th>
+                                    <th>Date création</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- User data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Analytics Page -->
+                <div id="analytics-page" class="page">
+                    <div class="page-header">
+                        <h1 class="page-title">Analytics Avancé</h1>
+                        <p class="page-subtitle">Analyses détaillées et métriques</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon users">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="stat-change positive">↗ +12%</div>
+                            </div>
+                            <div class="stat-value" id="analyticsUsers">23</div>
+                            <div class="stat-label">Utilisateurs Actifs</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon bookings">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <div class="stat-change positive">↗ +8%</div>
+                            </div>
+                            <div class="stat-value" id="analyticsBookings">0</div>
+                            <div class="stat-label">Réservations</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon revenue">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <div class="stat-change stable">→ Stable</div>
+                            </div>
+                            <div class="stat-value">0 FCFA</div>
+                            <div class="stat-label">Revenus</div>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <canvas id="analyticsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Page -->
+                <div id="profile-page" class="page">
+                    <div class="page-header">
+                        <h1 class="page-title">Profil Administrateur</h1>
+                        <p class="page-subtitle">Gérer votre compte administrateur</p>
+                    </div>
+                    
+                    <div class="profile-section">
+                        <div class="profile-card">
+                            <div class="profile-avatar">
+                                <div class="user-avatar large">A</div>
+                                <button class="btn-edit">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                            <div class="profile-info">
+                                <h3 class="profile-name">Admin Ezra</h3>
+                                <p class="profile-role">Administrateur Système</p>
+                                <p class="profile-email">admin@ezraservice.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <button class="btn primary" onclick="dashboard.editProfile()">
+                                <i class="fas fa-edit"></i>
+                                Modifier le profil
+                            </button>
+                            <button class="btn" onclick="dashboard.changePassword()">
+                                <i class="fas fa-key"></i>
+                                Changer le mot de passe
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Settings Page -->
+                <div id="settings-page" class="page">
+                    <div class="page-header">
+                        <h1 class="page-title">Paramètres Système</h1>
+                        <p class="page-subtitle">Configuration de l'application</p>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <div class="settings-group">
+                            <h3>Configuration Supabase</h3>
+                            <div class="setting-item">
+                                <label>URL Supabase</label>
+                                <input type="text" value="https://zouyaaeincpprkdkofgf.supabase.co" readonly>
+                            </div>
+                            <div class="setting-item">
+                                <label>Statut de connexion</label>
+                                <span class="status-badge" id="connectionStatus">Connecté</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-group">
+                            <h3>Notifications</h3>
+                            <div class="setting-item">
+                                <label>Alertes par email</label>
+                                <input type="checkbox" checked>
+                            </div>
+                            <div class="setting-item">
+                                <label>Notifications temps réel</label>
+                                <input type="checkbox" checked>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-actions">
+                            <button class="btn primary" onclick="dashboard.saveSettings()">
+                                <i class="fas fa-save"></i>
+                                Sauvegarder
+                            </button>
+                            <button class="btn" onclick="dashboard.resetSettings()">
+                                <i class="fas fa-undo"></i>
+                                Réinitialiser
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
