@@ -550,6 +550,571 @@ class EzraAdminDashboard {
         `;
     }
     
+    getBookingsContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Gestion des Réservations</h1>
+                <p class="page-subtitle">Superviser toutes les réservations de services</p>
+            </div>
+            
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--info), #60A5FA);">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">1,234</div>
+                    <div class="stat-label">Réservations Totales</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning), #FBBF24);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">23</div>
+                    <div class="stat-label">En Attente</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--success), #34D399);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">1,156</div>
+                    <div class="stat-label">Confirmées</div>
+                </div>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Réservations Récentes</h3>
+                    <div class="table-actions">
+                        <button class="btn" onclick="dashboard.filterBookings()">
+                            <i class="fas fa-filter"></i>
+                            Filtrer
+                        </button>
+                        <button class="btn btn-primary" onclick="dashboard.exportBookings()">
+                            <i class="fas fa-download"></i>
+                            Exporter
+                        </button>
+                    </div>
+                </div>
+                <table id="bookingsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Client</th>
+                            <th>Prestataire</th>
+                            <th>Service</th>
+                            <th>Date</th>
+                            <th>Montant</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bookingsTableBody">
+                        <!-- Bookings will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
+    getTransactionsContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Gestion des Transactions</h1>
+                <p class="page-subtitle">Superviser tous les paiements et transactions</p>
+            </div>
+            
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--ezra-gold), var(--ezra-gold-light));">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">2.3M</div>
+                    <div class="stat-label">Volume Total (FCFA)</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--success), #34D399);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">98.5%</div>
+                    <div class="stat-label">Taux de Succès</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning), #FBBF24);">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">En Cours</div>
+                </div>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Transactions Récentes</h3>
+                    <div class="table-actions">
+                        <button class="btn" onclick="dashboard.filterTransactions()">
+                            <i class="fas fa-filter"></i>
+                            Filtrer
+                        </button>
+                        <button class="btn btn-primary" onclick="dashboard.exportTransactions()">
+                            <i class="fas fa-download"></i>
+                            Exporter
+                        </button>
+                    </div>
+                </div>
+                <table id="transactionsTable">
+                    <thead>
+                        <tr>
+                            <th>ID Transaction</th>
+                            <th>Utilisateur</th>
+                            <th>Montant</th>
+                            <th>Méthode</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTableBody">
+                        <!-- Transactions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
+    getCampaignsContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Campagnes Marketing</h1>
+                <p class="page-subtitle">Créer et gérer des campagnes promotionnelles</p>
+            </div>
+            
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--ezra-gold), var(--ezra-gold-light));">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Campagnes Actives</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--info), #60A5FA);">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">15.7K</div>
+                    <div class="stat-label">Utilisateurs Touchés</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--success), #34D399);">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">12.3%</div>
+                    <div class="stat-label">Taux de Conversion</div>
+                </div>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Campagnes</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-primary" onclick="dashboard.createCampaign()">
+                            <i class="fas fa-plus"></i>
+                            Nouvelle Campagne
+                        </button>
+                    </div>
+                </div>
+                <table id="campaignsTable">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Type</th>
+                            <th>Date Début</th>
+                            <th>Date Fin</th>
+                            <th>Budget</th>
+                            <th>Performance</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="campaignsTableBody">
+                        <!-- Campaigns will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
+    getPromotionsContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Codes Promotionnels</h1>
+                <p class="page-subtitle">Gérer les codes de réduction et offres spéciales</p>
+            </div>
+            
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--ezra-gold), var(--ezra-gold-light));">
+                            <i class="fas fa-tags"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Codes Actifs</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--success), #34D399);">
+                            <i class="fas fa-percent"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">234K</div>
+                    <div class="stat-label">Économies Générées (FCFA)</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--info), #60A5FA);">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">1,892</div>
+                    <div class="stat-label">Utilisations</div>
+                </div>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Codes Promotionnels</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-primary" onclick="dashboard.createPromoCode()">
+                            <i class="fas fa-plus"></i>
+                            Nouveau Code
+                        </button>
+                    </div>
+                </div>
+                <table id="promotionsTable">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Valeur</th>
+                            <th>Utilisations</th>
+                            <th>Expiration</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="promotionsTableBody">
+                        <!-- Promotions will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
+    getRefundsContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Gestion des Remboursements</h1>
+                <p class="page-subtitle">Traiter les demandes de remboursement</p>
+            </div>
+            
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning), #FBBF24);">
+                            <i class="fas fa-undo"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Demandes en Cours</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--success), #34D399);">
+                            <i class="fas fa-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">187</div>
+                    <div class="stat-label">Remboursements Traités</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--ezra-gold), var(--ezra-gold-light));">
+                            <i class="fas fa-money-bill"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">456K</div>
+                    <div class="stat-label">Montant Total (FCFA)</div>
+                </div>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Demandes de Remboursement</h3>
+                    <div class="table-actions">
+                        <button class="btn" onclick="dashboard.filterRefunds()">
+                            <i class="fas fa-filter"></i>
+                            Filtrer
+                        </button>
+                        <button class="btn btn-primary" onclick="dashboard.bulkProcessRefunds()">
+                            <i class="fas fa-tasks"></i>
+                            Traitement Groupé
+                        </button>
+                    </div>
+                </div>
+                <table id="refundsTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Client</th>
+                            <th>Réservation</th>
+                            <th>Montant</th>
+                            <th>Raison</th>
+                            <th>Date Demande</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="refundsTableBody">
+                        <!-- Refunds will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
+    getMonitoringContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Monitoring Temps Réel</h1>
+                <p class="page-subtitle">Surveillance système et alertes en direct</p>
+            </div>
+            
+            <div class="stats-grid" style="margin-bottom: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--success), #34D399);">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">99.8%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--info), #60A5FA);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">1.2s</div>
+                    <div class="stat-label">Temps Réponse Moyen</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--warning), #FBBF24);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Alertes Actives</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, var(--ezra-gold), var(--ezra-gold-light));">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value">234</div>
+                    <div class="stat-label">Utilisateurs Connectés</div>
+                </div>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Alertes Système</h3>
+                    <div class="table-actions">
+                        <button class="btn" onclick="dashboard.refreshMonitoring()">
+                            <i class="fas fa-sync"></i>
+                            Actualiser
+                        </button>
+                        <button class="btn btn-primary" onclick="dashboard.configureAlerts()">
+                            <i class="fas fa-cog"></i>
+                            Configurer
+                        </button>
+                    </div>
+                </div>
+                <table id="monitoringTable">
+                    <thead>
+                        <tr>
+                            <th>Composant</th>
+                            <th>Statut</th>
+                            <th>Dernière Vérification</th>
+                            <th>Temps Réponse</th>
+                            <th>Alertes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monitoringTableBody">
+                        <!-- Monitoring data will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
+    getSettingsContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Paramètres Système</h1>
+                <p class="page-subtitle">Configuration de la plateforme Ezra</p>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Configuration Générale</h3>
+                </div>
+                <div style="padding: 2rem;">
+                    <div style="display: grid; gap: 1.5rem;">
+                        <div>
+                            <h4 style="margin-bottom: 1rem; font-weight: 600;">Paramètres de l'Application</h4>
+                            <div style="display: grid; gap: 1rem;">
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span>Maintenance Mode</span>
+                                    <input type="checkbox" style="width: 20px; height: 20px;">
+                                </label>
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span>Nouvelles Inscriptions</span>
+                                    <input type="checkbox" checked style="width: 20px; height: 20px;">
+                                </label>
+                                <label style="display: flex; align-items: center; justify-content: space-between;">
+                                    <span>Notifications Push</span>
+                                    <input type="checkbox" checked style="width: 20px; height: 20px;">
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 style="margin-bottom: 1rem; font-weight: 600;">Paramètres de Paiement</h4>
+                            <div style="display: grid; gap: 1rem;">
+                                <label style="display: grid; gap: 0.5rem;">
+                                    <span>Commission Plateforme (%)</span>
+                                    <input type="number" value="15" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 8px;">
+                                </label>
+                                <label style="display: grid; gap: 0.5rem;">
+                                    <span>Montant Minimum (FCFA)</span>
+                                    <input type="number" value="1000" style="padding: 0.5rem; border: 1px solid var(--border); border-radius: 8px;">
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 2rem;">
+                            <button class="btn btn-primary" onclick="dashboard.saveSettings()">
+                                <i class="fas fa-save"></i>
+                                Sauvegarder
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    getAdminsContent() {
+        return `
+            <div class="page-header">
+                <h1 class="page-title">Gestion des Administrateurs</h1>
+                <p class="page-subtitle">Gérer les comptes administrateurs</p>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <h3 class="table-title">Administrateurs</h3>
+                    <div class="table-actions">
+                        <button class="btn btn-primary" onclick="dashboard.createAdmin()">
+                            <i class="fas fa-user-plus"></i>
+                            Nouvel Admin
+                        </button>
+                    </div>
+                </div>
+                <table id="adminsTable">
+                    <thead>
+                        <tr>
+                            <th>Administrateur</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Permissions</th>
+                            <th>Dernière Connexion</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminsTableBody">
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                    <div class="user-avatar" style="width: 32px; height: 32px; font-size: 0.75rem;">SA</div>
+                                    <div>
+                                        <div style="font-weight: 600;">Super Admin</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>admin@ezraservice.com</td>
+                            <td>
+                                <span class="stat-change negative" style="text-transform: capitalize;">
+                                    Super Admin
+                                </span>
+                            </td>
+                            <td>Toutes</td>
+                            <td>Maintenant</td>
+                            <td>
+                                <span class="stat-change positive">
+                                    Actif
+                                </span>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <button class="btn" style="padding: 0.25rem 0.5rem;" onclick="dashboard.editAdmin(1)">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        `;
+    }
+    
     getAnalyticsContent() {
         return `
             <div class="page-header">
@@ -1335,6 +1900,21 @@ class EzraAdminDashboard {
         if (diffInMinutes < 1440) return `Il y a ${Math.floor(diffInMinutes / 60)} h`;
         return `Il y a ${Math.floor(diffInMinutes / 1440)} j`;
     }
+    
+    // Additional Action Methods
+    filterBookings() { this.showToast('Filtrage des réservations', 'info'); }
+    exportBookings() { this.showToast('Export des réservations', 'info'); }
+    filterTransactions() { this.showToast('Filtrage des transactions', 'info'); }
+    exportTransactions() { this.showToast('Export des transactions', 'info'); }
+    createCampaign() { this.showToast('Création d\'une nouvelle campagne', 'info'); }
+    createPromoCode() { this.showToast('Création d\'un nouveau code promo', 'info'); }
+    filterRefunds() { this.showToast('Filtrage des remboursements', 'info'); }
+    bulkProcessRefunds() { this.showToast('Traitement groupé des remboursements', 'info'); }
+    refreshMonitoring() { this.showToast('Actualisation du monitoring', 'info'); }
+    configureAlerts() { this.showToast('Configuration des alertes', 'info'); }
+    saveSettings() { this.showToast('Paramètres sauvegardés', 'success'); }
+    createAdmin() { this.showToast('Création d\'un nouveau compte admin', 'info'); }
+    editAdmin(id) { this.showToast(`Édition de l'admin ${id}`, 'info'); }
 }
 
 // Command Palette Class
