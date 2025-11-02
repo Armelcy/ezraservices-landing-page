@@ -1314,30 +1314,1262 @@
                 <div id="analyticsPage" class="page-content">
                     <div class="page-header">
                         <h1 class="page-title">Analytics</h1>
-                        <p class="page-subtitle">Analyses détaillées et rapports</p>
+                        <p class="page-subtitle">Analyses détaillées et rapports de performance</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportAnalyticsReport()">
+                                <i class="fas fa-download"></i>
+                                Exporter Rapport
+                            </button>
+                            <button class="btn btn-primary" onclick="refreshAnalytics()">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualiser
+                            </button>
+                        </div>
                     </div>
+                    
+                    <!-- Key Performance Indicators -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="monthlyGrowth">+24%</div>
+                            <div class="stat-label">Croissance Mensuelle</div>
+                            <div class="stat-trend positive">↗ +5% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon info">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="userRetention">87%</div>
+                            <div class="stat-label">Taux de Rétention</div>
+                            <div class="stat-trend positive">↗ +3% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="avgRating">4.6</div>
+                            <div class="stat-label">Note Moyenne Services</div>
+                            <div class="stat-trend positive">↗ +0.2 vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="avgResponseTime">2.4h</div>
+                            <div class="stat-label">Temps Réponse Moyen</div>
+                            <div class="stat-trend negative">↘ +0.3h vs mois dernier</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Charts Section -->
                     <div class="content-section">
-                        <p>Page Analytics en développement...</p>
+                        <div class="section-header">
+                            <h2 class="section-title">Graphiques de Performance</h2>
+                            <div class="header-actions">
+                                <select id="chartPeriod" onchange="updateChartPeriod(this.value)">
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d" selected>30 derniers jours</option>
+                                    <option value="90d">3 derniers mois</option>
+                                    <option value="1y">Dernière année</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">Évolution des Utilisateurs</h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="usersChart" width="400" height="200"></canvas>
+                                    <div class="chart-legend">
+                                        <div class="legend-item">
+                                            <span class="legend-color" style="background: #4CAF50;"></span>
+                                            <span>Nouveaux utilisateurs</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <span class="legend-color" style="background: #2196F3;"></span>
+                                            <span>Utilisateurs actifs</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <h3 class="chart-title">Répartition des Services</h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="servicesChart" width="400" height="200"></canvas>
+                                    <div class="chart-stats">
+                                        <div class="chart-stat">
+                                            <span class="stat-number">245</span>
+                                            <span class="stat-label">Services Actifs</span>
+                                        </div>
+                                        <div class="chart-stat">
+                                            <span class="stat-number">89%</span>
+                                            <span class="stat-label">Taux Satisfaction</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container full-width">
+                            <h3 class="chart-title">Revenus et Transactions</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="revenueChart" width="800" height="300"></canvas>
+                                <div class="chart-controls">
+                                    <button class="chart-toggle active" data-dataset="revenue">Revenus</button>
+                                    <button class="chart-toggle" data-dataset="transactions">Transactions</button>
+                                    <button class="chart-toggle" data-dataset="commissions">Commissions</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Tables -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Analyses Détaillées</h2>
+                        </div>
+                        
+                        <div class="analytics-tabs">
+                            <button class="tab-button active" onclick="showAnalyticsTab('providers')">
+                                <i class="fas fa-user-tie"></i>
+                                Top Prestataires
+                            </button>
+                            <button class="tab-button" onclick="showAnalyticsTab('services')">
+                                <i class="fas fa-tools"></i>
+                                Services Populaires
+                            </button>
+                            <button class="tab-button" onclick="showAnalyticsTab('regions')">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Répartition Géographique
+                            </button>
+                            <button class="tab-button" onclick="showAnalyticsTab('performance')">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Performance
+                            </button>
+                        </div>
+                        
+                        <div id="providersAnalytics" class="analytics-tab-content active">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Rang</th>
+                                        <th>Prestataire</th>
+                                        <th>Services Complétés</th>
+                                        <th>Note Moyenne</th>
+                                        <th>Revenus Générés</th>
+                                        <th>Taux de Réussite</th>
+                                        <th>Dernière Activité</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="topProvidersTable">
+                                    <tr>
+                                        <td><span class="rank gold">1</span></td>
+                                        <td>
+                                            <div class="provider-info">
+                                                <strong>Jean Dupont</strong>
+                                                <span class="provider-category">Plomberie</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="metric-value">142</span></td>
+                                        <td><span class="rating-badge excellent">4.9 ⭐</span></td>
+                                        <td><span class="revenue-value">245,600 FCFA</span></td>
+                                        <td><span class="success-rate high">96%</span></td>
+                                        <td>Il y a 2h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="rank silver">2</span></td>
+                                        <td>
+                                            <div class="provider-info">
+                                                <strong>Marie Kouam</strong>
+                                                <span class="provider-category">Ménage</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="metric-value">128</span></td>
+                                        <td><span class="rating-badge excellent">4.8 ⭐</span></td>
+                                        <td><span class="revenue-value">198,400 FCFA</span></td>
+                                        <td><span class="success-rate high">94%</span></td>
+                                        <td>Il y a 1h</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="rank bronze">3</span></td>
+                                        <td>
+                                            <div class="provider-info">
+                                                <strong>Paul Mbarga</strong>
+                                                <span class="provider-category">Électricité</span>
+                                            </div>
+                                        </td>
+                                        <td><span class="metric-value">115</span></td>
+                                        <td><span class="rating-badge good">4.7 ⭐</span></td>
+                                        <td><span class="revenue-value">189,200 FCFA</span></td>
+                                        <td><span class="success-rate high">92%</span></td>
+                                        <td>Il y a 4h</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="servicesAnalytics" class="analytics-tab-content">
+                            <div class="services-analytics-grid">
+                                <div class="service-metric-card">
+                                    <div class="metric-header">
+                                        <i class="fas fa-wrench service-icon"></i>
+                                        <h4>Plomberie</h4>
+                                    </div>
+                                    <div class="metric-stats">
+                                        <div class="metric-stat">
+                                            <span class="stat-value">342</span>
+                                            <span class="stat-label">Réservations</span>
+                                        </div>
+                                        <div class="metric-stat">
+                                            <span class="stat-value">4.8</span>
+                                            <span class="stat-label">Note Moyenne</span>
+                                        </div>
+                                        <div class="metric-stat">
+                                            <span class="stat-value">892K</span>
+                                            <span class="stat-label">Revenus (FCFA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-metric-card">
+                                    <div class="metric-header">
+                                        <i class="fas fa-broom service-icon"></i>
+                                        <h4>Ménage</h4>
+                                    </div>
+                                    <div class="metric-stats">
+                                        <div class="metric-stat">
+                                            <span class="stat-value">289</span>
+                                            <span class="stat-label">Réservations</span>
+                                        </div>
+                                        <div class="metric-stat">
+                                            <span class="stat-value">4.6</span>
+                                            <span class="stat-label">Note Moyenne</span>
+                                        </div>
+                                        <div class="metric-stat">
+                                            <span class="stat-value">567K</span>
+                                            <span class="stat-label">Revenus (FCFA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-metric-card">
+                                    <div class="metric-header">
+                                        <i class="fas fa-bolt service-icon"></i>
+                                        <h4>Électricité</h4>
+                                    </div>
+                                    <div class="metric-stats">
+                                        <div class="metric-stat">
+                                            <span class="stat-value">245</span>
+                                            <span class="stat-label">Réservations</span>
+                                        </div>
+                                        <div class="metric-stat">
+                                            <span class="stat-value">4.7</span>
+                                            <span class="stat-label">Note Moyenne</span>
+                                        </div>
+                                        <div class="metric-stat">
+                                            <span class="stat-value">734K</span>
+                                            <span class="stat-label">Revenus (FCFA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="regionsAnalytics" class="analytics-tab-content">
+                            <div class="regions-grid">
+                                <div class="region-card">
+                                    <h4 class="region-name">Douala</h4>
+                                    <div class="region-stats">
+                                        <div class="region-stat">
+                                            <span class="stat-number">45%</span>
+                                            <span class="stat-label">Part du marché</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">1,234</span>
+                                            <span class="stat-label">Utilisateurs actifs</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">2.1M</span>
+                                            <span class="stat-label">Revenus (FCFA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="region-card">
+                                    <h4 class="region-name">Yaoundé</h4>
+                                    <div class="region-stats">
+                                        <div class="region-stat">
+                                            <span class="stat-number">38%</span>
+                                            <span class="stat-label">Part du marché</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">987</span>
+                                            <span class="stat-label">Utilisateurs actifs</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">1.8M</span>
+                                            <span class="stat-label">Revenus (FCFA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="region-card">
+                                    <h4 class="region-name">Bafoussam</h4>
+                                    <div class="region-stats">
+                                        <div class="region-stat">
+                                            <span class="stat-number">12%</span>
+                                            <span class="stat-label">Part du marché</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">345</span>
+                                            <span class="stat-label">Utilisateurs actifs</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">567K</span>
+                                            <span class="stat-label">Revenus (FCFA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="region-card">
+                                    <h4 class="region-name">Autres Villes</h4>
+                                    <div class="region-stats">
+                                        <div class="region-stat">
+                                            <span class="stat-number">5%</span>
+                                            <span class="stat-label">Part du marché</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">123</span>
+                                            <span class="stat-label">Utilisateurs actifs</span>
+                                        </div>
+                                        <div class="region-stat">
+                                            <span class="stat-number">234K</span>
+                                            <span class="stat-label">Revenus (FCFA)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="performanceAnalytics" class="analytics-tab-content">
+                            <div class="performance-metrics">
+                                <div class="performance-card">
+                                    <div class="performance-header">
+                                        <h4>Performance Système</h4>
+                                        <span class="performance-status good">Excellent</span>
+                                    </div>
+                                    <div class="performance-details">
+                                        <div class="performance-metric">
+                                            <span class="metric-label">Temps de réponse API</span>
+                                            <span class="metric-value">245ms</span>
+                                            <span class="metric-status good">↗ -12ms</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-label">Disponibilité</span>
+                                            <span class="metric-value">99.8%</span>
+                                            <span class="metric-status good">↗ +0.1%</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-label">Erreurs 5xx</span>
+                                            <span class="metric-value">0.02%</span>
+                                            <span class="metric-status good">↘ -0.01%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="performance-card">
+                                    <div class="performance-header">
+                                        <h4>Performance Mobile</h4>
+                                        <span class="performance-status good">Bon</span>
+                                    </div>
+                                    <div class="performance-details">
+                                        <div class="performance-metric">
+                                            <span class="metric-label">Temps de chargement</span>
+                                            <span class="metric-value">1.8s</span>
+                                            <span class="metric-status warning">↗ +0.2s</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-label">Score Performance</span>
+                                            <span class="metric-value">87/100</span>
+                                            <span class="metric-status good">↗ +3</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-label">Taux de crash</span>
+                                            <span class="metric-value">0.05%</span>
+                                            <span class="metric-status good">↘ -0.02%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="transactionsPage" class="page-content">
                     <div class="page-header">
                         <h1 class="page-title">Transactions</h1>
-                        <p class="page-subtitle">Surveillance des paiements et transactions</p>
+                        <p class="page-subtitle">Surveillance des paiements et transactions financières</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportTransactions()">
+                                <i class="fas fa-download"></i>
+                                Exporter
+                            </button>
+                            <button class="btn btn-warning" onclick="detectFraud()">
+                                <i class="fas fa-shield-alt"></i>
+                                Détecter Fraudes
+                            </button>
+                            <button class="btn btn-primary" onclick="refreshTransactions()">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualiser
+                            </button>
+                        </div>
                     </div>
+                    
+                    <!-- Transaction Overview -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalRevenue">2,845,600</div>
+                            <div class="stat-label">Revenus Totaux (FCFA)</div>
+                            <div class="stat-trend positive">↗ +12% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon info">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="transactionCount">1,247</div>
+                            <div class="stat-label">Transactions Mensuelles</div>
+                            <div class="stat-trend positive">↗ +8% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="pendingTransactions">23</div>
+                            <div class="stat-label">Transactions en Attente</div>
+                            <div class="stat-trend neutral">↔ Stable</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon error">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="failedTransactions">5</div>
+                            <div class="stat-label">Échecs de Paiement</div>
+                            <div class="stat-trend negative">↘ -3 vs hier</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment Methods Performance -->
                     <div class="content-section">
-                        <p>Page Transactions en développement...</p>
+                        <div class="section-header">
+                            <h2 class="section-title">Performance des Méthodes de Paiement</h2>
+                        </div>
+                        
+                        <div class="payment-methods-grid">
+                            <div class="payment-method-card">
+                                <div class="payment-header">
+                                    <i class="fab fa-cc-visa payment-icon"></i>
+                                    <h4>MTN Mobile Money</h4>
+                                    <span class="payment-status active">Actif</span>
+                                </div>
+                                <div class="payment-stats">
+                                    <div class="payment-stat">
+                                        <span class="stat-value">65%</span>
+                                        <span class="stat-label">Part des transactions</span>
+                                    </div>
+                                    <div class="payment-stat">
+                                        <span class="stat-value">98.2%</span>
+                                        <span class="stat-label">Taux de réussite</span>
+                                    </div>
+                                    <div class="payment-stat">
+                                        <span class="stat-value">1.8s</span>
+                                        <span class="stat-label">Temps moyen</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method-card">
+                                <div class="payment-header">
+                                    <i class="fab fa-cc-mastercard payment-icon"></i>
+                                    <h4>Orange Money</h4>
+                                    <span class="payment-status active">Actif</span>
+                                </div>
+                                <div class="payment-stats">
+                                    <div class="payment-stat">
+                                        <span class="stat-value">30%</span>
+                                        <span class="stat-label">Part des transactions</span>
+                                    </div>
+                                    <div class="payment-stat">
+                                        <span class="stat-value">96.8%</span>
+                                        <span class="stat-label">Taux de réussite</span>
+                                    </div>
+                                    <div class="payment-stat">
+                                        <span class="stat-value">2.1s</span>
+                                        <span class="stat-label">Temps moyen</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-method-card">
+                                <div class="payment-header">
+                                    <i class="fas fa-university payment-icon"></i>
+                                    <h4>Virements Bancaires</h4>
+                                    <span class="payment-status limited">Limité</span>
+                                </div>
+                                <div class="payment-stats">
+                                    <div class="payment-stat">
+                                        <span class="stat-value">5%</span>
+                                        <span class="stat-label">Part des transactions</span>
+                                    </div>
+                                    <div class="payment-stat">
+                                        <span class="stat-value">94.5%</span>
+                                        <span class="stat-label">Taux de réussite</span>
+                                    </div>
+                                    <div class="payment-stat">
+                                        <span class="stat-value">24h</span>
+                                        <span class="stat-label">Temps moyen</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Transaction Filters -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Transactions Récentes</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="showTransactionFilters()">
+                                    <i class="fas fa-filter"></i>
+                                    Filtrer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="transactionFilters" class="filters-section" style="display: none;">
+                            <div class="filters-grid">
+                                <div class="filter-group">
+                                    <label>Statut</label>
+                                    <select id="transactionStatusFilter">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="completed">Complétée</option>
+                                        <option value="pending">En attente</option>
+                                        <option value="failed">Échouée</option>
+                                        <option value="refunded">Remboursée</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Méthode de paiement</label>
+                                    <select id="paymentMethodFilter">
+                                        <option value="">Toutes les méthodes</option>
+                                        <option value="mtn">MTN Mobile Money</option>
+                                        <option value="orange">Orange Money</option>
+                                        <option value="bank">Virement bancaire</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Montant minimum</label>
+                                    <input type="number" id="minAmountFilter" placeholder="0 FCFA">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Date de début</label>
+                                    <input type="date" id="startDateFilter">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Date de fin</label>
+                                    <input type="date" id="endDateFilter">
+                                </div>
+                                <div class="filter-group">
+                                    <button class="btn btn-primary" onclick="applyTransactionFilters()">
+                                        Appliquer Filtres
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Transactions Table -->
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Transaction</th>
+                                        <th>Client</th>
+                                        <th>Prestataire</th>
+                                        <th>Service</th>
+                                        <th>Montant</th>
+                                        <th>Méthode</th>
+                                        <th>Statut</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionsTableBody">
+                                    <tr>
+                                        <td><span class="transaction-id">TXN-2024001247</span></td>
+                                        <td>
+                                            <div class="user-info">
+                                                <strong>Pierre Kamga</strong>
+                                                <span class="user-email">pierre.kamga@email.com</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="user-info">
+                                                <strong>Jean Dupont</strong>
+                                                <span class="user-email">jean.dupont@email.com</span>
+                                            </div>
+                                        </td>
+                                        <td>Réparation plomberie</td>
+                                        <td><span class="amount">15,000 FCFA</span></td>
+                                        <td><span class="payment-method mtn">MTN MoMo</span></td>
+                                        <td><span class="status-badge completed">Complétée</span></td>
+                                        <td>02/11/2025 14:30</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn view" onclick="viewTransaction('TXN-2024001247')" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn edit" onclick="editTransaction('TXN-2024001247')" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="action-btn refund" onclick="refundTransaction('TXN-2024001247')" title="Rembourser">
+                                                    <i class="fas fa-undo"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TXN-2024001246</span></td>
+                                        <td>
+                                            <div class="user-info">
+                                                <strong>Lucie Mballa</strong>
+                                                <span class="user-email">lucie.mballa@email.com</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="user-info">
+                                                <strong>Marie Kouam</strong>
+                                                <span class="user-email">marie.kouam@email.com</span>
+                                            </div>
+                                        </td>
+                                        <td>Service de ménage</td>
+                                        <td><span class="amount">8,500 FCFA</span></td>
+                                        <td><span class="payment-method orange">Orange Money</span></td>
+                                        <td><span class="status-badge pending">En attente</span></td>
+                                        <td>02/11/2025 13:15</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn view" onclick="viewTransaction('TXN-2024001246')" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn approve" onclick="approveTransaction('TXN-2024001246')" title="Approuver">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button class="action-btn reject" onclick="rejectTransaction('TXN-2024001246')" title="Rejeter">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="transaction-id">TXN-2024001245</span></td>
+                                        <td>
+                                            <div class="user-info">
+                                                <strong>Emmanuel Simo</strong>
+                                                <span class="user-email">emmanuel.simo@email.com</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="user-info">
+                                                <strong>Paul Mbarga</strong>
+                                                <span class="user-email">paul.mbarga@email.com</span>
+                                            </div>
+                                        </td>
+                                        <td>Installation électrique</td>
+                                        <td><span class="amount">25,000 FCFA</span></td>
+                                        <td><span class="payment-method bank">Virement</span></td>
+                                        <td><span class="status-badge failed">Échouée</span></td>
+                                        <td>02/11/2025 11:45</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn view" onclick="viewTransaction('TXN-2024001245')" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn retry" onclick="retryTransaction('TXN-2024001245')" title="Réessayer">
+                                                    <i class="fas fa-redo"></i>
+                                                </button>
+                                                <button class="action-btn contact" onclick="contactUser('TXN-2024001245')" title="Contacter client">
+                                                    <i class="fas fa-envelope"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="table-pagination">
+                            <div class="pagination-info">
+                                Affichage de 1-3 sur 1,247 transactions
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="pagination-btn" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="pagination-pages">
+                                    <button class="pagination-page active">1</button>
+                                    <button class="pagination-page">2</button>
+                                    <button class="pagination-page">3</button>
+                                    <span>...</span>
+                                    <button class="pagination-page">416</button>
+                                </span>
+                                <button class="pagination-btn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Fraud Detection -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Détection de Fraude</h2>
+                            <div class="header-actions">
+                                <span class="fraud-status safe">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Système Actif
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="fraud-detection-grid">
+                            <div class="fraud-alert-card low">
+                                <div class="alert-header">
+                                    <i class="fas fa-info-circle"></i>
+                                    <h4>Alertes Faibles</h4>
+                                    <span class="alert-count">12</span>
+                                </div>
+                                <div class="alert-description">
+                                    Transactions inhabituelles détectées mais dans les limites normales
+                                </div>
+                                <button class="btn btn-small" onclick="viewFraudAlerts('low')">Voir Détails</button>
+                            </div>
+                            
+                            <div class="fraud-alert-card medium">
+                                <div class="alert-header">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <h4>Alertes Moyennes</h4>
+                                    <span class="alert-count">3</span>
+                                </div>
+                                <div class="alert-description">
+                                    Activité suspecte nécessitant une vérification manuelle
+                                </div>
+                                <button class="btn btn-small" onclick="viewFraudAlerts('medium')">Examiner</button>
+                            </div>
+                            
+                            <div class="fraud-alert-card high">
+                                <div class="alert-header">
+                                    <i class="fas fa-ban"></i>
+                                    <h4>Alertes Élevées</h4>
+                                    <span class="alert-count">0</span>
+                                </div>
+                                <div class="alert-description">
+                                    Transactions potentiellement frauduleuses bloquées automatiquement
+                                </div>
+                                <button class="btn btn-small" onclick="viewFraudAlerts('high')">Vérifier</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="campaignsPage" class="page-content">
                     <div class="page-header">
-                        <h1 class="page-title">Campagnes</h1>
-                        <p class="page-subtitle">Gestion des campagnes marketing</p>
+                        <h1 class="page-title">Campagnes Marketing</h1>
+                        <p class="page-subtitle">Gestion des campagnes publicitaires et promotionnelles</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportCampaigns()">
+                                <i class="fas fa-download"></i>
+                                Exporter Rapport
+                            </button>
+                            <button class="btn btn-primary" onclick="createCampaign()">
+                                <i class="fas fa-plus"></i>
+                                Nouvelle Campagne
+                            </button>
+                        </div>
                     </div>
+                    
+                    <!-- Campaign Overview -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-bullhorn"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="activeCampaigns">12</div>
+                            <div class="stat-label">Campagnes Actives</div>
+                            <div class="stat-trend positive">↗ +3 ce mois</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon info">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalImpressions">245,680</div>
+                            <div class="stat-label">Impressions Totales</div>
+                            <div class="stat-trend positive">↗ +18% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-mouse-pointer"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="avgCTR">3.2%</div>
+                            <div class="stat-label">Taux de Clic Moyen</div>
+                            <div class="stat-trend positive">↗ +0.4% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="conversions">1,847</div>
+                            <div class="stat-label">Conversions</div>
+                            <div class="stat-trend positive">↗ +22% vs mois dernier</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campaign Performance Chart -->
                     <div class="content-section">
-                        <p>Page Campagnes en développement...</p>
+                        <div class="section-header">
+                            <h2 class="section-title">Performance des Campagnes</h2>
+                            <div class="header-actions">
+                                <select id="campaignPeriod" onchange="updateCampaignChart(this.value)">
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d" selected>30 derniers jours</option>
+                                    <option value="90d">3 derniers mois</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container full-width">
+                            <div class="chart-wrapper">
+                                <canvas id="campaignPerformanceChart" width="800" height="300"></canvas>
+                                <div class="chart-controls">
+                                    <button class="chart-toggle active" data-metric="impressions">Impressions</button>
+                                    <button class="chart-toggle" data-metric="clicks">Clics</button>
+                                    <button class="chart-toggle" data-metric="conversions">Conversions</button>
+                                    <button class="chart-toggle" data-metric="cost">Coût</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Campaigns -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Campagnes Actives</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="showCampaignFilters()">
+                                    <i class="fas fa-filter"></i>
+                                    Filtrer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="campaignFilters" class="filters-section" style="display: none;">
+                            <div class="filters-grid">
+                                <div class="filter-group">
+                                    <label>Statut</label>
+                                    <select id="campaignStatusFilter">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="active">Active</option>
+                                        <option value="paused">En pause</option>
+                                        <option value="completed">Terminée</option>
+                                        <option value="draft">Brouillon</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Type de campagne</label>
+                                    <select id="campaignTypeFilter">
+                                        <option value="">Tous les types</option>
+                                        <option value="acquisition">Acquisition</option>
+                                        <option value="retention">Rétention</option>
+                                        <option value="brand">Branding</option>
+                                        <option value="seasonal">Saisonnière</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Budget minimum</label>
+                                    <input type="number" id="minBudgetFilter" placeholder="0 FCFA">
+                                </div>
+                                <div class="filter-group">
+                                    <button class="btn btn-primary" onclick="applyCampaignFilters()">
+                                        Appliquer Filtres
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="campaigns-grid">
+                            <div class="campaign-card">
+                                <div class="campaign-header">
+                                    <div class="campaign-info">
+                                        <h4 class="campaign-name">Promotion Rentrée 2024</h4>
+                                        <span class="campaign-type acquisition">Acquisition</span>
+                                    </div>
+                                    <div class="campaign-status">
+                                        <span class="status-badge active">Active</span>
+                                        <div class="campaign-actions">
+                                            <button class="action-btn" onclick="editCampaign('camp_001')" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="action-btn" onclick="pauseCampaign('camp_001')" title="Mettre en pause">
+                                                <i class="fas fa-pause"></i>
+                                            </button>
+                                            <button class="action-btn" onclick="viewCampaignStats('camp_001')" title="Statistiques">
+                                                <i class="fas fa-chart-bar"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="campaign-content">
+                                    <div class="campaign-description">
+                                        Campagne de promotion pour la rentrée scolaire ciblant les services de ménage et de garde d'enfants.
+                                    </div>
+                                    
+                                    <div class="campaign-metrics">
+                                        <div class="metric-row">
+                                            <div class="metric">
+                                                <span class="metric-label">Budget</span>
+                                                <span class="metric-value">150,000 FCFA</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Dépensé</span>
+                                                <span class="metric-value">89,450 FCFA</span>
+                                            </div>
+                                        </div>
+                                        <div class="campaign-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 59.6%"></div>
+                                            </div>
+                                            <span class="progress-text">59.6% du budget utilisé</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="campaign-performance">
+                                        <div class="performance-metric">
+                                            <span class="metric-number">45,280</span>
+                                            <span class="metric-label">Impressions</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">1,456</span>
+                                            <span class="metric-label">Clics</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">3.2%</span>
+                                            <span class="metric-label">CTR</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">89</span>
+                                            <span class="metric-label">Conversions</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="campaign-dates">
+                                        <div class="date-info">
+                                            <i class="fas fa-calendar-start"></i>
+                                            <span>Début: 15/10/2024</span>
+                                        </div>
+                                        <div class="date-info">
+                                            <i class="fas fa-calendar-end"></i>
+                                            <span>Fin: 15/12/2024</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-card">
+                                <div class="campaign-header">
+                                    <div class="campaign-info">
+                                        <h4 class="campaign-name">Black Friday Services</h4>
+                                        <span class="campaign-type seasonal">Saisonnière</span>
+                                    </div>
+                                    <div class="campaign-status">
+                                        <span class="status-badge active">Active</span>
+                                        <div class="campaign-actions">
+                                            <button class="action-btn" onclick="editCampaign('camp_002')" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="action-btn" onclick="pauseCampaign('camp_002')" title="Mettre en pause">
+                                                <i class="fas fa-pause"></i>
+                                            </button>
+                                            <button class="action-btn" onclick="viewCampaignStats('camp_002')" title="Statistiques">
+                                                <i class="fas fa-chart-bar"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="campaign-content">
+                                    <div class="campaign-description">
+                                        Offres spéciales Black Friday sur tous les services avec des réductions jusqu'à 30%.
+                                    </div>
+                                    
+                                    <div class="campaign-metrics">
+                                        <div class="metric-row">
+                                            <div class="metric">
+                                                <span class="metric-label">Budget</span>
+                                                <span class="metric-value">300,000 FCFA</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Dépensé</span>
+                                                <span class="metric-value">245,300 FCFA</span>
+                                            </div>
+                                        </div>
+                                        <div class="campaign-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 81.8%"></div>
+                                            </div>
+                                            <span class="progress-text">81.8% du budget utilisé</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="campaign-performance">
+                                        <div class="performance-metric">
+                                            <span class="metric-number">89,640</span>
+                                            <span class="metric-label">Impressions</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">3,247</span>
+                                            <span class="metric-label">Clics</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">3.6%</span>
+                                            <span class="metric-label">CTR</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">234</span>
+                                            <span class="metric-label">Conversions</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="campaign-dates">
+                                        <div class="date-info">
+                                            <i class="fas fa-calendar-start"></i>
+                                            <span>Début: 20/11/2024</span>
+                                        </div>
+                                        <div class="date-info">
+                                            <i class="fas fa-calendar-end"></i>
+                                            <span>Fin: 30/11/2024</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-card">
+                                <div class="campaign-header">
+                                    <div class="campaign-info">
+                                        <h4 class="campaign-name">Fidélisation Clients</h4>
+                                        <span class="campaign-type retention">Rétention</span>
+                                    </div>
+                                    <div class="campaign-status">
+                                        <span class="status-badge paused">En pause</span>
+                                        <div class="campaign-actions">
+                                            <button class="action-btn" onclick="editCampaign('camp_003')" title="Modifier">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="action-btn" onclick="resumeCampaign('camp_003')" title="Reprendre">
+                                                <i class="fas fa-play"></i>
+                                            </button>
+                                            <button class="action-btn" onclick="viewCampaignStats('camp_003')" title="Statistiques">
+                                                <i class="fas fa-chart-bar"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="campaign-content">
+                                    <div class="campaign-description">
+                                        Programme de fidélisation avec points de récompense pour les clients réguliers.
+                                    </div>
+                                    
+                                    <div class="campaign-metrics">
+                                        <div class="metric-row">
+                                            <div class="metric">
+                                                <span class="metric-label">Budget</span>
+                                                <span class="metric-value">200,000 FCFA</span>
+                                            </div>
+                                            <div class="metric">
+                                                <span class="metric-label">Dépensé</span>
+                                                <span class="metric-value">67,800 FCFA</span>
+                                            </div>
+                                        </div>
+                                        <div class="campaign-progress">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style="width: 33.9%"></div>
+                                            </div>
+                                            <span class="progress-text">33.9% du budget utilisé</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="campaign-performance">
+                                        <div class="performance-metric">
+                                            <span class="metric-number">28,450</span>
+                                            <span class="metric-label">Impressions</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">891</span>
+                                            <span class="metric-label">Clics</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">3.1%</span>
+                                            <span class="metric-label">CTR</span>
+                                        </div>
+                                        <div class="performance-metric">
+                                            <span class="metric-number">67</span>
+                                            <span class="metric-label">Conversions</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="campaign-dates">
+                                        <div class="date-info">
+                                            <i class="fas fa-calendar-start"></i>
+                                            <span>Début: 01/10/2024</span>
+                                        </div>
+                                        <div class="date-info">
+                                            <i class="fas fa-calendar-end"></i>
+                                            <span>Fin: 31/12/2024</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campaign Analytics -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Analyse des Audiences</h2>
+                        </div>
+                        
+                        <div class="audience-analytics">
+                            <div class="audience-card">
+                                <h4>Répartition par Âge</h4>
+                                <div class="audience-chart">
+                                    <div class="age-group">
+                                        <span class="age-label">18-25 ans</span>
+                                        <div class="age-bar">
+                                            <div class="age-fill" style="width: 25%"></div>
+                                        </div>
+                                        <span class="age-percent">25%</span>
+                                    </div>
+                                    <div class="age-group">
+                                        <span class="age-label">26-35 ans</span>
+                                        <div class="age-bar">
+                                            <div class="age-fill" style="width: 35%"></div>
+                                        </div>
+                                        <span class="age-percent">35%</span>
+                                    </div>
+                                    <div class="age-group">
+                                        <span class="age-label">36-45 ans</span>
+                                        <div class="age-bar">
+                                            <div class="age-fill" style="width: 28%"></div>
+                                        </div>
+                                        <span class="age-percent">28%</span>
+                                    </div>
+                                    <div class="age-group">
+                                        <span class="age-label">46+ ans</span>
+                                        <div class="age-bar">
+                                            <div class="age-fill" style="width: 12%"></div>
+                                        </div>
+                                        <span class="age-percent">12%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="audience-card">
+                                <h4>Top Villes</h4>
+                                <div class="cities-list">
+                                    <div class="city-item">
+                                        <span class="city-name">Douala</span>
+                                        <span class="city-percent">45%</span>
+                                    </div>
+                                    <div class="city-item">
+                                        <span class="city-name">Yaoundé</span>
+                                        <span class="city-percent">38%</span>
+                                    </div>
+                                    <div class="city-item">
+                                        <span class="city-name">Bafoussam</span>
+                                        <span class="city-percent">12%</span>
+                                    </div>
+                                    <div class="city-item">
+                                        <span class="city-name">Autres</span>
+                                        <span class="city-percent">5%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="audience-card">
+                                <h4>Appareils Utilisés</h4>
+                                <div class="devices-chart">
+                                    <div class="device-item">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        <div class="device-info">
+                                            <span class="device-name">Mobile</span>
+                                            <span class="device-percent">78%</span>
+                                        </div>
+                                    </div>
+                                    <div class="device-item">
+                                        <i class="fas fa-tablet-alt"></i>
+                                        <div class="device-info">
+                                            <span class="device-name">Tablette</span>
+                                            <span class="device-percent">15%</span>
+                                        </div>
+                                    </div>
+                                    <div class="device-item">
+                                        <i class="fas fa-desktop"></i>
+                                        <div class="device-info">
+                                            <span class="device-name">Desktop</span>
+                                            <span class="device-percent">7%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
