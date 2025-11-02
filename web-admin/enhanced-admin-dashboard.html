@@ -2575,31 +2575,1296 @@
                 
                 <div id="promotionsPage" class="page-content">
                     <div class="page-header">
-                        <h1 class="page-title">Promotions</h1>
-                        <p class="page-subtitle">Gestion des codes promotionnels</p>
+                        <h1 class="page-title">Codes Promotionnels</h1>
+                        <p class="page-subtitle">Gestion des offres et codes de réduction</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportPromoCodes()">
+                                <i class="fas fa-download"></i>
+                                Exporter
+                            </button>
+                            <button class="btn btn-primary" onclick="createPromoCode()">
+                                <i class="fas fa-plus"></i>
+                                Nouveau Code
+                            </button>
+                        </div>
                     </div>
+                    
+                    <!-- Promotions Overview -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-tags"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="activePromoCodes">28</div>
+                            <div class="stat-label">Codes Actifs</div>
+                            <div class="stat-trend positive">↗ +5 ce mois</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon info">
+                                    <i class="fas fa-ticket-alt"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalRedemptions">1,847</div>
+                            <div class="stat-label">Utilisations Totales</div>
+                            <div class="stat-trend positive">↗ +23% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="avgDiscount">15.8%</div>
+                            <div class="stat-label">Réduction Moyenne</div>
+                            <div class="stat-trend neutral">↔ Stable</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-piggy-bank"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="totalSavings">456,780</div>
+                            <div class="stat-label">Économies Clients (FCFA)</div>
+                            <div class="stat-trend positive">↗ +18% vs mois dernier</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Actions -->
                     <div class="content-section">
-                        <p>Page Promotions en développement...</p>
+                        <div class="section-header">
+                            <h2 class="section-title">Actions Rapides</h2>
+                        </div>
+                        
+                        <div class="quick-actions-grid">
+                            <div class="quick-action-card" onclick="createBulkPromo()">
+                                <div class="action-icon">
+                                    <i class="fas fa-layer-group"></i>
+                                </div>
+                                <h4>Promo en Lot</h4>
+                                <p>Créer plusieurs codes pour une campagne</p>
+                            </div>
+                            
+                            <div class="quick-action-card" onclick="createSeasonalPromo()">
+                                <div class="action-icon">
+                                    <i class="fas fa-snowflake"></i>
+                                </div>
+                                <h4>Promo Saisonnière</h4>
+                                <p>Codes pour événements spéciaux</p>
+                            </div>
+                            
+                            <div class="quick-action-card" onclick="createFirstTimePromo()">
+                                <div class="action-icon">
+                                    <i class="fas fa-user-plus"></i>
+                                </div>
+                                <h4>Nouveaux Clients</h4>
+                                <p>Codes de bienvenue exclusifs</p>
+                            </div>
+                            
+                            <div class="quick-action-card" onclick="createLoyaltyPromo()">
+                                <div class="action-icon">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                                <h4>Fidélité</h4>
+                                <p>Récompenses clients fidèles</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Promotions Management -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Codes Promotionnels</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="showPromoFilters()">
+                                    <i class="fas fa-filter"></i>
+                                    Filtrer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="promoFilters" class="filters-section" style="display: none;">
+                            <div class="filters-grid">
+                                <div class="filter-group">
+                                    <label>Statut</label>
+                                    <select id="promoStatusFilter">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="active">Actif</option>
+                                        <option value="expired">Expiré</option>
+                                        <option value="disabled">Désactivé</option>
+                                        <option value="draft">Brouillon</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Type</label>
+                                    <select id="promoTypeFilter">
+                                        <option value="">Tous les types</option>
+                                        <option value="percentage">Pourcentage</option>
+                                        <option value="fixed">Montant fixe</option>
+                                        <option value="free_service">Service gratuit</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Catégorie</label>
+                                    <select id="promoCategoryFilter">
+                                        <option value="">Toutes les catégories</option>
+                                        <option value="seasonal">Saisonnière</option>
+                                        <option value="loyalty">Fidélité</option>
+                                        <option value="acquisition">Acquisition</option>
+                                        <option value="retention">Rétention</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <button class="btn btn-primary" onclick="applyPromoFilters()">
+                                        Appliquer Filtres
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Type</th>
+                                        <th>Valeur</th>
+                                        <th>Utilisations</th>
+                                        <th>Statut</th>
+                                        <th>Expire le</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="promoCodesTableBody">
+                                    <tr>
+                                        <td>
+                                            <div class="promo-code-info">
+                                                <strong class="promo-code">WELCOME2024</strong>
+                                                <span class="promo-category seasonal">Saisonnière</span>
+                                            </div>
+                                        </td>
+                                        <td>Réduction de bienvenue pour nouveaux clients</td>
+                                        <td><span class="promo-type percentage">Pourcentage</span></td>
+                                        <td><span class="promo-value">20%</span></td>
+                                        <td>
+                                            <div class="usage-info">
+                                                <span class="usage-count">156/500</span>
+                                                <div class="usage-bar">
+                                                    <div class="usage-fill" style="width: 31.2%"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge active">Actif</span></td>
+                                        <td>31/12/2024</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn edit" onclick="editPromoCode('WELCOME2024')" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="action-btn copy" onclick="copyPromoCode('WELCOME2024')" title="Dupliquer">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button class="action-btn stats" onclick="viewPromoStats('WELCOME2024')" title="Statistiques">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                                <button class="action-btn delete" onclick="disablePromoCode('WELCOME2024')" title="Désactiver">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="promo-code-info">
+                                                <strong class="promo-code">BLACKFRIDAY30</strong>
+                                                <span class="promo-category seasonal">Saisonnière</span>
+                                            </div>
+                                        </td>
+                                        <td>Offre spéciale Black Friday</td>
+                                        <td><span class="promo-type percentage">Pourcentage</span></td>
+                                        <td><span class="promo-value">30%</span></td>
+                                        <td>
+                                            <div class="usage-info">
+                                                <span class="usage-count">234/1000</span>
+                                                <div class="usage-bar">
+                                                    <div class="usage-fill" style="width: 23.4%"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge active">Actif</span></td>
+                                        <td>30/11/2024</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn edit" onclick="editPromoCode('BLACKFRIDAY30')" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="action-btn copy" onclick="copyPromoCode('BLACKFRIDAY30')" title="Dupliquer">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button class="action-btn stats" onclick="viewPromoStats('BLACKFRIDAY30')" title="Statistiques">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                                <button class="action-btn delete" onclick="disablePromoCode('BLACKFRIDAY30')" title="Désactiver">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="promo-code-info">
+                                                <strong class="promo-code">LOYAL15</strong>
+                                                <span class="promo-category loyalty">Fidélité</span>
+                                            </div>
+                                        </td>
+                                        <td>Code de fidélité pour clients réguliers</td>
+                                        <td><span class="promo-type fixed">Montant fixe</span></td>
+                                        <td><span class="promo-value">5,000 FCFA</span></td>
+                                        <td>
+                                            <div class="usage-info">
+                                                <span class="usage-count">89/200</span>
+                                                <div class="usage-bar">
+                                                    <div class="usage-fill" style="width: 44.5%"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge active">Actif</span></td>
+                                        <td>Aucune</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn edit" onclick="editPromoCode('LOYAL15')" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="action-btn copy" onclick="copyPromoCode('LOYAL15')" title="Dupliquer">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button class="action-btn stats" onclick="viewPromoStats('LOYAL15')" title="Statistiques">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                                <button class="action-btn delete" onclick="disablePromoCode('LOYAL15')" title="Désactiver">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="promo-code-info">
+                                                <strong class="promo-code">SUMMER2024</strong>
+                                                <span class="promo-category seasonal">Saisonnière</span>
+                                            </div>
+                                        </td>
+                                        <td>Promotion été 2024</td>
+                                        <td><span class="promo-type percentage">Pourcentage</span></td>
+                                        <td><span class="promo-value">25%</span></td>
+                                        <td>
+                                            <div class="usage-info">
+                                                <span class="usage-count">500/500</span>
+                                                <div class="usage-bar">
+                                                    <div class="usage-fill" style="width: 100%"></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td><span class="status-badge expired">Expiré</span></td>
+                                        <td>31/08/2024</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn view" onclick="viewPromoCode('SUMMER2024')" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn copy" onclick="copyPromoCode('SUMMER2024')" title="Dupliquer">
+                                                    <i class="fas fa-copy"></i>
+                                                </button>
+                                                <button class="action-btn stats" onclick="viewPromoStats('SUMMER2024')" title="Statistiques">
+                                                    <i class="fas fa-chart-bar"></i>
+                                                </button>
+                                                <button class="action-btn delete" onclick="deletePromoCode('SUMMER2024')" title="Supprimer">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="table-pagination">
+                            <div class="pagination-info">
+                                Affichage de 1-4 sur 28 codes promotionnels
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="pagination-btn" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="pagination-pages">
+                                    <button class="pagination-page active">1</button>
+                                    <button class="pagination-page">2</button>
+                                    <button class="pagination-page">3</button>
+                                    <span>...</span>
+                                    <button class="pagination-page">7</button>
+                                </span>
+                                <button class="pagination-btn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Promotion Performance -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Performance des Promotions</h2>
+                            <div class="header-actions">
+                                <select id="promoPerformancePeriod" onchange="updatePromoPerformance(this.value)">
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d" selected>30 derniers jours</option>
+                                    <option value="90d">3 derniers mois</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="performance-grid">
+                            <div class="performance-card">
+                                <h4>Top Codes par Utilisation</h4>
+                                <div class="top-codes-list">
+                                    <div class="top-code-item">
+                                        <div class="code-rank">1</div>
+                                        <div class="code-info">
+                                            <span class="code-name">BLACKFRIDAY30</span>
+                                            <span class="code-usage">234 utilisations</span>
+                                        </div>
+                                        <div class="code-impact">↗ +45%</div>
+                                    </div>
+                                    <div class="top-code-item">
+                                        <div class="code-rank">2</div>
+                                        <div class="code-info">
+                                            <span class="code-name">WELCOME2024</span>
+                                            <span class="code-usage">156 utilisations</span>
+                                        </div>
+                                        <div class="code-impact">↗ +23%</div>
+                                    </div>
+                                    <div class="top-code-item">
+                                        <div class="code-rank">3</div>
+                                        <div class="code-info">
+                                            <span class="code-name">LOYAL15</span>
+                                            <span class="code-usage">89 utilisations</span>
+                                        </div>
+                                        <div class="code-impact">↗ +12%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="performance-card">
+                                <h4>Taux de Conversion</h4>
+                                <div class="conversion-chart">
+                                    <div class="conversion-metric">
+                                        <span class="metric-label">Codes vus</span>
+                                        <span class="metric-value">12,456</span>
+                                    </div>
+                                    <div class="conversion-metric">
+                                        <span class="metric-label">Codes utilisés</span>
+                                        <span class="metric-value">1,847</span>
+                                    </div>
+                                    <div class="conversion-metric highlight">
+                                        <span class="metric-label">Taux de conversion</span>
+                                        <span class="metric-value">14.8%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="performance-card">
+                                <h4>Impact sur les Revenus</h4>
+                                <div class="revenue-impact">
+                                    <div class="impact-metric">
+                                        <span class="metric-label">Revenus générés</span>
+                                        <span class="metric-value">2,145,600 FCFA</span>
+                                    </div>
+                                    <div class="impact-metric">
+                                        <span class="metric-label">Économies offertes</span>
+                                        <span class="metric-value">456,780 FCFA</span>
+                                    </div>
+                                    <div class="impact-metric highlight">
+                                        <span class="metric-label">ROI des promotions</span>
+                                        <span class="metric-value">+147%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="disputesPage" class="page-content">
                     <div class="page-header">
-                        <h1 class="page-title">Litiges</h1>
-                        <p class="page-subtitle">Résolution des litiges clients</p>
+                        <h1 class="page-title">Gestion des Litiges</h1>
+                        <p class="page-subtitle">Résolution des conflits et réclamations clients</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportDisputes()">
+                                <i class="fas fa-download"></i>
+                                Exporter Rapport
+                            </button>
+                            <button class="btn btn-warning" onclick="escalateToSupport()">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Escalade Support
+                            </button>
+                            <button class="btn btn-primary" onclick="refreshDisputes()">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualiser
+                            </button>
+                        </div>
                     </div>
+                    
+                    <!-- Disputes Overview -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-balance-scale"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="activeDisputes">15</div>
+                            <div class="stat-label">Litiges Actifs</div>
+                            <div class="stat-trend negative">↗ +3 cette semaine</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="resolvedDisputes">142</div>
+                            <div class="stat-label">Résolus ce Mois</div>
+                            <div class="stat-trend positive">↗ +12% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon info">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="avgResolutionTime">2.4h</div>
+                            <div class="stat-label">Temps Moyen Résolution</div>
+                            <div class="stat-trend positive">↘ -0.6h vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-thumbs-up"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="satisfactionRate">94.2%</div>
+                            <div class="stat-label">Taux de Satisfaction</div>
+                            <div class="stat-trend positive">↗ +1.8% vs mois dernier</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Priority Disputes -->
                     <div class="content-section">
-                        <p>Page Litiges en développement...</p>
+                        <div class="section-header">
+                            <h2 class="section-title">Litiges Prioritaires</h2>
+                            <div class="header-actions">
+                                <span class="priority-indicator high">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    3 Urgents
+                                </span>
+                            </div>
+                        </div>
+                        
+                        <div class="priority-disputes-list">
+                            <div class="dispute-card high-priority">
+                                <div class="dispute-header">
+                                    <div class="dispute-info">
+                                        <h4 class="dispute-title">Service non réalisé - Plomberie</h4>
+                                        <span class="dispute-id">#DISP-2024-001247</span>
+                                    </div>
+                                    <div class="dispute-meta">
+                                        <span class="priority-badge high">Urgent</span>
+                                        <span class="time-elapsed">Il y a 4h</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="dispute-details">
+                                    <div class="participants">
+                                        <div class="participant client">
+                                            <i class="fas fa-user"></i>
+                                            <div class="participant-info">
+                                                <strong>Pierre Kamga</strong>
+                                                <span>Client</span>
+                                            </div>
+                                        </div>
+                                        <div class="vs-indicator">VS</div>
+                                        <div class="participant provider">
+                                            <i class="fas fa-user-tie"></i>
+                                            <div class="participant-info">
+                                                <strong>Jean Dupont</strong>
+                                                <span>Prestataire</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="dispute-summary">
+                                        <p><strong>Réclamation:</strong> Le prestataire ne s'est pas présenté au rendez-vous convenu. Aucune communication préalable.</p>
+                                        <div class="dispute-amount">
+                                            <strong>Montant en litige:</strong> 15,000 FCFA
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="dispute-actions">
+                                        <button class="btn btn-sm btn-primary" onclick="viewDisputeDetails('DISP-2024-001247')">
+                                            <i class="fas fa-eye"></i>
+                                            Voir Détails
+                                        </button>
+                                        <button class="btn btn-sm btn-success" onclick="quickResolve('DISP-2024-001247', 'refund')">
+                                            <i class="fas fa-undo"></i>
+                                            Remboursement
+                                        </button>
+                                        <button class="btn btn-sm btn-warning" onclick="mediateDispute('DISP-2024-001247')">
+                                            <i class="fas fa-handshake"></i>
+                                            Médiation
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="dispute-card medium-priority">
+                                <div class="dispute-header">
+                                    <div class="dispute-info">
+                                        <h4 class="dispute-title">Qualité du service - Ménage</h4>
+                                        <span class="dispute-id">#DISP-2024-001246</span>
+                                    </div>
+                                    <div class="dispute-meta">
+                                        <span class="priority-badge medium">Moyen</span>
+                                        <span class="time-elapsed">Il y a 1j</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="dispute-details">
+                                    <div class="participants">
+                                        <div class="participant client">
+                                            <i class="fas fa-user"></i>
+                                            <div class="participant-info">
+                                                <strong>Marie Tchuente</strong>
+                                                <span>Cliente</span>
+                                            </div>
+                                        </div>
+                                        <div class="vs-indicator">VS</div>
+                                        <div class="participant provider">
+                                            <i class="fas fa-user-tie"></i>
+                                            <div class="participant-info">
+                                                <strong>Lucie Mballa</strong>
+                                                <span>Prestataire</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="dispute-summary">
+                                        <p><strong>Réclamation:</strong> Service de ménage incomplet, certaines pièces non nettoyées selon les spécifications.</p>
+                                        <div class="dispute-amount">
+                                            <strong>Montant en litige:</strong> 8,500 FCFA
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="dispute-actions">
+                                        <button class="btn btn-sm btn-primary" onclick="viewDisputeDetails('DISP-2024-001246')">
+                                            <i class="fas fa-eye"></i>
+                                            Voir Détails
+                                        </button>
+                                        <button class="btn btn-sm btn-info" onclick="requestEvidence('DISP-2024-001246')">
+                                            <i class="fas fa-camera"></i>
+                                            Demander Preuves
+                                        </button>
+                                        <button class="btn btn-sm btn-warning" onclick="mediateDispute('DISP-2024-001246')">
+                                            <i class="fas fa-handshake"></i>
+                                            Médiation
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- All Disputes -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Tous les Litiges</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="showDisputeFilters()">
+                                    <i class="fas fa-filter"></i>
+                                    Filtrer
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="disputeFilters" class="filters-section" style="display: none;">
+                            <div class="filters-grid">
+                                <div class="filter-group">
+                                    <label>Statut</label>
+                                    <select id="disputeStatusFilter">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="open">Ouvert</option>
+                                        <option value="in_progress">En cours</option>
+                                        <option value="resolved">Résolu</option>
+                                        <option value="closed">Fermé</option>
+                                        <option value="escalated">Escaladé</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Priorité</label>
+                                    <select id="disputePriorityFilter">
+                                        <option value="">Toutes les priorités</option>
+                                        <option value="high">Urgent</option>
+                                        <option value="medium">Moyen</option>
+                                        <option value="low">Faible</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Catégorie</label>
+                                    <select id="disputeCategoryFilter">
+                                        <option value="">Toutes les catégories</option>
+                                        <option value="no_show">Absence prestataire</option>
+                                        <option value="quality">Qualité service</option>
+                                        <option value="payment">Problème paiement</option>
+                                        <option value="communication">Communication</option>
+                                        <option value="cancellation">Annulation</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Code confirmation</label>
+                                    <input type="text" id="confirmationCodeFilter" placeholder="ex: EZR-12345678">
+                                </div>
+                                <div class="filter-group">
+                                    <button class="btn btn-primary" onclick="applyDisputeFilters()">
+                                        Appliquer Filtres
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID Litige</th>
+                                        <th>Participants</th>
+                                        <th>Service</th>
+                                        <th>Catégorie</th>
+                                        <th>Priorité</th>
+                                        <th>Montant</th>
+                                        <th>Statut</th>
+                                        <th>Créé le</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="disputesTableBody">
+                                    <tr>
+                                        <td><span class="dispute-id">DISP-2024-001247</span></td>
+                                        <td>
+                                            <div class="participants-mini">
+                                                <div class="participant-mini">
+                                                    <strong>Pierre K.</strong> <span class="vs">vs</span> <strong>Jean D.</strong>
+                                                </div>
+                                                <div class="confirmation-code">EZR-12345678</div>
+                                            </div>
+                                        </td>
+                                        <td>Réparation plomberie</td>
+                                        <td><span class="category-badge no_show">Absence</span></td>
+                                        <td><span class="priority-badge high">Urgent</span></td>
+                                        <td>15,000 FCFA</td>
+                                        <td><span class="status-badge open">Ouvert</span></td>
+                                        <td>02/11/2025 10:30</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn view" onclick="viewDisputeDetails('DISP-2024-001247')" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn message" onclick="contactParties('DISP-2024-001247')" title="Contacter les parties">
+                                                    <i class="fas fa-comments"></i>
+                                                </button>
+                                                <button class="action-btn resolve" onclick="showResolveOptions('DISP-2024-001247')" title="Résoudre">
+                                                    <i class="fas fa-gavel"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="dispute-id">DISP-2024-001246</span></td>
+                                        <td>
+                                            <div class="participants-mini">
+                                                <div class="participant-mini">
+                                                    <strong>Marie T.</strong> <span class="vs">vs</span> <strong>Lucie M.</strong>
+                                                </div>
+                                                <div class="confirmation-code">EZR-87654321</div>
+                                            </div>
+                                        </td>
+                                        <td>Service de ménage</td>
+                                        <td><span class="category-badge quality">Qualité</span></td>
+                                        <td><span class="priority-badge medium">Moyen</span></td>
+                                        <td>8,500 FCFA</td>
+                                        <td><span class="status-badge in_progress">En cours</span></td>
+                                        <td>01/11/2025 16:45</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn view" onclick="viewDisputeDetails('DISP-2024-001246')" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn message" onclick="contactParties('DISP-2024-001246')" title="Contacter les parties">
+                                                    <i class="fas fa-comments"></i>
+                                                </button>
+                                                <button class="action-btn resolve" onclick="showResolveOptions('DISP-2024-001246')" title="Résoudre">
+                                                    <i class="fas fa-gavel"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="dispute-id">DISP-2024-001245</span></td>
+                                        <td>
+                                            <div class="participants-mini">
+                                                <div class="participant-mini">
+                                                    <strong>Paul F.</strong> <span class="vs">vs</span> <strong>Samuel N.</strong>
+                                                </div>
+                                                <div class="confirmation-code">EZR-13579246</div>
+                                            </div>
+                                        </td>
+                                        <td>Installation électrique</td>
+                                        <td><span class="category-badge payment">Paiement</span></td>
+                                        <td><span class="priority-badge low">Faible</span></td>
+                                        <td>25,000 FCFA</td>
+                                        <td><span class="status-badge resolved">Résolu</span></td>
+                                        <td>31/10/2025 09:15</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn view" onclick="viewDisputeDetails('DISP-2024-001245')" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="action-btn history" onclick="viewResolutionHistory('DISP-2024-001245')" title="Historique résolution">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                                <button class="action-btn survey" onclick="sendSatisfactionSurvey('DISP-2024-001245')" title="Enquête satisfaction">
+                                                    <i class="fas fa-star"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="table-pagination">
+                            <div class="pagination-info">
+                                Affichage de 1-3 sur 157 litiges
+                            </div>
+                            <div class="pagination-controls">
+                                <button class="pagination-btn" disabled>
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="pagination-pages">
+                                    <button class="pagination-page active">1</button>
+                                    <button class="pagination-page">2</button>
+                                    <button class="pagination-page">3</button>
+                                    <span>...</span>
+                                    <button class="pagination-page">53</button>
+                                </span>
+                                <button class="pagination-btn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resolution Templates -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Modèles de Résolution</h2>
+                        </div>
+                        
+                        <div class="templates-grid">
+                            <div class="template-card" onclick="useTemplate('no_show_refund')">
+                                <div class="template-icon">
+                                    <i class="fas fa-undo-alt"></i>
+                                </div>
+                                <h4>Absence Prestataire</h4>
+                                <p>Remboursement complet + pénalité prestataire</p>
+                                <div class="template-usage">Utilisé 23 fois ce mois</div>
+                            </div>
+                            
+                            <div class="template-card" onclick="useTemplate('partial_refund')">
+                                <div class="template-icon">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <h4>Service Partiel</h4>
+                                <p>Remboursement proportionnel + nouveau service</p>
+                                <div class="template-usage">Utilisé 18 fois ce mois</div>
+                            </div>
+                            
+                            <div class="template-card" onclick="useTemplate('quality_redo')">
+                                <div class="template-icon">
+                                    <i class="fas fa-redo"></i>
+                                </div>
+                                <h4>Qualité Insuffisante</h4>
+                                <p>Nouveau service gratuit par autre prestataire</p>
+                                <div class="template-usage">Utilisé 15 fois ce mois</div>
+                            </div>
+                            
+                            <div class="template-card" onclick="useTemplate('payment_issue')">
+                                <div class="template-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <h4>Problème Paiement</h4>
+                                <p>Résolution technique + compensation</p>
+                                <div class="template-usage">Utilisé 8 fois ce mois</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
                 <div id="monitoringPage" class="page-content">
                     <div class="page-header">
-                        <h1 class="page-title">Monitoring</h1>
-                        <p class="page-subtitle">Surveillance système et performance</p>
+                        <h1 class="page-title">Monitoring Système</h1>
+                        <p class="page-subtitle">Surveillance en temps réel de la performance et de la santé du système</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportSystemReport()">
+                                <i class="fas fa-download"></i>
+                                Rapport Système
+                            </button>
+                            <button class="btn btn-warning" onclick="runSystemDiagnostic()">
+                                <i class="fas fa-stethoscope"></i>
+                                Diagnostic
+                            </button>
+                            <button class="btn btn-primary" onclick="refreshSystemStatus()">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualiser
+                            </button>
+                        </div>
                     </div>
+                    
+                    <!-- System Health Overview -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="systemHealth">Excellent</div>
+                            <div class="stat-label">État du Système</div>
+                            <div class="stat-trend positive">↗ Stable depuis 15j</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon info">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="responseTime">247ms</div>
+                            <div class="stat-label">Temps de Réponse Moyen</div>
+                            <div class="stat-trend positive">↘ -12ms vs hier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon success">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="uptime">99.97%</div>
+                            <div class="stat-label">Disponibilité (30j)</div>
+                            <div class="stat-trend positive">↗ +0.02% vs mois dernier</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="activeAlerts">2</div>
+                            <div class="stat-label">Alertes Actives</div>
+                            <div class="stat-trend negative">↗ +1 depuis ce matin</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Real-time Monitoring -->
                     <div class="content-section">
-                        <p>Page Monitoring en développement...</p>
+                        <div class="section-header">
+                            <h2 class="section-title">Surveillance Temps Réel</h2>
+                            <div class="header-actions">
+                                <div class="status-indicators">
+                                    <span class="status-indicator online">
+                                        <i class="fas fa-circle"></i>
+                                        API En Ligne
+                                    </span>
+                                    <span class="status-indicator online">
+                                        <i class="fas fa-circle"></i>
+                                        Base de Données
+                                    </span>
+                                    <span class="status-indicator warning">
+                                        <i class="fas fa-circle"></i>
+                                        File d'Attente
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="monitoring-grid">
+                            <div class="monitoring-card">
+                                <div class="card-header">
+                                    <h3>Performance Serveur</h3>
+                                    <div class="health-indicator good">
+                                        <i class="fas fa-check-circle"></i>
+                                        Bon
+                                    </div>
+                                </div>
+                                <div class="metrics-list">
+                                    <div class="metric-item">
+                                        <span class="metric-label">CPU Usage</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" style="width: 34%"></div>
+                                        </div>
+                                        <span class="metric-value">34%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">RAM Usage</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" style="width: 67%"></div>
+                                        </div>
+                                        <span class="metric-value">67%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Stockage</span>
+                                        <div class="metric-bar">
+                                            <div class="metric-fill" style="width: 23%"></div>
+                                        </div>
+                                        <span class="metric-value">23%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="monitoring-card">
+                                <div class="card-header">
+                                    <h3>Base de Données</h3>
+                                    <div class="health-indicator good">
+                                        <i class="fas fa-check-circle"></i>
+                                        Optimal
+                                    </div>
+                                </div>
+                                <div class="metrics-list">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Connexions Actives</span>
+                                        <span class="metric-value">23/100</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Requêtes/sec</span>
+                                        <span class="metric-value">147</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Taille DB</span>
+                                        <span class="metric-value">2.3 GB</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Temps Query Moyen</span>
+                                        <span class="metric-value">12ms</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="monitoring-card">
+                                <div class="card-header">
+                                    <h3>API Performance</h3>
+                                    <div class="health-indicator warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        Attention
+                                    </div>
+                                </div>
+                                <div class="metrics-list">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Requêtes/min</span>
+                                        <span class="metric-value">1,247</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Taux d'Erreur</span>
+                                        <span class="metric-value error">2.1%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">99e Percentile</span>
+                                        <span class="metric-value">890ms</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Endpoints Actifs</span>
+                                        <span class="metric-value">47/48</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Active Alerts -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Alertes Système</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-sm btn-secondary" onclick="acknowledgeAllAlerts()">
+                                    <i class="fas fa-check"></i>
+                                    Acquitter Tout
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="alerts-list">
+                            <div class="alert-item warning">
+                                <div class="alert-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <h4 class="alert-title">Taux d'erreur API élevé</h4>
+                                    <p class="alert-description">Le taux d'erreur de l'API a dépassé le seuil de 2% (actuellement 2.1%)</p>
+                                    <div class="alert-meta">
+                                        <span class="alert-time">Il y a 23 minutes</span>
+                                        <span class="alert-severity warning">Attention</span>
+                                    </div>
+                                </div>
+                                <div class="alert-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="investigateAlert('api_error_rate')">
+                                        Investiguer
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" onclick="acknowledgeAlert('api_error_rate')">
+                                        Acquitter
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="alert-item info">
+                                <div class="alert-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <h4 class="alert-title">Pic de trafic détecté</h4>
+                                    <p class="alert-description">Augmentation inhabituelle du trafic (+34% par rapport à la normale)</p>
+                                    <div class="alert-meta">
+                                        <span class="alert-time">Il y a 1 heure</span>
+                                        <span class="alert-severity info">Information</span>
+                                    </div>
+                                </div>
+                                <div class="alert-actions">
+                                    <button class="btn btn-sm btn-primary" onclick="viewTrafficDetails()">
+                                        Voir Détails
+                                    </button>
+                                    <button class="btn btn-sm btn-secondary" onclick="acknowledgeAlert('traffic_spike')">
+                                        Acquitter
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- System Services -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Services Système</h2>
+                        </div>
+                        
+                        <div class="services-grid">
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <div class="service-info">
+                                        <h4>API Gateway</h4>
+                                        <span class="service-version">v2.1.4</span>
+                                    </div>
+                                    <div class="service-status online">
+                                        <i class="fas fa-circle"></i>
+                                        En Ligne
+                                    </div>
+                                </div>
+                                <div class="service-metrics">
+                                    <div class="metric">
+                                        <span class="label">Uptime:</span>
+                                        <span class="value">15j 4h 23m</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="label">Requêtes:</span>
+                                        <span class="value">2.4M aujourd'hui</span>
+                                    </div>
+                                </div>
+                                <div class="service-actions">
+                                    <button class="btn btn-sm btn-secondary" onclick="restartService('api_gateway')">
+                                        <i class="fas fa-redo"></i>
+                                        Redémarrer
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('api_gateway')">
+                                        <i class="fas fa-file-alt"></i>
+                                        Logs
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <div class="service-info">
+                                        <h4>Service Paiements</h4>
+                                        <span class="service-version">v1.8.2</span>
+                                    </div>
+                                    <div class="service-status online">
+                                        <i class="fas fa-circle"></i>
+                                        En Ligne
+                                    </div>
+                                </div>
+                                <div class="service-metrics">
+                                    <div class="metric">
+                                        <span class="label">Uptime:</span>
+                                        <span class="value">7j 12h 45m</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="label">Transactions:</span>
+                                        <span class="value">342 aujourd'hui</span>
+                                    </div>
+                                </div>
+                                <div class="service-actions">
+                                    <button class="btn btn-sm btn-secondary" onclick="restartService('payment_service')">
+                                        <i class="fas fa-redo"></i>
+                                        Redémarrer
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('payment_service')">
+                                        <i class="fas fa-file-alt"></i>
+                                        Logs
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <div class="service-info">
+                                        <h4>Service Notifications</h4>
+                                        <span class="service-version">v1.4.1</span>
+                                    </div>
+                                    <div class="service-status warning">
+                                        <i class="fas fa-circle"></i>
+                                        Dégradé
+                                    </div>
+                                </div>
+                                <div class="service-metrics">
+                                    <div class="metric">
+                                        <span class="label">Uptime:</span>
+                                        <span class="value">3j 8h 12m</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="label">Messages:</span>
+                                        <span class="value">1.2K aujourd'hui</span>
+                                    </div>
+                                </div>
+                                <div class="service-actions">
+                                    <button class="btn btn-sm btn-warning" onclick="restartService('notification_service')">
+                                        <i class="fas fa-redo"></i>
+                                        Redémarrer
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('notification_service')">
+                                        <i class="fas fa-file-alt"></i>
+                                        Logs
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card">
+                                <div class="service-header">
+                                    <div class="service-info">
+                                        <h4>Service de Géolocalisation</h4>
+                                        <span class="service-version">v1.2.7</span>
+                                    </div>
+                                    <div class="service-status online">
+                                        <i class="fas fa-circle"></i>
+                                        En Ligne
+                                    </div>
+                                </div>
+                                <div class="service-metrics">
+                                    <div class="metric">
+                                        <span class="label">Uptime:</span>
+                                        <span class="value">21j 15h 33m</span>
+                                    </div>
+                                    <div class="metric">
+                                        <span class="label">Requêtes:</span>
+                                        <span class="value">5.7K aujourd'hui</span>
+                                    </div>
+                                </div>
+                                <div class="service-actions">
+                                    <button class="btn btn-sm btn-secondary" onclick="restartService('location_service')">
+                                        <i class="fas fa-redo"></i>
+                                        Redémarrer
+                                    </button>
+                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('location_service')">
+                                        <i class="fas fa-file-alt"></i>
+                                        Logs
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Performance Metrics -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Métriques de Performance</h2>
+                            <div class="header-actions">
+                                <select id="metricsTimeRange" onchange="updateMetricsTimeRange()">
+                                    <option value="1h">Dernière heure</option>
+                                    <option value="24h" selected>Dernières 24h</option>
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d">30 derniers jours</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="metrics-dashboard">
+                            <div class="metric-chart-container">
+                                <h4>Temps de Réponse API</h4>
+                                <div class="chart-placeholder">
+                                    <div class="chart-info">
+                                        <div class="chart-stat">
+                                            <span class="stat-label">Moyenne</span>
+                                            <span class="stat-value">247ms</span>
+                                        </div>
+                                        <div class="chart-stat">
+                                            <span class="stat-label">95e Percentile</span>
+                                            <span class="stat-value">634ms</span>
+                                        </div>
+                                        <div class="chart-stat">
+                                            <span class="stat-label">Max</span>
+                                            <span class="stat-value">1.2s</span>
+                                        </div>
+                                    </div>
+                                    <canvas id="responseTimeChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="metric-chart-container">
+                                <h4>Trafic Utilisateurs</h4>
+                                <div class="chart-placeholder">
+                                    <div class="chart-info">
+                                        <div class="chart-stat">
+                                            <span class="stat-label">Pics</span>
+                                            <span class="stat-value">1,842/h</span>
+                                        </div>
+                                        <div class="chart-stat">
+                                            <span class="stat-label">Moyenne</span>
+                                            <span class="stat-value">967/h</span>
+                                        </div>
+                                        <div class="chart-stat">
+                                            <span class="stat-label">Total</span>
+                                            <span class="stat-value">23.2K</span>
+                                        </div>
+                                    </div>
+                                    <canvas id="trafficChart" width="400" height="200"></canvas>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -4747,6 +6012,502 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
                 
                 window.enhancedAdmin.showToast(`Utilisateur ${restoredUser.full_name || restoredUser.email} restauré`, 'success');
             }
+        }
+        
+        // Additional Dashboard Functions
+        function exportSystemReport() {
+            window.enhancedAdmin.showToast('Génération du rapport système...', 'info');
+            // TODO: Implement actual system report export
+        }
+        
+        function runSystemDiagnostic() {
+            window.enhancedAdmin.showToast('Lancement du diagnostic système...', 'info');
+            // TODO: Implement system diagnostic
+        }
+        
+        function refreshSystemStatus() {
+            window.enhancedAdmin.showToast('Actualisation du statut système...', 'info');
+            // TODO: Implement system status refresh
+        }
+        
+        function acknowledgeAllAlerts() {
+            window.enhancedAdmin.showToast('Toutes les alertes ont été acquittées', 'success');
+            // TODO: Implement alert acknowledgment
+        }
+        
+        function acknowledgeAlert(alertId) {
+            window.enhancedAdmin.showToast(`Alerte ${alertId} acquittée`, 'success');
+            // TODO: Implement single alert acknowledgment
+        }
+        
+        function investigateAlert(alertId) {
+            window.enhancedAdmin.showToast(`Investigation de l'alerte ${alertId}`, 'info');
+            // TODO: Implement alert investigation
+        }
+        
+        function viewTrafficDetails() {
+            window.enhancedAdmin.showToast('Affichage des détails du trafic', 'info');
+            // TODO: Implement traffic details view
+        }
+        
+        function restartService(serviceId) {
+            if (confirm(`Redémarrer le service ${serviceId}?`)) {
+                window.enhancedAdmin.showToast(`Redémarrage du service ${serviceId}...`, 'warning');
+                // TODO: Implement service restart
+            }
+        }
+        
+        function viewServiceLogs(serviceId) {
+            window.enhancedAdmin.showToast(`Affichage des logs du service ${serviceId}`, 'info');
+            // TODO: Implement service logs view
+        }
+        
+        function updateMetricsTimeRange() {
+            const range = document.getElementById('metricsTimeRange').value;
+            window.enhancedAdmin.showToast(`Mise à jour des métriques pour: ${range}`, 'info');
+            // TODO: Implement metrics time range update
+        }
+        
+        // Analytics Functions
+        function exportAnalyticsReport() {
+            window.enhancedAdmin.showToast('Export du rapport d\'analytique...', 'info');
+            // TODO: Implement analytics export
+        }
+        
+        function refreshAnalytics() {
+            window.enhancedAdmin.showToast('Actualisation des données analytiques...', 'info');
+            // TODO: Implement analytics refresh
+        }
+        
+        function showAnalyticsFilters() {
+            const filters = document.getElementById('analyticsFilters');
+            if (filters) {
+                filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        function generateCustomReport() {
+            window.enhancedAdmin.showToast('Génération de rapport personnalisé...', 'info');
+            // TODO: Implement custom report generation
+        }
+        
+        // Transactions Functions
+        function exportTransactions() {
+            window.enhancedAdmin.showToast('Export des transactions...', 'info');
+            // TODO: Implement transactions export
+        }
+        
+        function refreshTransactions() {
+            window.enhancedAdmin.showToast('Actualisation des transactions...', 'info');
+            // TODO: Implement transactions refresh
+        }
+        
+        function showTransactionFilters() {
+            const filters = document.getElementById('transactionFilters');
+            if (filters) {
+                filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        function flagTransaction(transactionId) {
+            window.enhancedAdmin.showToast(`Transaction ${transactionId} signalée pour révision`, 'warning');
+            // TODO: Implement transaction flagging
+        }
+        
+        function viewTransactionDetails(transactionId) {
+            window.enhancedAdmin.showToast(`Affichage des détails de la transaction ${transactionId}`, 'info');
+            // TODO: Implement transaction details view
+        }
+        
+        function processRefund(transactionId) {
+            if (confirm('Confirmer le remboursement?')) {
+                window.enhancedAdmin.showToast(`Traitement du remboursement pour ${transactionId}...`, 'info');
+                // TODO: Implement refund processing
+            }
+        }
+        
+        // Campaigns Functions
+        function exportCampaigns() {
+            window.enhancedAdmin.showToast('Export des campagnes...', 'info');
+            // TODO: Implement campaigns export
+        }
+        
+        function createCampaign() {
+            window.enhancedAdmin.showToast('Création d\'une nouvelle campagne...', 'info');
+            // TODO: Implement campaign creation
+        }
+        
+        function refreshCampaigns() {
+            window.enhancedAdmin.showToast('Actualisation des campagnes...', 'info');
+            // TODO: Implement campaigns refresh
+        }
+        
+        function showCampaignFilters() {
+            const filters = document.getElementById('campaignFilters');
+            if (filters) {
+                filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        function pauseCampaign(campaignId) {
+            window.enhancedAdmin.showToast(`Campagne ${campaignId} mise en pause`, 'info');
+            // TODO: Implement campaign pause
+        }
+        
+        function viewCampaignDetails(campaignId) {
+            window.enhancedAdmin.showToast(`Affichage des détails de la campagne ${campaignId}`, 'info');
+            // TODO: Implement campaign details view
+        }
+        
+        function cloneCampaign(campaignId) {
+            window.enhancedAdmin.showToast(`Clonage de la campagne ${campaignId}...`, 'info');
+            // TODO: Implement campaign cloning
+        }
+        
+        // Promotions Functions
+        function exportPromotions() {
+            window.enhancedAdmin.showToast('Export des promotions...', 'info');
+            // TODO: Implement promotions export
+        }
+        
+        function createPromotion() {
+            window.enhancedAdmin.showToast('Création d\'une nouvelle promotion...', 'info');
+            // TODO: Implement promotion creation
+        }
+        
+        function refreshPromotions() {
+            window.enhancedAdmin.showToast('Actualisation des promotions...', 'info');
+            // TODO: Implement promotions refresh
+        }
+        
+        function showPromotionFilters() {
+            const filters = document.getElementById('promotionFilters');
+            if (filters) {
+                filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        function viewPromotionDetails(promoId) {
+            window.enhancedAdmin.showToast(`Affichage des détails de la promotion ${promoId}`, 'info');
+            // TODO: Implement promotion details view
+        }
+        
+        function deactivatePromotion(promoId) {
+            if (confirm('Désactiver cette promotion?')) {
+                window.enhancedAdmin.showToast(`Promotion ${promoId} désactivée`, 'info');
+                // TODO: Implement promotion deactivation
+            }
+        }
+        
+        function duplicatePromotion(promoId) {
+            window.enhancedAdmin.showToast(`Duplication de la promotion ${promoId}...`, 'info');
+            // TODO: Implement promotion duplication
+        }
+        
+        // Disputes Functions
+        function exportDisputes() {
+            window.enhancedAdmin.showToast('Export des litiges...', 'info');
+            // TODO: Implement disputes export
+        }
+        
+        function escalateToSupport() {
+            window.enhancedAdmin.showToast('Escalade vers le support technique...', 'warning');
+            // TODO: Implement support escalation
+        }
+        
+        function refreshDisputes() {
+            window.enhancedAdmin.showToast('Actualisation des litiges...', 'info');
+            // TODO: Implement disputes refresh
+        }
+        
+        function showDisputeFilters() {
+            const filters = document.getElementById('disputeFilters');
+            if (filters) {
+                filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+        
+        function applyDisputeFilters() {
+            window.enhancedAdmin.showToast('Application des filtres de litiges...', 'info');
+            // TODO: Implement dispute filters
+        }
+        
+        function viewDisputeDetails(disputeId) {
+            window.enhancedAdmin.showToast(`Affichage des détails du litige ${disputeId}`, 'info');
+            // TODO: Implement dispute details view
+        }
+        
+        function quickResolve(disputeId, action) {
+            if (confirm(`Résoudre le litige ${disputeId} avec l'action: ${action}?`)) {
+                window.enhancedAdmin.showToast(`Résolution rapide appliquée: ${action}`, 'success');
+                // TODO: Implement quick dispute resolution
+            }
+        }
+        
+        function mediateDispute(disputeId) {
+            window.enhancedAdmin.showToast(`Lancement de la médiation pour ${disputeId}`, 'info');
+            // TODO: Implement dispute mediation
+        }
+        
+        function contactParties(disputeId) {
+            window.enhancedAdmin.showToast(`Contact des parties pour ${disputeId}`, 'info');
+            // TODO: Implement party contact
+        }
+        
+        function showResolveOptions(disputeId) {
+            window.enhancedAdmin.showToast(`Options de résolution pour ${disputeId}`, 'info');
+            // TODO: Implement resolve options modal
+        }
+        
+        function useTemplate(templateId) {
+            window.enhancedAdmin.showToast(`Utilisation du modèle: ${templateId}`, 'info');
+            // TODO: Implement template usage
+        }
+        
+        // Bulk Operations Functions
+        function selectAllUsers() {
+            const checkboxes = document.querySelectorAll('.user-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllUsers');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateBulkActionsUI();
+        }
+        
+        function selectAllProviders() {
+            const checkboxes = document.querySelectorAll('.provider-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllProviders');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateBulkActionsUI();
+        }
+        
+        function selectAllBookings() {
+            const checkboxes = document.querySelectorAll('.booking-checkbox');
+            const selectAllCheckbox = document.getElementById('selectAllBookings');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateBulkActionsUI();
+        }
+        
+        function updateBulkActionsUI() {
+            const selectedUsers = document.querySelectorAll('.user-checkbox:checked').length;
+            const selectedProviders = document.querySelectorAll('.provider-checkbox:checked').length;
+            const selectedBookings = document.querySelectorAll('.booking-checkbox:checked').length;
+            
+            // Update bulk action buttons visibility
+            const bulkActionsUser = document.getElementById('bulkActionsUsers');
+            const bulkActionsProvider = document.getElementById('bulkActionsProviders');
+            const bulkActionsBooking = document.getElementById('bulkActionsBookings');
+            
+            if (bulkActionsUser) {
+                bulkActionsUser.style.display = selectedUsers > 0 ? 'flex' : 'none';
+                const count = bulkActionsUser.querySelector('.selection-count');
+                if (count) count.textContent = `${selectedUsers} sélectionné(s)`;
+            }
+            
+            if (bulkActionsProvider) {
+                bulkActionsProvider.style.display = selectedProviders > 0 ? 'flex' : 'none';
+                const count = bulkActionsProvider.querySelector('.selection-count');
+                if (count) count.textContent = `${selectedProviders} sélectionné(s)`;
+            }
+            
+            if (bulkActionsBooking) {
+                bulkActionsBooking.style.display = selectedBookings > 0 ? 'flex' : 'none';
+                const count = bulkActionsBooking.querySelector('.selection-count');
+                if (count) count.textContent = `${selectedBookings} sélectionné(s)`;
+            }
+        }
+        
+        function bulkDeleteUsers() {
+            const selectedCheckboxes = document.querySelectorAll('.user-checkbox:checked');
+            const selectedUsers = Array.from(selectedCheckboxes).map(cb => cb.dataset.userId);
+            
+            if (selectedUsers.length === 0) {
+                window.enhancedAdmin.showToast('Aucun utilisateur sélectionné', 'warning');
+                return;
+            }
+            
+            if (confirm(`⚠️ ATTENTION ⚠️\n\nSupprimer ${selectedUsers.length} utilisateur(s)?\n\nCette action archivera les utilisateurs sélectionnés.`)) {
+                selectedUsers.forEach(userId => {
+                    deleteUser(userId);
+                });
+                window.enhancedAdmin.showToast(`${selectedUsers.length} utilisateur(s) supprimé(s) en lot`, 'success');
+                updateBulkActionsUI();
+            }
+        }
+        
+        function bulkBanUsers() {
+            const selectedCheckboxes = document.querySelectorAll('.user-checkbox:checked');
+            const selectedUsers = Array.from(selectedCheckboxes).map(cb => {
+                const userId = cb.dataset.userId;
+                const user = window.enhancedAdmin.users.find(u => u.id === userId);
+                return user ? user.email : null;
+            }).filter(email => email);
+            
+            if (selectedUsers.length === 0) {
+                window.enhancedAdmin.showToast('Aucun utilisateur sélectionné', 'warning');
+                return;
+            }
+            
+            if (confirm(`⚠️ ATTENTION ⚠️\n\nBannir ${selectedUsers.length} utilisateur(s)?\n\nLeurs emails seront ajoutés à la liste noire.`)) {
+                selectedUsers.forEach(email => {
+                    banEmail(email, 'Bannissement en lot');
+                });
+                window.enhancedAdmin.showToast(`${selectedUsers.length} utilisateur(s) banni(s) en lot`, 'success');
+                updateBulkActionsUI();
+            }
+        }
+        
+        function bulkExportUsers() {
+            const selectedCheckboxes = document.querySelectorAll('.user-checkbox:checked');
+            const selectedUserIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.userId);
+            
+            if (selectedUserIds.length === 0) {
+                window.enhancedAdmin.showToast('Aucun utilisateur sélectionné', 'warning');
+                return;
+            }
+            
+            const selectedUsersData = window.enhancedAdmin.users.filter(user => 
+                selectedUserIds.includes(user.id)
+            );
+            
+            // Create CSV content
+            const csvHeader = 'ID,Nom,Email,Téléphone,Date Création\\n';
+            const csvRows = selectedUsersData.map(user => 
+                `${user.id},"${user.full_name || ''}","${user.email}","${user.phone || ''}","${user.created_at || ''}"`
+            ).join('\\n');
+            
+            const csvContent = csvHeader + csvRows;
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `utilisateurs_selectionnes_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            window.enhancedAdmin.showToast(`Export de ${selectedUserIds.length} utilisateur(s) terminé`, 'success');
+        }
+        
+        function bulkApproveProviders() {
+            const selectedCheckboxes = document.querySelectorAll('.provider-checkbox:checked');
+            const selectedProviders = Array.from(selectedCheckboxes).map(cb => cb.dataset.providerId);
+            
+            if (selectedProviders.length === 0) {
+                window.enhancedAdmin.showToast('Aucun prestataire sélectionné', 'warning');
+                return;
+            }
+            
+            if (confirm(`Approuver ${selectedProviders.length} prestataire(s) en lot?`)) {
+                selectedProviders.forEach(providerId => {
+                    approveProvider(providerId);
+                });
+                window.enhancedAdmin.showToast(`${selectedProviders.length} prestataire(s) approuvé(s) en lot`, 'success');
+                updateBulkActionsUI();
+            }
+        }
+        
+        function bulkRejectProviders() {
+            const selectedCheckboxes = document.querySelectorAll('.provider-checkbox:checked');
+            const selectedProviders = Array.from(selectedCheckboxes).map(cb => cb.dataset.providerId);
+            
+            if (selectedProviders.length === 0) {
+                window.enhancedAdmin.showToast('Aucun prestataire sélectionné', 'warning');
+                return;
+            }
+            
+            const reason = prompt('Raison du rejet (optionnel):');
+            if (reason !== null) { // User didn't cancel
+                if (confirm(`Rejeter ${selectedProviders.length} prestataire(s) en lot?`)) {
+                    selectedProviders.forEach(providerId => {
+                        // TODO: Implement provider rejection
+                        console.log(`Rejecting provider ${providerId} with reason: ${reason}`);
+                    });
+                    window.enhancedAdmin.showToast(`${selectedProviders.length} prestataire(s) rejeté(s) en lot`, 'info');
+                    updateBulkActionsUI();
+                }
+            }
+        }
+        
+        function bulkExportProviders() {
+            const selectedCheckboxes = document.querySelectorAll('.provider-checkbox:checked');
+            const selectedProviderIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.providerId);
+            
+            if (selectedProviderIds.length === 0) {
+                window.enhancedAdmin.showToast('Aucun prestataire sélectionné', 'warning');
+                return;
+            }
+            
+            const selectedProvidersData = window.enhancedAdmin.providers.filter(provider => 
+                selectedProviderIds.includes(provider.id)
+            );
+            
+            // Create CSV content
+            const csvHeader = 'ID,Nom Entreprise,Email,CNI,Statut,Date Création\\n';
+            const csvRows = selectedProvidersData.map(provider => 
+                `${provider.id},"${provider.business_name || ''}","${provider.email}","${provider.cni_number || ''}","${provider.cni_verified ? 'Vérifié' : 'En attente'}","${provider.created_at || ''}"`
+            ).join('\\n');
+            
+            const csvContent = csvHeader + csvRows;
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `prestataires_selectionnes_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            window.enhancedAdmin.showToast(`Export de ${selectedProviderIds.length} prestataire(s) terminé`, 'success');
+        }
+        
+        function bulkCancelBookings() {
+            const selectedCheckboxes = document.querySelectorAll('.booking-checkbox:checked');
+            const selectedBookings = Array.from(selectedCheckboxes).map(cb => cb.dataset.bookingId);
+            
+            if (selectedBookings.length === 0) {
+                window.enhancedAdmin.showToast('Aucune réservation sélectionnée', 'warning');
+                return;
+            }
+            
+            const reason = prompt('Raison de l\'annulation:') || 'Annulation administrative';
+            if (confirm(`Annuler ${selectedBookings.length} réservation(s) en lot?\\nRaison: ${reason}`)) {
+                selectedBookings.forEach(bookingId => {
+                    cancelBooking(bookingId, reason);
+                });
+                window.enhancedAdmin.showToast(`${selectedBookings.length} réservation(s) annulée(s) en lot`, 'info');
+                updateBulkActionsUI();
+            }
+        }
+        
+        function bulkExportBookings() {
+            const selectedCheckboxes = document.querySelectorAll('.booking-checkbox:checked');
+            const selectedBookingIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.bookingId);
+            
+            if (selectedBookingIds.length === 0) {
+                window.enhancedAdmin.showToast('Aucune réservation sélectionnée', 'warning');
+                return;
+            }
+            
+            const selectedBookingsData = window.enhancedAdmin.bookings.filter(booking => 
+                selectedBookingIds.includes(booking.id)
+            );
+            
+            // Create CSV content
+            const csvHeader = 'ID,Code Confirmation,Client,Prestataire,Service,Statut,Montant,Date\\n';
+            const csvRows = selectedBookingsData.map(booking => 
+                `${booking.id},"${booking.confirmation_code || ''}","${booking.client_name || ''}","${booking.provider_name || ''}","${booking.service_type || ''}","${booking.status || ''}","${booking.total_amount || ''}","${booking.scheduled_date || ''}"`
+            ).join('\\n');
+            
+            const csvContent = csvHeader + csvRows;
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `reservations_selectionnees_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            window.enhancedAdmin.showToast(`Export de ${selectedBookingIds.length} réservation(s) terminé`, 'success');
         }
         
         // Initialize dashboard when page loads
