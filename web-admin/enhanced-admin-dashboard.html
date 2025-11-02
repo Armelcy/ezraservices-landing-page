@@ -2197,13 +2197,39 @@
             }
             
             // Audit Trail Functions
-            addToDeletedUsers(deletedUser) {
+            async addToDeletedUsers(deletedUser) {
                 try {
+                    console.log('🗃️ Adding user to audit trail:', deletedUser.email);
+                    
+                    // Try to save to Supabase first
+                    if (this.supabase) {
+                        const { data, error } = await this.supabase
+                            .from('deleted_users_audit')
+                            .insert([{
+                                original_user_id: deletedUser.id,
+                                full_name: deletedUser.full_name,
+                                email: deletedUser.email,
+                                role: deletedUser.role,
+                                deleted_by: deletedUser.deleted_by,
+                                deleted_at: deletedUser.deleted_at,
+                                deletion_reason: deletedUser.deletion_reason,
+                                original_data: JSON.stringify(deletedUser)
+                            }]);
+                        
+                        if (error) {
+                            console.warn('Database insert failed, using localStorage:', error);
+                        } else {
+                            console.log('✅ User audit saved to database');
+                        }
+                    }
+                    
+                    // Always save to localStorage as backup
                     const existing = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
                     existing.push(deletedUser);
                     localStorage.setItem('ezra_deleted_users', JSON.stringify(existing));
                     this.deletedUsers = existing;
                     this.updateDeletedStats();
+                    
                 } catch (error) {
                     console.error('Failed to save deleted user:', error);
                 }
@@ -2221,16 +2247,77 @@
                 }
             }
             
-            loadDeletedData() {
+            async loadDeletedData() {
                 try {
+                    console.log('📊 Loading audit trail and ban data...');
+                    
+                    // Load from database first
+                    if (this.supabase) {
+                        try {
+                            // Load deleted users from database
+                            const { data: deletedUsersDB, error: usersError } = await this.supabase
+                                .from('deleted_users_audit')
+                                .select('*')
+                                .order('deleted_at', { ascending: false });
+                            
+                            if (deletedUsersDB && !usersError) {
+                                console.log(`✅ Loaded ${deletedUsersDB.length} deleted users from database`);
+                                this.deletedUsers = deletedUsersDB.map(record => JSON.parse(record.original_data));
+                            }
+                            
+                            // Load banned emails from database
+                            const { data: bannedEmailsDB, error: banError } = await this.supabase
+                                .from('banned_emails')
+                                .select('*')
+                                .order('banned_at', { ascending: false });
+                            
+                            if (bannedEmailsDB && !banError) {
+                                console.log(`✅ Loaded ${bannedEmailsDB.length} banned emails from database`);
+                                this.bannedEmails = bannedEmailsDB;
+                            }
+                            
+                        } catch (dbError) {
+                            console.warn('Database loading failed, using localStorage:', dbError);
+                        }
+                    }
+                    
+                    // Merge with localStorage data (fallback and additional data)
+                    const localDeletedUsers = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
+                    const localDeletedProviders = JSON.parse(localStorage.getItem('ezra_deleted_providers') || '[]');
+                    const localBannedEmails = JSON.parse(localStorage.getItem('ezra_banned_emails') || '[]');
+                    
+                    // Merge without duplicates
+                    this.deletedUsers = this.mergeArrays(this.deletedUsers, localDeletedUsers, 'id');
+                    this.deletedProviders = this.mergeArrays(this.deletedProviders, localDeletedProviders, 'id');
+                    this.bannedEmails = this.mergeArrays(this.bannedEmails, localBannedEmails, 'email');
+                    
+                    this.updateDeletedStats();
+                    this.updateBanStats();
+                    
+                    console.log(`📊 Final counts - Deleted users: ${this.deletedUsers.length}, Banned emails: ${this.bannedEmails.length}`);
+                    
+                } catch (error) {
+                    console.error('Failed to load deleted data:', error);
+                    // Fallback to localStorage only
                     this.deletedUsers = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
                     this.deletedProviders = JSON.parse(localStorage.getItem('ezra_deleted_providers') || '[]');
                     this.bannedEmails = JSON.parse(localStorage.getItem('ezra_banned_emails') || '[]');
                     this.updateDeletedStats();
                     this.updateBanStats();
-                } catch (error) {
-                    console.error('Failed to load deleted data:', error);
                 }
+            }
+            
+            mergeArrays(dbArray, localArray, keyField) {
+                const merged = [...(dbArray || [])];
+                const existingKeys = new Set(merged.map(item => item[keyField]));
+                
+                localArray.forEach(item => {
+                    if (!existingKeys.has(item[keyField])) {
+                        merged.push(item);
+                    }
+                });
+                
+                return merged;
             }
             
             updateDeletedStats() {
@@ -2246,16 +2333,107 @@
                     document.getElementById('recentDeletionsCount').textContent = recentDeletions.length;
                     document.getElementById('deletedBadge').textContent = this.deletedUsers.length + this.deletedProviders.length;
                 }
+                
+                // Update the deleted users table
+                this.updateDeletedUsersTable();
+                this.updateDeletedProvidersTable();
+            }
+            
+            updateDeletedUsersTable() {
+                const container = document.querySelector('#deletedUsersContainer tbody');
+                if (!container) return;
+                
+                if (this.deletedUsers.length === 0) {
+                    container.innerHTML = '<tr><td colspan="7" class="loading">Aucun utilisateur supprimé</td></tr>';
+                    return;
+                }
+                
+                container.innerHTML = this.deletedUsers.map(user => `
+                    <tr>
+                        <td><strong>${user.full_name || 'N/A'}</strong></td>
+                        <td>${user.email}</td>
+                        <td><span class="status-badge ${user.role}">${user.role}</span></td>
+                        <td>${user.deleted_by}</td>
+                        <td>${new Date(user.deleted_at).toLocaleDateString('fr-FR')} ${new Date(user.deleted_at).toLocaleTimeString('fr-FR')}</td>
+                        <td>${user.deletion_reason}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn approve" onclick="restoreDeletedUser('${user.id}')" title="Restaurer (Super Admin seulement)">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="permanentlyDeleteUser('${user.id}')" title="Supprimer définitivement (Super Admin seulement)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+            
+            updateDeletedProvidersTable() {
+                const container = document.querySelector('#deletedProvidersContainer tbody');
+                if (!container) return;
+                
+                if (this.deletedProviders.length === 0) {
+                    container.innerHTML = '<tr><td colspan="8" class="loading">Aucun prestataire supprimé</td></tr>';
+                    return;
+                }
+                
+                container.innerHTML = this.deletedProviders.map(provider => `
+                    <tr>
+                        <td><strong>${provider.business_name}</strong></td>
+                        <td>${provider.user?.full_name || 'N/A'}</td>
+                        <td>${provider.user?.email || 'N/A'}</td>
+                        <td><span class="cni-digits">****${provider.cni_number ? provider.cni_number.slice(-4) : 'N/A'}</span></td>
+                        <td>${provider.deleted_by}</td>
+                        <td>${new Date(provider.deleted_at).toLocaleDateString('fr-FR')} ${new Date(provider.deleted_at).toLocaleTimeString('fr-FR')}</td>
+                        <td>${provider.deletion_reason}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn approve" onclick="restoreDeletedProvider('${provider.id}')" title="Restaurer (Super Admin seulement)">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="permanentlyDeleteProvider('${provider.id}')" title="Supprimer définitivement (Super Admin seulement)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
             }
             
             // Ban Management Functions
-            addToBannedEmails(banData) {
+            async addToBannedEmails(banData) {
                 try {
+                    console.log('🚫 Adding email to ban list:', banData.email);
+                    
+                    // Try to save to Supabase first
+                    if (this.supabase) {
+                        const { data, error } = await this.supabase
+                            .from('banned_emails')
+                            .insert([{
+                                email: banData.email,
+                                reason: banData.reason,
+                                type: banData.type,
+                                banned_by: banData.banned_by,
+                                banned_at: banData.banned_at,
+                                expires_at: banData.expires_at
+                            }]);
+                        
+                        if (error) {
+                            console.warn('Database insert failed, using localStorage:', error);
+                        } else {
+                            console.log('✅ Ban saved to database');
+                        }
+                    }
+                    
+                    // Always save to localStorage as backup
                     const existing = JSON.parse(localStorage.getItem('ezra_banned_emails') || '[]');
                     existing.push(banData);
                     localStorage.setItem('ezra_banned_emails', JSON.stringify(existing));
                     this.bannedEmails = existing;
                     this.updateBanStats();
+                    
                 } catch (error) {
                     console.error('Failed to save banned email:', error);
                 }
@@ -2686,7 +2864,7 @@
             }
         }
         
-        function deleteUser(userId) {
+        async function deleteUser(userId) {
             const user = window.enhancedAdmin.users.find(u => u.id === userId);
             if (!user) {
                 window.enhancedAdmin.showToast('Utilisateur non trouvé', 'error');
@@ -2697,21 +2875,27 @@
             if (reason === null) return; // User cancelled
             
             if (confirm(`⚠️ ATTENTION ⚠️\n\nSupprimer définitivement l'utilisateur?\n\nNom: ${user.full_name || 'N/A'}\nEmail: ${user.email}\nRaison: ${reason}\n\nCette action sera enregistrée dans l'audit trail.`)) {
-                // Add to deleted users archive
-                const deletedUser = {
-                    ...user,
-                    deleted_by: 'current_admin',
-                    deleted_at: new Date().toISOString(),
-                    deletion_reason: reason
-                };
-                
-                window.enhancedAdmin.addToDeletedUsers(deletedUser);
-                
-                // Remove from active users
-                window.enhancedAdmin.users = window.enhancedAdmin.users.filter(u => u.id !== userId);
-                window.enhancedAdmin.updateUsersUI(window.enhancedAdmin.users, 'allUsersContainer');
-                
-                window.enhancedAdmin.showToast(`Utilisateur ${user.full_name || user.email} supprimé et archivé`, 'success');
+                try {
+                    // Add to deleted users archive
+                    const deletedUser = {
+                        ...user,
+                        deleted_by: 'current_admin',
+                        deleted_at: new Date().toISOString(),
+                        deletion_reason: reason
+                    };
+                    
+                    await window.enhancedAdmin.addToDeletedUsers(deletedUser);
+                    
+                    // Remove from active users
+                    window.enhancedAdmin.users = window.enhancedAdmin.users.filter(u => u.id !== userId);
+                    window.enhancedAdmin.updateUsersUI(window.enhancedAdmin.users, 'allUsersContainer');
+                    
+                    window.enhancedAdmin.showToast(`Utilisateur ${user.full_name || user.email} supprimé et archivé`, 'success');
+                    
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    window.enhancedAdmin.showToast('Erreur lors de la suppression', 'error');
+                }
             }
         }
         
@@ -3118,7 +3302,7 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
         });
         
         // Ban Management Functions
-        function banEmail() {
+        async function banEmail() {
             const email = document.getElementById('banEmailInput').value.trim();
             const reason = document.getElementById('banReasonSelect').value;
             const type = document.getElementById('banTypeSelect').value;
@@ -3133,22 +3317,28 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
                 return;
             }
             
-            const banData = {
-                email: email.toLowerCase(),
-                reason: reason,
-                type: type,
-                banned_by: 'current_admin',
-                banned_at: new Date().toISOString(),
-                expires_at: type === 'temporary' ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : null
-            };
-            
-            window.enhancedAdmin.addToBannedEmails(banData);
-            updateBannedList();
-            
-            // Clear form
-            document.getElementById('banEmailInput').value = '';
-            
-            window.enhancedAdmin.showToast(`Email ${email} banni avec succès`, 'success');
+            try {
+                const banData = {
+                    email: email.toLowerCase(),
+                    reason: reason,
+                    type: type,
+                    banned_by: 'current_admin',
+                    banned_at: new Date().toISOString(),
+                    expires_at: type === 'temporary' ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : null
+                };
+                
+                await window.enhancedAdmin.addToBannedEmails(banData);
+                updateBannedList();
+                
+                // Clear form
+                document.getElementById('banEmailInput').value = '';
+                
+                window.enhancedAdmin.showToast(`Email ${email} banni avec succès`, 'success');
+                
+            } catch (error) {
+                console.error('Error banning email:', error);
+                window.enhancedAdmin.showToast('Erreur lors du bannissement', 'error');
+            }
         }
         
         function updateBannedList() {
