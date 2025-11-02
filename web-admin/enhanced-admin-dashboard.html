@@ -824,6 +824,33 @@
             padding: 0.5rem 1rem;
             font-size: 0.9rem;
         }
+        
+        /* Booking table specific styles */
+        .confirmation-code {
+            color: var(--ezra-gold);
+            font-family: 'Courier New', monospace;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .email-text {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .provider-owner {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .cni-digits {
+            font-family: 'Courier New', monospace;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            color: var(--info);
+        }
     </style>
 </head>
 <body>
@@ -1212,7 +1239,7 @@
                         <div class="section-header">
                             <h2 class="section-title">Toutes les Réservations</h2>
                             <div class="header-actions">
-                                <button class="btn btn-secondary" onclick="filterBookings()">
+                                <button class="btn btn-secondary" onclick="showBookingFilters()">
                                     <i class="fas fa-filter"></i>
                                     Filtrer
                                 </button>
@@ -1220,6 +1247,47 @@
                                     <i class="fas fa-download"></i>
                                     Exporter
                                 </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Booking Filters -->
+                        <div id="bookingFilters" class="filters-section" style="display: none;">
+                            <div class="filters-grid">
+                                <div class="filter-group">
+                                    <label>Code de Confirmation</label>
+                                    <input type="text" id="confirmationCodeFilter" placeholder="ex: ABC123" style="text-transform: uppercase;">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Statut</label>
+                                    <select id="bookingStatusFilter">
+                                        <option value="">Tous les statuts</option>
+                                        <option value="pending">En attente</option>
+                                        <option value="confirmed">Confirmé</option>
+                                        <option value="in_progress">En cours</option>
+                                        <option value="completed">Terminé</option>
+                                        <option value="cancelled">Annulé</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Date de début</label>
+                                    <input type="date" id="bookingStartDate">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Date de fin</label>
+                                    <input type="date" id="bookingEndDate">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Client</label>
+                                    <input type="text" id="customerNameFilter" placeholder="Nom du client...">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Prestataire</label>
+                                    <input type="text" id="providerNameFilter" placeholder="Nom du prestataire...">
+                                </div>
+                                <div class="filter-actions">
+                                    <button class="btn btn-secondary" onclick="clearBookingFilters()">Effacer</button>
+                                    <button class="btn" onclick="applyBookingFilters()">Appliquer</button>
+                                </div>
                             </div>
                         </div>
                         
@@ -1549,11 +1617,12 @@
                 console.log('📊 Loading dashboard data...');
                 
                 try {
-                    const [stats, users, bookings, providers] = await Promise.allSettled([
+                    const [stats, users, bookings, providers, admins] = await Promise.allSettled([
                         this.loadStats(),
                         this.loadUsers(),
                         this.loadBookings(),
-                        this.loadProviders()
+                        this.loadProviders(),
+                        this.loadAdmins()
                     ]);
                     
                     if (stats.status === 'fulfilled') {
@@ -1572,6 +1641,14 @@
                     
                     if (providers.status === 'fulfilled') {
                         this.providers = providers.value;
+                    }
+                    
+                    if (admins.status === 'fulfilled') {
+                        this.admins = admins.value;
+                        // Merge with localStorage admins
+                        const localAdmins = this.loadAdminsFromLocalStorage();
+                        this.admins = [...this.admins, ...localAdmins];
+                        this.updateAdminsUI();
                     }
                     
                     console.log('✅ Dashboard data loaded');
@@ -1645,24 +1722,78 @@
             
             async loadBookings() {
                 try {
+                    console.log('📅 Loading bookings from database...');
+                    
                     const { data, error } = await this.supabase
                         .from('bookings')
                         .select(`
-                            id, service_name, status, total_amount, created_at,
-                            customer:customer_id(full_name),
-                            provider:provider_id(business_name)
+                            id, service_name, status, total_amount, created_at, 
+                            confirmation_code, scheduled_date, service_fee,
+                            customer:customer_id(full_name, email),
+                            provider:provider_id(business_name, user:user_id(full_name))
                         `)
                         .order('created_at', { ascending: false })
-                        .limit(50);
+                        .limit(100);
                     
-                    if (error) throw error;
+                    if (error) {
+                        console.error('Database query failed:', error);
+                        throw error;
+                    }
+                    
+                    console.log(`✅ Loaded ${data?.length || 0} bookings from database`);
                     return data || [];
                     
                 } catch (error) {
                     console.warn('Bookings loading failed, using demo data:', error);
                     return [
-                        { id: '1', service_name: 'Nettoyage', status: 'completed', total_amount: 25000, created_at: new Date().toISOString(), customer: { full_name: 'John Doe' }, provider: { business_name: 'CleanCorp' } },
-                        { id: '2', service_name: 'Réparation', status: 'pending', total_amount: 35000, created_at: new Date().toISOString(), customer: { full_name: 'Jane Smith' }, provider: { business_name: 'FixIt' } }
+                        { 
+                            id: '1', 
+                            service_name: 'Nettoyage de Maison', 
+                            status: 'completed', 
+                            total_amount: 25000, 
+                            service_fee: 2500,
+                            confirmation_code: 'ABC123',
+                            scheduled_date: new Date().toISOString(),
+                            created_at: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+                            customer: { full_name: 'John Doe', email: 'john@example.com' }, 
+                            provider: { business_name: 'CleanCorp', user: { full_name: 'Marie Dubois' } }
+                        },
+                        { 
+                            id: '2', 
+                            service_name: 'Réparation Électrique', 
+                            status: 'confirmed', 
+                            total_amount: 35000, 
+                            service_fee: 3500,
+                            confirmation_code: 'XYZ789',
+                            scheduled_date: new Date(Date.now() + 86400000).toISOString(), // Tomorrow
+                            created_at: new Date().toISOString(),
+                            customer: { full_name: 'Jane Smith', email: 'jane@example.com' }, 
+                            provider: { business_name: 'FixIt Services', user: { full_name: 'Paul Martin' } }
+                        },
+                        { 
+                            id: '3', 
+                            service_name: 'Jardinage', 
+                            status: 'pending', 
+                            total_amount: 15000, 
+                            service_fee: 1500,
+                            confirmation_code: 'GHI456',
+                            scheduled_date: new Date(Date.now() + 172800000).toISOString(), // Day after tomorrow
+                            created_at: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+                            customer: { full_name: 'Pierre Kamga', email: 'pierre@example.com' }, 
+                            provider: { business_name: 'Green Spaces', user: { full_name: 'Alice Nkomo' } }
+                        },
+                        { 
+                            id: '4', 
+                            service_name: 'Plomberie', 
+                            status: 'in_progress', 
+                            total_amount: 45000, 
+                            service_fee: 4500,
+                            confirmation_code: 'DEF321',
+                            scheduled_date: new Date().toISOString(), // Today
+                            created_at: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
+                            customer: { full_name: 'Sophie Mvondo', email: 'sophie@example.com' }, 
+                            provider: { business_name: 'AquaFix Pro', user: { full_name: 'Jean Biyong' } }
+                        }
                     ];
                 }
             }
@@ -1724,6 +1855,9 @@
             
             async createAdminInDatabase(adminData) {
                 try {
+                    console.log('🔄 Creating admin in database:', adminData);
+                    
+                    // First, try to create in admin_users table
                     const { data, error } = await this.supabase
                         .from('admin_users')
                         .insert([{
@@ -1736,13 +1870,25 @@
                         }])
                         .select();
                     
-                    if (error) throw error;
+                    if (error) {
+                        console.error('Database insert failed:', error);
+                        
+                        // If admin_users table doesn't exist, try profiles table
+                        if (error.message.includes('admin_users')) {
+                            console.log('📝 admin_users table not found, using profiles table');
+                            return await this.createAdminInProfiles(adminData);
+                        }
+                        throw error;
+                    }
+                    
+                    console.log('✅ Admin created in database:', data[0]);
                     return data[0];
                     
                 } catch (error) {
                     console.error('Failed to create admin in database:', error);
-                    // Return mock data for demo
-                    return {
+                    
+                    // Store in localStorage as fallback
+                    const mockAdmin = {
                         id: Date.now().toString(),
                         full_name: adminData.name,
                         email: adminData.email,
@@ -1751,6 +1897,52 @@
                         created_at: new Date().toISOString(),
                         last_login: null
                     };
+                    
+                    this.saveAdminToLocalStorage(mockAdmin);
+                    return mockAdmin;
+                }
+            }
+            
+            async createAdminInProfiles(adminData) {
+                try {
+                    const { data, error } = await this.supabase
+                        .from('profiles')
+                        .insert([{
+                            full_name: adminData.name,
+                            email: adminData.email,
+                            role: adminData.role,
+                            admin_role: adminData.role,
+                            is_active: true,
+                            created_at: new Date().toISOString()
+                        }])
+                        .select();
+                    
+                    if (error) throw error;
+                    return data[0];
+                    
+                } catch (error) {
+                    console.error('Failed to create admin in profiles:', error);
+                    throw error;
+                }
+            }
+            
+            saveAdminToLocalStorage(admin) {
+                try {
+                    const existingAdmins = JSON.parse(localStorage.getItem('ezra_admins') || '[]');
+                    existingAdmins.push(admin);
+                    localStorage.setItem('ezra_admins', JSON.stringify(existingAdmins));
+                    console.log('💾 Admin saved to localStorage');
+                } catch (error) {
+                    console.error('Failed to save admin to localStorage:', error);
+                }
+            }
+            
+            loadAdminsFromLocalStorage() {
+                try {
+                    return JSON.parse(localStorage.getItem('ezra_admins') || '[]');
+                } catch (error) {
+                    console.error('Failed to load admins from localStorage:', error);
+                    return [];
                 }
             }
             
@@ -1826,23 +2018,46 @@
                     <table class="data-table">
                         <thead>
                             <tr>
+                                <th>Code Confirmation</th>
                                 <th>Service</th>
                                 <th>Client</th>
                                 <th>Prestataire</th>
                                 <th>Statut</th>
                                 <th>Montant</th>
-                                <th>Date</th>
+                                <th>Date Programmée</th>
+                                <th>Date Création</th>
                                 ${containerId === 'allBookingsContainer' ? '<th>Actions</th>' : ''}
                             </tr>
                         </thead>
                         <tbody>
-                            ${bookings.map(booking => `
+                            ${bookings.map(booking => {
+                                const statusText = {
+                                    'pending': 'En attente',
+                                    'confirmed': 'Confirmé', 
+                                    'in_progress': 'En cours',
+                                    'completed': 'Terminé',
+                                    'cancelled': 'Annulé'
+                                };
+                                
+                                return `
                                 <tr>
+                                    <td><strong class="confirmation-code">${booking.confirmation_code || 'N/A'}</strong></td>
                                     <td>${booking.service_name}</td>
-                                    <td>${booking.customer?.full_name || 'N/A'}</td>
-                                    <td>${booking.provider?.business_name || 'N/A'}</td>
-                                    <td><span class="status-badge ${booking.status}">${booking.status}</span></td>
+                                    <td>
+                                        <div>
+                                            <strong>${booking.customer?.full_name || 'N/A'}</strong>
+                                            <br><small class="email-text">${booking.customer?.email || ''}</small>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div>
+                                            <strong>${booking.provider?.business_name || 'N/A'}</strong>
+                                            <br><small class="provider-owner">${booking.provider?.user?.full_name || ''}</small>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge ${booking.status}">${statusText[booking.status] || booking.status}</span></td>
                                     <td>${this.formatCurrency(booking.total_amount)}</td>
+                                    <td>${booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleDateString('fr-FR') : 'N/A'}</td>
                                     <td>${new Date(booking.created_at).toLocaleDateString('fr-FR')}</td>
                                     ${containerId === 'allBookingsContainer' ? `
                                         <td>
@@ -1850,11 +2065,15 @@
                                                 <button class="action-btn edit" onclick="viewBooking('${booking.id}')">
                                                     <i class="fas fa-eye"></i>
                                                 </button>
+                                                <button class="action-btn edit" onclick="editBooking('${booking.id}')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
                                             </div>
                                         </td>
                                     ` : ''}
                                 </tr>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </tbody>
                     </table>
                 `;
@@ -1916,6 +2135,45 @@
                 `;
                 
                 container.innerHTML = table;
+            }
+            
+            updateAdminsUI() {
+                const tableBody = document.querySelector('#adminsTableContainer tbody');
+                if (!tableBody) return;
+                
+                // Clear existing rows except super admin
+                const superAdminRow = tableBody.querySelector('tr');
+                tableBody.innerHTML = '';
+                if (superAdminRow) {
+                    tableBody.appendChild(superAdminRow);
+                }
+                
+                // Add all admins from database and localStorage
+                this.admins.forEach(admin => {
+                    const newRow = document.createElement('tr');
+                    newRow.innerHTML = `
+                        <td>${admin.full_name}</td>
+                        <td>${admin.email}</td>
+                        <td><span class="status-badge ${admin.role}">${admin.role === 'moderator' ? 'Modérateur' : 'Support Agent'}</span></td>
+                        <td><span class="status-badge active">Actif</span></td>
+                        <td>${admin.last_login ? new Date(admin.last_login).toLocaleDateString('fr-FR') : 'Jamais'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn edit" onclick="editAdmin('${admin.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="deleteAdmin('${admin.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(newRow);
+                });
+                
+                // Update admin count badge
+                const totalAdmins = this.admins.length + 1; // +1 for super admin
+                document.getElementById('adminsBadge').textContent = totalAdmins;
             }
             
             setupEventListeners() {
@@ -2120,6 +2378,26 @@
             window.enhancedAdmin.showToast('Export des réservations en cours...', 'info');
         }
         
+        function viewBooking(bookingId) {
+            const booking = window.enhancedAdmin.bookings.find(b => b.id === bookingId);
+            if (booking) {
+                const details = `
+Réservation: ${booking.confirmation_code}
+Service: ${booking.service_name}
+Client: ${booking.customer?.full_name} (${booking.customer?.email})
+Prestataire: ${booking.provider?.business_name}
+Statut: ${booking.status}
+Montant: ${window.enhancedAdmin.formatCurrency(booking.total_amount)}
+Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).toLocaleDateString('fr-FR') : 'N/A'}
+                `;
+                alert(details);
+            }
+        }
+        
+        function editBooking(bookingId) {
+            window.enhancedAdmin.showToast(`Modification réservation ${bookingId}`, 'info');
+        }
+        
         // Admin Management Functions
         function showAddAdminModal() {
             document.getElementById('addAdminModal').style.display = 'flex';
@@ -2273,6 +2551,90 @@
             
             window.enhancedAdmin.updateProvidersUI(filteredProviders, 'allProvidersContainer');
             window.enhancedAdmin.showToast(`${filteredProviders.length} prestataire(s) trouvé(s)`, 'info');
+        }
+        
+        // Booking Filter Functions
+        function showBookingFilters() {
+            const filters = document.getElementById('bookingFilters');
+            filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        function clearBookingFilters() {
+            document.getElementById('confirmationCodeFilter').value = '';
+            document.getElementById('bookingStatusFilter').value = '';
+            document.getElementById('bookingStartDate').value = '';
+            document.getElementById('bookingEndDate').value = '';
+            document.getElementById('customerNameFilter').value = '';
+            document.getElementById('providerNameFilter').value = '';
+            applyBookingFilters();
+        }
+        
+        function applyBookingFilters() {
+            const confirmationCode = document.getElementById('confirmationCodeFilter').value.toUpperCase();
+            const statusFilter = document.getElementById('bookingStatusFilter').value;
+            const startDate = document.getElementById('bookingStartDate').value;
+            const endDate = document.getElementById('bookingEndDate').value;
+            const customerName = document.getElementById('customerNameFilter').value.toLowerCase();
+            const providerName = document.getElementById('providerNameFilter').value.toLowerCase();
+            
+            let filteredBookings = window.enhancedAdmin.bookings;
+            
+            // Confirmation code filter (exact match)
+            if (confirmationCode) {
+                filteredBookings = filteredBookings.filter(booking => 
+                    booking.confirmation_code && booking.confirmation_code.toUpperCase() === confirmationCode
+                );
+            }
+            
+            // Status filter
+            if (statusFilter) {
+                filteredBookings = filteredBookings.filter(booking => booking.status === statusFilter);
+            }
+            
+            // Date range filter
+            if (startDate) {
+                const start = new Date(startDate);
+                filteredBookings = filteredBookings.filter(booking => 
+                    new Date(booking.created_at) >= start
+                );
+            }
+            
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(23, 59, 59, 999); // Include full end date
+                filteredBookings = filteredBookings.filter(booking => 
+                    new Date(booking.created_at) <= end
+                );
+            }
+            
+            // Customer name filter
+            if (customerName) {
+                filteredBookings = filteredBookings.filter(booking => 
+                    (booking.customer?.full_name && booking.customer.full_name.toLowerCase().includes(customerName)) ||
+                    (booking.customer?.email && booking.customer.email.toLowerCase().includes(customerName))
+                );
+            }
+            
+            // Provider name filter  
+            if (providerName) {
+                filteredBookings = filteredBookings.filter(booking => 
+                    (booking.provider?.business_name && booking.provider.business_name.toLowerCase().includes(providerName)) ||
+                    (booking.provider?.user?.full_name && booking.provider.user.full_name.toLowerCase().includes(providerName))
+                );
+            }
+            
+            window.enhancedAdmin.updateBookingsUI(filteredBookings, 'allBookingsContainer');
+            
+            // Special message for confirmation code search
+            if (confirmationCode) {
+                if (filteredBookings.length === 1) {
+                    window.enhancedAdmin.showToast(`✅ Réservation trouvée pour le code ${confirmationCode}`, 'success');
+                } else if (filteredBookings.length === 0) {
+                    window.enhancedAdmin.showToast(`❌ Aucune réservation trouvée pour le code ${confirmationCode}`, 'error');
+                }
+            } else {
+                window.enhancedAdmin.showToast(`${filteredBookings.length} réservation(s) trouvée(s)`, 'info');
+            }
         }
         
         function editAdmin(adminId) {
