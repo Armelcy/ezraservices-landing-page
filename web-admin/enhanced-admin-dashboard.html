@@ -2224,9 +2224,9 @@
                     }
                     
                     // Always save to localStorage as backup
-                    const existing = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
+                    const existing = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
                     existing.push(deletedUser);
-                    localStorage.setItem('ezra_deleted_users', JSON.stringify(existing));
+                    localStorage.setItem('deletedUsers', JSON.stringify(existing));
                     this.deletedUsers = existing;
                     this.updateDeletedStats();
                     
@@ -2237,9 +2237,9 @@
             
             addToDeletedProviders(deletedProvider) {
                 try {
-                    const existing = JSON.parse(localStorage.getItem('ezra_deleted_providers') || '[]');
+                    const existing = JSON.parse(localStorage.getItem('deletedProviders') || '[]');
                     existing.push(deletedProvider);
-                    localStorage.setItem('ezra_deleted_providers', JSON.stringify(existing));
+                    localStorage.setItem('deletedProviders', JSON.stringify(existing));
                     this.deletedProviders = existing;
                     this.updateDeletedStats();
                 } catch (error) {
@@ -2282,8 +2282,8 @@
                     }
                     
                     // Merge with localStorage data (fallback and additional data)
-                    const localDeletedUsers = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
-                    const localDeletedProviders = JSON.parse(localStorage.getItem('ezra_deleted_providers') || '[]');
+                    const localDeletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                    const localDeletedProviders = JSON.parse(localStorage.getItem('deletedProviders') || '[]');
                     const localBannedEmails = JSON.parse(localStorage.getItem('ezra_banned_emails') || '[]');
                     
                     // Merge without duplicates
@@ -2299,8 +2299,8 @@
                 } catch (error) {
                     console.error('Failed to load deleted data:', error);
                     // Fallback to localStorage only
-                    this.deletedUsers = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
-                    this.deletedProviders = JSON.parse(localStorage.getItem('ezra_deleted_providers') || '[]');
+                    this.deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                    this.deletedProviders = JSON.parse(localStorage.getItem('deletedProviders') || '[]');
                     this.bannedEmails = JSON.parse(localStorage.getItem('ezra_banned_emails') || '[]');
                     this.updateDeletedStats();
                     this.updateBanStats();
@@ -2413,13 +2413,18 @@
                             .select('*')
                             .order('deleted_at', { ascending: false });
                         
-                        if (error) throw error;
+                        if (error) {
+                            console.error('Supabase error:', error);
+                            throw error;
+                        }
                         
+                        console.log('✅ Raw database data:', data);
                         console.log('✅ Loaded', data?.length || 0, 'deleted users from database');
                         this.deletedUsers = data || [];
                         
                         // Also load from localStorage as backup
                         const localData = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                        console.log('📦 Local storage data:', localData);
                         
                         // Merge database and local data (database takes priority)
                         const allData = [...this.deletedUsers];
@@ -2430,18 +2435,23 @@
                         });
                         
                         this.deletedUsers = allData;
+                        console.log('🔄 Final merged data:', this.deletedUsers);
                     } else {
                         // Fallback to localStorage
                         this.deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
                         console.log('📦 Loaded', this.deletedUsers.length, 'deleted users from localStorage');
                     }
                     
+                    // Update stats first
+                    this.updateDeletedStats();
                     this.updateDeletedUsersTable();
                     
                 } catch (error) {
                     console.error('Error loading deleted users:', error);
                     // Fallback to localStorage
                     this.deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                    console.log('📦 Fallback to localStorage:', this.deletedUsers);
+                    this.updateDeletedStats();
                     this.updateDeletedUsersTable();
                 }
             }
