@@ -2402,6 +2402,94 @@
                 `).join('');
             }
             
+            // Load deleted users from database
+            async loadDeletedUsersFromDatabase() {
+                try {
+                    console.log('📥 Loading deleted users from database...');
+                    
+                    if (this.supabase) {
+                        const { data, error } = await this.supabase
+                            .from('deleted_users_audit')
+                            .select('*')
+                            .order('deleted_at', { ascending: false });
+                        
+                        if (error) throw error;
+                        
+                        console.log('✅ Loaded', data?.length || 0, 'deleted users from database');
+                        this.deletedUsers = data || [];
+                        
+                        // Also load from localStorage as backup
+                        const localData = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                        
+                        // Merge database and local data (database takes priority)
+                        const allData = [...this.deletedUsers];
+                        localData.forEach(localUser => {
+                            if (!allData.find(dbUser => dbUser.email === localUser.email)) {
+                                allData.push(localUser);
+                            }
+                        });
+                        
+                        this.deletedUsers = allData;
+                    } else {
+                        // Fallback to localStorage
+                        this.deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                        console.log('📦 Loaded', this.deletedUsers.length, 'deleted users from localStorage');
+                    }
+                    
+                    this.updateDeletedUsersTable();
+                    
+                } catch (error) {
+                    console.error('Error loading deleted users:', error);
+                    // Fallback to localStorage
+                    this.deletedUsers = JSON.parse(localStorage.getItem('deletedUsers') || '[]');
+                    this.updateDeletedUsersTable();
+                }
+            }
+            
+            // Load deleted providers from database
+            async loadDeletedProvidersFromDatabase() {
+                try {
+                    console.log('📥 Loading deleted providers from database...');
+                    
+                    if (this.supabase) {
+                        const { data, error } = await this.supabase
+                            .from('deleted_providers_audit')
+                            .select('*')
+                            .order('deleted_at', { ascending: false });
+                        
+                        if (error) throw error;
+                        
+                        console.log('✅ Loaded', data?.length || 0, 'deleted providers from database');
+                        this.deletedProviders = data || [];
+                        
+                        // Also load from localStorage as backup
+                        const localData = JSON.parse(localStorage.getItem('deletedProviders') || '[]');
+                        
+                        // Merge database and local data (database takes priority)
+                        const allData = [...this.deletedProviders];
+                        localData.forEach(localProvider => {
+                            if (!allData.find(dbProvider => dbProvider.email === localProvider.email)) {
+                                allData.push(localProvider);
+                            }
+                        });
+                        
+                        this.deletedProviders = allData;
+                    } else {
+                        // Fallback to localStorage
+                        this.deletedProviders = JSON.parse(localStorage.getItem('deletedProviders') || '[]');
+                        console.log('📦 Loaded', this.deletedProviders.length, 'deleted providers from localStorage');
+                    }
+                    
+                    this.updateDeletedProvidersTable();
+                    
+                } catch (error) {
+                    console.error('Error loading deleted providers:', error);
+                    // Fallback to localStorage
+                    this.deletedProviders = JSON.parse(localStorage.getItem('deletedProviders') || '[]');
+                    this.updateDeletedProvidersTable();
+                }
+            }
+            
             // Ban Management Functions
             async addToBannedEmails(banData) {
                 try {
@@ -2765,6 +2853,12 @@
                         break;
                     case 'bookings':
                         this.updateBookingsUI(this.bookings, 'allBookingsContainer');
+                        break;
+                    case 'audit':
+                        // Load deleted users and providers from database
+                        console.log('🔄 Loading audit trail data...');
+                        await this.loadDeletedUsersFromDatabase();
+                        await this.loadDeletedProvidersFromDatabase();
                         break;
                 }
             }
