@@ -1634,6 +1634,26 @@
                         this.updateUsersUI(users.value.slice(0, 5)); // Show only 5 on dashboard
                     }
                     
+                    if (admins.status === 'fulfilled') {
+                        this.admins = admins.value;
+                        // Merge with localStorage admins
+                        const localAdmins = this.loadAdminsFromLocalStorage();
+                        this.admins = [...this.admins, ...localAdmins];
+                        
+                        // Add admins to users array for filtering
+                        const adminUsers = this.admins.map(admin => ({
+                            id: admin.id,
+                            email: admin.email,
+                            full_name: admin.full_name,
+                            role: 'admin',
+                            is_active: admin.is_active,
+                            created_at: admin.created_at
+                        }));
+                        this.users = [...this.users, ...adminUsers];
+                        
+                        this.updateAdminsUI();
+                    }
+                    
                     if (bookings.status === 'fulfilled') {
                         this.bookings = bookings.value;
                         this.updateBookingsUI(bookings.value.slice(0, 5)); // Show only 5 on dashboard
@@ -1641,14 +1661,6 @@
                     
                     if (providers.status === 'fulfilled') {
                         this.providers = providers.value;
-                    }
-                    
-                    if (admins.status === 'fulfilled') {
-                        this.admins = admins.value;
-                        // Merge with localStorage admins
-                        const localAdmins = this.loadAdminsFromLocalStorage();
-                        this.admins = [...this.admins, ...localAdmins];
-                        this.updateAdminsUI();
                     }
                     
                     console.log('✅ Dashboard data loaded');
@@ -2329,7 +2341,22 @@
         
         // User management functions
         function editUser(userId) {
-            window.enhancedAdmin.showToast(`Édition utilisateur ${userId}`, 'info');
+            const user = window.enhancedAdmin.users.find(u => u.id === userId);
+            if (!user) {
+                window.enhancedAdmin.showToast('Utilisateur non trouvé', 'error');
+                return;
+            }
+            
+            const newName = prompt(`Modifier le nom pour ${user.email}:`, user.full_name || '');
+            if (newName && newName !== user.full_name) {
+                user.full_name = newName;
+                // Update UI
+                window.enhancedAdmin.updateUsersUI(window.enhancedAdmin.users, 'allUsersContainer');
+                window.enhancedAdmin.showToast(`Utilisateur ${newName} mis à jour`, 'success');
+                
+                // Here you would typically make an API call to update the user
+                console.log('Update user:', { id: userId, full_name: newName });
+            }
         }
         
         function deleteUser(userId) {
@@ -2352,7 +2379,38 @@
         }
         
         function editProvider(providerId) {
-            window.enhancedAdmin.showToast(`Édition prestataire ${providerId}`, 'info');
+            const provider = window.enhancedAdmin.providers.find(p => p.id === providerId);
+            if (!provider) {
+                window.enhancedAdmin.showToast('Prestataire non trouvé', 'error');
+                return;
+            }
+            
+            const details = `
+=== MODIFIER PRESTATAIRE ===
+Entreprise: ${provider.business_name}
+Propriétaire: ${provider.user?.full_name || 'N/A'}
+Email: ${provider.user?.email || 'N/A'}
+CNI: ****${provider.cni_number ? provider.cni_number.slice(-4) : 'N/A'}
+Statut CNI: ${provider.cni_verified ? 'Vérifié' : 'En attente'}
+Statut: ${provider.is_active ? 'Actif' : 'Inactif'}
+
+Actions disponibles:
+- Approuver CNI
+- Activer/Désactiver
+- Modifier informations
+            `;
+            
+            if (confirm(details + '\n\nVoulez-vous approuver ce prestataire?')) {
+                provider.cni_verified = true;
+                provider.is_active = true;
+                
+                // Update both containers
+                const pendingProviders = window.enhancedAdmin.providers.filter(p => !p.cni_verified);
+                window.enhancedAdmin.updateProvidersUI(pendingProviders, 'pendingProvidersContainer');
+                window.enhancedAdmin.updateProvidersUI(window.enhancedAdmin.providers, 'allProvidersContainer');
+                
+                window.enhancedAdmin.showToast(`Prestataire ${provider.business_name} approuvé`, 'success');
+            }
         }
         
         function bulkApproveProviders() {
@@ -2395,7 +2453,48 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
         }
         
         function editBooking(bookingId) {
-            window.enhancedAdmin.showToast(`Modification réservation ${bookingId}`, 'info');
+            const booking = window.enhancedAdmin.bookings.find(b => b.id === bookingId);
+            if (!booking) {
+                window.enhancedAdmin.showToast('Réservation non trouvée', 'error');
+                return;
+            }
+            
+            const statusOptions = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled'];
+            const statusText = {
+                'pending': 'En attente',
+                'confirmed': 'Confirmé', 
+                'in_progress': 'En cours',
+                'completed': 'Terminé',
+                'cancelled': 'Annulé'
+            };
+            
+            const currentStatus = booking.status;
+            const newStatus = prompt(
+                `Modifier le statut de la réservation ${booking.confirmation_code}:\n\n` +
+                `Statut actuel: ${statusText[currentStatus]}\n\n` +
+                `Options:\n` +
+                `1. pending (En attente)\n` +
+                `2. confirmed (Confirmé)\n` +
+                `3. in_progress (En cours)\n` +
+                `4. completed (Terminé)\n` +
+                `5. cancelled (Annulé)\n\n` +
+                `Entrez le nouveau statut:`,
+                currentStatus
+            );
+            
+            if (newStatus && statusOptions.includes(newStatus) && newStatus !== currentStatus) {
+                booking.status = newStatus;
+                
+                // Update UI
+                window.enhancedAdmin.updateBookingsUI(window.enhancedAdmin.bookings, 'allBookingsContainer');
+                window.enhancedAdmin.showToast(
+                    `Réservation ${booking.confirmation_code} → ${statusText[newStatus]}`, 
+                    'success'
+                );
+                
+                // Here you would typically make an API call to update the booking
+                console.log('Update booking:', { id: bookingId, status: newStatus });
+            }
         }
         
         // Admin Management Functions
