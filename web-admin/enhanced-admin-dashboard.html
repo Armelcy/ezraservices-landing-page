@@ -4338,6 +4338,14 @@
                         auth: {
                             autoRefreshToken: true,
                             persistSession: false
+                        },
+                        db: {
+                            schema: 'public'
+                        },
+                        global: {
+                            headers: {
+                                'X-Client-Info': 'ezra-admin-dashboard'
+                            }
                         }
                     }
                 );
@@ -6518,6 +6526,15 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
             a.click();
             
             window.enhancedAdmin.showToast(`Export de ${selectedBookingIds.length} réservation(s) terminé`, 'success');
+        }
+        
+        // Navigation function (called from HTML)
+        function navigateTo(page) {
+            if (window.enhancedAdmin) {
+                window.enhancedAdmin.navigateTo(page);
+            } else {
+                console.error('Dashboard not initialized yet');
+            }
         }
         
         // Initialize dashboard when page loads
