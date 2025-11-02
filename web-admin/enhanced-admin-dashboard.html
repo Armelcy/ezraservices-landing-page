@@ -4275,9 +4275,10 @@
     </div>
 
     <script>
-        // Ezra Configuration - Replace with your actual Supabase credentials
+        // Ezra Configuration - UPDATE THESE WITH YOUR CURRENT SUPABASE KEYS
         window.EZRA_CONFIG = {
             SUPABASE_URL: 'https://zouyaaeincpprkdkofgf.supabase.co',
+            // ⚠️ UPDATE THIS: Go to Supabase → Settings → API → Copy "anon public" key
             SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvdXlhYWVpbmNwcHJrZGtvZmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0OTQ4ODMsImV4cCI6MjA0NjA3MDg4M30.5zRZvCZKGHfJBc0QFN5_SEYwjKG8NTPF_HfJaXAOOmY'
         };
         
@@ -5325,6 +5326,12 @@
             }
             
             setupRealTimeUpdates() {
+                // Temporarily disabled realtime to fix WebSocket spam
+                // TODO: Re-enable after configuring Supabase Realtime properly
+                console.log('📡 Realtime updates disabled to prevent WebSocket errors');
+                return;
+                
+                /* DISABLED - Causing WebSocket connection spam
                 if (!this.supabase) return;
                 
                 this.supabase
@@ -5338,6 +5345,7 @@
                     .on('postgres_changes', { event: '*', schema: 'public', table: 'bookings' }, 
                         () => this.loadDashboardData())
                     .subscribe();
+                */
             }
             
             navigateTo(page) {
