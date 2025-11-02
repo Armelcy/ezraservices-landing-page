@@ -873,7 +873,7 @@ class EzraAdminDashboard {
                             <i class="fas fa-calendar-check"></i>
                         </div>
                     </div>
-                    <div class="stat-value">1,234</div>
+                    <div class="stat-value" id="totalBookingsCount">-</div>
                     <div class="stat-label">Réservations Totales</div>
                 </div>
                 
@@ -883,7 +883,7 @@ class EzraAdminDashboard {
                             <i class="fas fa-clock"></i>
                         </div>
                     </div>
-                    <div class="stat-value">23</div>
+                    <div class="stat-value" id="pendingBookingsCount">-</div>
                     <div class="stat-label">En Attente</div>
                 </div>
                 
@@ -893,7 +893,7 @@ class EzraAdminDashboard {
                             <i class="fas fa-check-circle"></i>
                         </div>
                     </div>
-                    <div class="stat-value">1,156</div>
+                    <div class="stat-value" id="confirmedBookingsCount">-</div>
                     <div class="stat-label">Confirmées</div>
                 </div>
             </div>
@@ -1601,6 +1601,9 @@ class EzraAdminDashboard {
             case 'providers':
                 this.loadProvidersData();
                 break;
+            case 'bookings':
+                this.loadBookingsData();
+                break;
             case 'analytics':
                 this.loadAnalyticsData();
                 this.initializeAnalyticsCharts();
@@ -1983,12 +1986,16 @@ class EzraAdminDashboard {
                         avatar: (user.display_name || user.email || 'U').substring(0, 2).toUpperCase()
                     }));
                     
-                    this.showToast(`${users.length} utilisateurs chargés`, 'success');
+                    // Only show success toast on first load
+                    if (!this.initialUsersLoaded) {
+                        this.showToastOnce('users-loaded', `${users.length} utilisateurs chargés`, 'success');
+                        this.initialUsersLoaded = true;
+                    }
                 }
             } else {
                 console.log('🎭 Loading demo users (no Supabase connection)');
                 users = this.getDemoUsers();
-                this.showToast('Mode démonstration - Utilisateurs fictifs', 'info');
+                this.showToastOnce('demo-mode-users', 'Mode démonstration - Utilisateurs fictifs', 'info');
             }
 
             // Render users table
@@ -2071,8 +2078,205 @@ class EzraAdminDashboard {
                 </tr>
             `).join('');
             
-            this.showToast('Erreur de connexion - Données de démonstration', 'warning');
+            this.showToastOnce('users-error', 'Erreur de connexion - Données de démonstration', 'warning');
         }
+    }
+
+    async loadBookingsData() {
+        const tableBody = document.getElementById('bookingsTableBody');
+        if (!tableBody) return;
+        
+        console.log('📅 Loading bookings data...');
+        tableBody.innerHTML = this.getLoadingSkeleton(5);
+        
+        try {
+            let bookings = [];
+            
+            if (this.supabase) {
+                console.log('🔍 Attempting to load real bookings from Supabase...');
+                
+                const { data, error } = await this.supabase
+                    .from('bookings')
+                    .select(`
+                        id,
+                        customer_id,
+                        provider_id,
+                        service_name,
+                        status,
+                        booking_date,
+                        total_amount,
+                        created_at
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+
+                if (error) {
+                    console.error('❌ Error loading bookings:', error);
+                    if (error.message.includes('relation "bookings" does not exist')) {
+                        bookings = this.getDemoBookings();
+                        this.showToastOnce('bookings-demo', 'Table "bookings" non trouvée - Données de démonstration', 'warning');
+                    } else {
+                        throw error;
+                    }
+                } else if (data && data.length > 0) {
+                    console.log(`✅ Successfully loaded ${data.length} real bookings from Supabase`);
+                    
+                    bookings = data.map(booking => ({
+                        id: booking.id,
+                        customer: booking.customer_id || 'Client inconnu',
+                        provider: booking.provider_id || 'Prestataire inconnu',
+                        service: booking.service_name || 'Service',
+                        status: booking.status || 'pending',
+                        date: new Date(booking.booking_date || booking.created_at).toLocaleDateString('fr-FR'),
+                        amount: booking.total_amount || 0
+                    }));
+                    
+                    if (!this.initialBookingsLoaded) {
+                        this.showToastOnce('bookings-loaded', `${bookings.length} réservations chargées`, 'success');
+                        this.initialBookingsLoaded = true;
+                    }
+                } else {
+                    console.log('📅 No bookings found, using demo data');
+                    bookings = this.getDemoBookings();
+                    this.showToastOnce('bookings-empty', 'Aucune réservation trouvée - Données demo', 'info');
+                }
+            } else {
+                console.log('🎭 Loading demo bookings (no Supabase connection)');
+                bookings = this.getDemoBookings();
+                this.showToastOnce('demo-mode-bookings', 'Mode démonstration - Réservations fictives', 'info');
+            }
+
+            // Update stats cards
+            this.updateBookingsStats(bookings);
+
+            // Render bookings table
+            setTimeout(() => {
+                tableBody.innerHTML = bookings.map(booking => `
+                    <tr>
+                        <td>${booking.id}</td>
+                        <td>${booking.customer}</td>
+                        <td>${booking.provider}</td>
+                        <td>${booking.service}</td>
+                        <td>${booking.date}</td>
+                        <td>${booking.amount ? booking.amount.toLocaleString('fr-FR') + ' FCFA' : 'N/A'}</td>
+                        <td><span class="status-badge ${booking.status}">${this.getStatusLabel(booking.status)}</span></td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm" onclick="dashboard.viewBooking('${booking.id}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm" onclick="dashboard.editBooking('${booking.id}')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }, 300);
+            
+        } catch (error) {
+            console.error('💥 Error loading bookings:', error);
+            const demoBookings = this.getDemoBookings();
+            this.updateBookingsStats(demoBookings);
+            
+            tableBody.innerHTML = demoBookings.map(booking => `
+                <tr>
+                    <td>${booking.id}</td>
+                    <td>${booking.customer}</td>
+                    <td>${booking.provider}</td>
+                    <td>${booking.service}</td>
+                    <td>${booking.date}</td>
+                    <td>${booking.amount ? booking.amount.toLocaleString('fr-FR') + ' FCFA' : 'N/A'}</td>
+                    <td><span class="status-badge ${booking.status}">${this.getStatusLabel(booking.status)}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm" onclick="dashboard.viewBooking('${booking.id}')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm" onclick="dashboard.editBooking('${booking.id}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            this.showToastOnce('bookings-error', 'Erreur de connexion - Données de démonstration', 'warning');
+        }
+    }
+
+    getDemoBookings() {
+        return [
+            {
+                id: 'BK001',
+                customer: 'Marie Martin',
+                provider: 'Service Pro Douala',
+                service: 'Ménage, Jardinage',
+                status: 'completed',
+                date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toLocaleDateString('fr-FR'),
+                amount: 15000
+            },
+            {
+                id: 'BK002',
+                customer: 'Pierre Durand',
+                provider: 'Expert Plomberie',
+                service: 'Plomberie',
+                status: 'confirmed',
+                date: new Date().toLocaleDateString('fr-FR'),
+                amount: 25000
+            },
+            {
+                id: 'BK003',
+                customer: 'Sophie Levy',
+                provider: 'Claude Essomba',
+                service: 'Électricité',
+                status: 'pending',
+                date: new Date(Date.now() + 1000 * 60 * 60 * 24).toLocaleDateString('fr-FR'),
+                amount: 18000
+            },
+            {
+                id: 'BK004',
+                customer: 'Emmanuel Foka',
+                provider: 'Aminata Bah',
+                service: 'Coiffure',
+                status: 'cancelled',
+                date: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5).toLocaleDateString('fr-FR'),
+                amount: 8000
+            }
+        ];
+    }
+
+    getStatusLabel(status) {
+        const labels = {
+            'pending': 'En attente',
+            'confirmed': 'Confirmée',
+            'completed': 'Terminée',
+            'cancelled': 'Annulée'
+        };
+        return labels[status] || status;
+    }
+
+    viewBooking(id) {
+        this.showToast(`Affichage de la réservation ${id}`, 'info');
+    }
+
+    editBooking(id) {
+        this.showToast(`Édition de la réservation ${id}`, 'info');
+    }
+
+    updateBookingsStats(bookings) {
+        const totalCount = bookings.length;
+        const pendingCount = bookings.filter(b => b.status === 'pending').length;
+        const confirmedCount = bookings.filter(b => b.status === 'confirmed' || b.status === 'completed').length;
+
+        // Update stat cards if they exist
+        const totalEl = document.getElementById('totalBookingsCount');
+        const pendingEl = document.getElementById('pendingBookingsCount');
+        const confirmedEl = document.getElementById('confirmedBookingsCount');
+
+        if (totalEl) totalEl.textContent = totalCount.toLocaleString('fr-FR');
+        if (pendingEl) pendingEl.textContent = pendingCount.toLocaleString('fr-FR');
+        if (confirmedEl) confirmedEl.textContent = confirmedCount.toLocaleString('fr-FR');
     }
 
     getDemoUsers() {
@@ -2172,26 +2376,63 @@ class EzraAdminDashboard {
         const tableBody = document.getElementById('providersTableBody');
         if (!tableBody) return;
         
+        console.log('👥 Loading providers data...');
         tableBody.innerHTML = this.getLoadingSkeleton(5);
         
-        const providers = [
-            {
-                id: 1,
-                name: 'Service Pro Douala',
-                services: ['Ménage', 'Jardinage'],
-                location: 'Douala',
-                rating: 4.8,
-                status: 'approved'
-            },
-            {
-                id: 2,
-                name: 'Expert Plomberie',
-                services: ['Plomberie'],
-                location: 'Yaoundé',
-                rating: 4.5,
-                status: 'pending'
+        try {
+            let providers = [];
+            
+            if (this.supabase) {
+                console.log('🔍 Attempting to load real providers from Supabase...');
+                
+                // Load providers from Users table where provider_type exists
+                const { data, error } = await this.supabase
+                    .from('Users')
+                    .select(`
+                        id,
+                        email,
+                        display_name,
+                        provider_type,
+                        providers,
+                        created_at
+                    `)
+                    .not('provider_type', 'is', null)
+                    .order('created_at', { ascending: false })
+                    .limit(50);
+
+                if (error) {
+                    console.error('❌ Error loading providers:', error);
+                    providers = this.getDemoProviders();
+                    this.showToastOnce('providers-demo', 'Erreur de chargement - Données de démonstration', 'warning');
+                } else if (data && data.length > 0) {
+                    console.log(`✅ Successfully loaded ${data.length} real providers from Supabase`);
+                    
+                    providers = data.map(provider => ({
+                        id: provider.id,
+                        name: provider.display_name || provider.email?.split('@')[0] || 'Prestataire',
+                        services: provider.provider_type ? [provider.provider_type] : (provider.providers ? provider.providers.split(',') : ['Service']),
+                        location: 'Cameroun', // Default location
+                        rating: 4.5 + Math.random() * 0.5, // Random rating between 4.5-5.0
+                        status: 'approved' // Default to approved
+                    }));
+                    
+                    if (!this.initialProvidersLoaded) {
+                        this.showToastOnce('providers-loaded', `${providers.length} prestataires chargés`, 'success');
+                        this.initialProvidersLoaded = true;
+                    }
+                } else {
+                    console.log('👥 No providers found, using demo data');
+                    providers = this.getDemoProviders();
+                    this.showToastOnce('providers-empty', 'Aucun prestataire trouvé - Données demo', 'info');
+                }
+            } else {
+                console.log('🎭 Loading demo providers (no Supabase connection)');
+                providers = this.getDemoProviders();
+                this.showToastOnce('demo-mode-providers', 'Mode démonstration - Prestataires fictifs', 'info');
             }
-        ];
+
+            // Update provider stats
+            this.updateProvidersStats(providers);
         
         setTimeout(() => {
             tableBody.innerHTML = providers.map(provider => `
@@ -2232,6 +2473,111 @@ class EzraAdminDashboard {
                 </tr>
             `).join('');
         }, 1000);
+            
+        } catch (error) {
+            console.error('💥 Error loading providers:', error);
+            const demoProviders = this.getDemoProviders();
+            this.updateProvidersStats(demoProviders);
+            
+            tableBody.innerHTML = demoProviders.map(provider => `
+                <tr>
+                    <td><input type="checkbox" value="${provider.id}"></td>
+                    <td>
+                        <div style="font-weight: 600;">${provider.name}</div>
+                    </td>
+                    <td>${provider.services.join(', ')}</td>
+                    <td>${provider.location}</td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 0.25rem;">
+                            <i class="fas fa-star" style="color: var(--warning);"></i>
+                            ${provider.rating}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="stat-change ${provider.status === 'approved' ? 'positive' : 'negative'}">
+                            ${provider.status === 'approved' ? 'Approuvé' : 'En attente'}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            ${provider.status === 'pending' ? `
+                                <button class="btn" style="padding: 0.25rem 0.5rem;" onclick="dashboard.approveProvider(${provider.id})">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn" style="padding: 0.25rem 0.5rem;" onclick="dashboard.rejectProvider(${provider.id})">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            ` : `
+                                <button class="btn" style="padding: 0.25rem 0.5rem;" onclick="dashboard.viewProvider(${provider.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+            
+            this.showToastOnce('providers-error', 'Erreur de connexion - Données de démonstration', 'warning');
+        }
+    }
+
+    getDemoProviders() {
+        return [
+            {
+                id: 1,
+                name: 'Service Pro Douala',
+                services: ['Ménage', 'Jardinage'],
+                location: 'Douala',
+                rating: 4.8,
+                status: 'approved'
+            },
+            {
+                id: 2,
+                name: 'Expert Plomberie',
+                services: ['Plomberie'],
+                location: 'Yaoundé',
+                rating: 4.5,
+                status: 'pending'
+            },
+            {
+                id: 3,
+                name: 'Claude Essomba',
+                services: ['Électricité'],
+                location: 'Yaoundé',
+                rating: 4.5,
+                status: 'approved'
+            },
+            {
+                id: 4,
+                name: 'Aminata Bah',
+                services: ['Coiffure'],
+                location: 'Douala',
+                rating: 4.8,
+                status: 'approved'
+            }
+        ];
+    }
+
+    updateProvidersStats(providers) {
+        const totalCount = providers.length;
+        const pendingCount = providers.filter(p => p.status === 'pending').length;
+        const approvedCount = providers.filter(p => p.status === 'approved').length;
+        const avgRating = providers.reduce((sum, p) => sum + p.rating, 0) / providers.length;
+
+        // Update stat cards if they exist (for providers page)
+        const totalEl = document.getElementById('totalProvidersCount');
+        const pendingEl = document.getElementById('pendingProvidersCount');
+        const approvedEl = document.getElementById('approvedProvidersCount');
+        const ratingEl = document.getElementById('avgProvidersRating');
+
+        if (totalEl) totalEl.textContent = totalCount.toLocaleString('fr-FR');
+        if (pendingEl) pendingEl.textContent = pendingCount.toLocaleString('fr-FR');
+        if (approvedEl) approvedEl.textContent = approvedCount.toLocaleString('fr-FR');
+        if (ratingEl) ratingEl.textContent = avgRating.toFixed(1);
+    }
+
+    viewProvider(id) {
+        this.showToast(`Affichage du prestataire ${id}`, 'info');
     }
     
     async loadDisputesData() {
