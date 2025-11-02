@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Ezra Admin - Connexion Sécurisée</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <style>
+        :root {
+            --ezra-navy: #0A1630;
+            --ezra-navy-light: #1a2849;
+            --ezra-gold: #D4AF37;
+            --ezra-gold-light: #F4E6A1;
+            --surface: #FFFFFF;
+            --text-primary: #1E293B;
+            --text-secondary: #64748B;
+            --error: #EF4444;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --border: #E2E8F0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--ezra-navy) 0%, var(--ezra-navy-light) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .login-container {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--ezra-gold) 0%, var(--ezra-gold-light) 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: var(--ezra-navy);
+        }
+        
+        .login-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ezra-navy);
+            margin-bottom: 0.5rem;
+        }
+        
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .login-form {
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--ezra-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        .form-input.error {
+            border-color: var(--error);
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0;
+            font-size: 1rem;
+        }
+        
+        .password-toggle:hover {
+            color: var(--text-primary);
+        }
+        
+        .login-button {
+            width: 100%;
+            background: linear-gradient(135deg, var(--ezra-gold) 0%, var(--ezra-gold-light) 100%);
+            color: var(--ezra-navy);
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+        }
+        
+        .login-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .login-button .loading {
+            display: none;
+        }
+        
+        .login-button.loading .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--ezra-navy);
+            border-top: 2px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.5rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .security-notice {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        
+        .security-notice .icon {
+            color: var(--ezra-gold);
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .security-notice .text {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+        
+        .error-message {
+            background: #fef2f2;
+            color: var(--error);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border: 1px solid #fecaca;
+            display: none;
+        }
+        
+        .success-message {
+            background: #f0fdf4;
+            color: var(--success);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border: 1px solid #bbf7d0;
+            display: none;
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .forgot-password a {
+            color: var(--ezra-gold);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        .lockout-message {
+            background: #fff7ed;
+            color: var(--warning);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            border: 1px solid #fed7aa;
+            display: none;
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1 class="login-title">Ezra Admin</h1>
+            <p class="login-subtitle">Accès sécurisé au tableau de bord administrateur</p>
+        </div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        <div id="lockoutMessage" class="lockout-message"></div>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="email" class="form-label">
+                    <i class="fas fa-envelope"></i> Adresse email
+                </label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    class="form-input" 
+                    placeholder="admin@ezraservice.com"
+                    required
+                    autocomplete="email"
+                    spellcheck="false"
+                >
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">
+                    <i class="fas fa-lock"></i> Mot de passe
+                </label>
+                <div class="password-wrapper">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Entrez votre mot de passe"
+                        required
+                        autocomplete="current-password"
+                        minlength="8"
+                    >
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <button type="submit" id="loginButton" class="login-button">
+                <span class="loading"></span>
+                <span class="button-text">Se connecter</span>
+            </button>
+        </form>
+        
+        <div class="forgot-password">
+            <a href="#" onclick="handleForgotPassword()">Mot de passe oublié ?</a>
+        </div>
+        
+        <div class="security-notice">
+            <div class="icon">
+                <i class="fas fa-shield-check"></i>
+            </div>
+            <div class="text">
+                Connexion sécurisée avec protection contre les attaques par force brute.
+                <br>Maximum 5 tentatives avant verrouillage temporaire.
+            </div>
+        </div>
+    </div>
+
+    <script src="secure-admin-auth.js"></script>
+    <script>
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('loginButton');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const lockoutMessage = document.getElementById('lockoutMessage');
+
+        // Form submission handler
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            
+            // Clear previous messages
+            hideAllMessages();
+            
+            // Client-side validation
+            if (!email || !password) {
+                showError('Veuillez remplir tous les champs');
+                return;
+            }
+            
+            if (!isValidEmail(email)) {
+                showError('Format d\'email invalide');
+                emailInput.classList.add('error');
+                return;
+            }
+            
+            // Check for account lockout
+            if (window.secureAdminAuth && window.secureAdminAuth.isAccountLocked(email)) {
+                const timeRemaining = window.secureAdminAuth.getLockoutTimeRemaining(email);
+                showLockout(`Compte verrouillé. Réessayez dans ${Math.ceil(timeRemaining / 60000)} minutes.`);
+                return;
+            }
+            
+            // Show loading state
+            setLoadingState(true);
+            
+            try {
+                // Attempt login
+                if (window.secureAdminAuth) {
+                    const success = await window.secureAdminAuth.login(email, password);
+                    
+                    if (success) {
+                        showSuccess('Connexion réussie! Redirection...');
+                        // Redirect will be handled by the auth class
+                    } else {
+                        // Error will be shown by the auth class
+                        setLoadingState(false);
+                    }
+                } else {
+                    throw new Error('Système d\'authentification non disponible');
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('Erreur de connexion: ' + error.message);
+                setLoadingState(false);
+            }
+        });
+
+        // Input event listeners for real-time validation
+        emailInput.addEventListener('input', () => {
+            emailInput.classList.remove('error');
+            hideAllMessages();
+        });
+
+        passwordInput.addEventListener('input', () => {
+            passwordInput.classList.remove('error');
+            hideAllMessages();
+        });
+
+        // Password visibility toggle
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleIcon = document.getElementById('passwordToggleIcon');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.className = 'fas fa-eye';
+            }
+        }
+
+        // Utility functions
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function setLoadingState(loading) {
+            loginButton.disabled = loading;
+            if (loading) {
+                loginButton.classList.add('loading');
+                loginButton.querySelector('.button-text').textContent = 'Connexion...';
+            } else {
+                loginButton.classList.remove('loading');
+                loginButton.querySelector('.button-text').textContent = 'Se connecter';
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+        }
+
+        function showLockout(message) {
+            lockoutMessage.textContent = message;
+            lockoutMessage.style.display = 'block';
+        }
+
+        function hideAllMessages() {
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            lockoutMessage.style.display = 'none';
+        }
+
+        function handleForgotPassword() {
+            showError('Fonctionnalité de récupération de mot de passe non encore implémentée. Contactez votre administrateur système.');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.target === emailInput || e.target === passwordInput)) {
+                loginForm.requestSubmit();
+            }
+        });
+
+        // Auto-focus on email field
+        document.addEventListener('DOMContentLoaded', () => {
+            emailInput.focus();
+        });
+
+        // Security: Clear password field on page unload
+        window.addEventListener('beforeunload', () => {
+            passwordInput.value = '';
+        });
+
+        // Check for existing session on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            if (window.secureAdminAuth) {
+                // The auth class will handle session checking automatically
+            }
+        });
+    </script>
+</body>
+</html>
