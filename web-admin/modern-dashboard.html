@@ -1606,10 +1606,61 @@
         <!-- Toasts will be dynamically added here -->
     </div>
 
-    <!-- Original dashboard script commented out - using fixed version -->
-    <!-- <script src="modern-dashboard.js"></script> -->
+    <!-- Use BOTH original UI script AND fixed connection -->
+    <script src="modern-dashboard.js"></script>
     
-    <!-- FIXED Dashboard Connection Script -->
-    <script src="fixed-dashboard-connection.js"></script>
+    <!-- Override connection logic with fixed version -->
+    <script>
+    // Override the connection testing with fixed logic
+    if (window.EzraAdminDashboard && window.ezraAdmin) {
+        console.log('🔧 Applying connection fixes to existing dashboard...');
+        
+        // Override the testConnection method with our fixed version
+        window.ezraAdmin.testConnection = async function() {
+            try {
+                console.log('🔌 Testing Supabase connection (FIXED VERSION)...');
+                
+                const { data, error } = await this.supabase
+                    .from('profiles')
+                    .select('count', { count: 'exact', head: true })
+                    .limit(1);
+                
+                if (error) {
+                    console.error('❌ Connection test failed:', error);
+                    if (error.message.includes('relation "profiles" does not exist')) {
+                        this.showToast('Table "profiles" n\'existe pas - Mode démonstration', 'warning');
+                        this.initDemoMode();
+                        return false;
+                    }
+                    throw error;
+                }
+                
+                console.log('✅ Connection test successful, found profiles table');
+                return true;
+                
+            } catch (error) {
+                console.error('🔥 Connection test failed:', error);
+                this.showToast('Erreur de connexion à la base de données', 'error');
+                this.initDemoMode();
+                return false;
+            }
+        };
+        
+        // Enhanced data loading with proper error handling
+        const originalLoadDashboardData = window.ezraAdmin.loadDashboardData;
+        window.ezraAdmin.loadDashboardData = async function() {
+            try {
+                console.log('📊 Loading dashboard data (ENHANCED VERSION)...');
+                await originalLoadDashboardData.call(this);
+                this.showToast('✅ Données chargées avec succès', 'success');
+            } catch (error) {
+                console.error('❌ Enhanced data loading failed:', error);
+                this.showToast('Chargement des données de démonstration', 'info');
+            }
+        };
+        
+        console.log('✅ Dashboard connection fixes applied successfully');
+    }
+    </script>
 </body>
 </html>
