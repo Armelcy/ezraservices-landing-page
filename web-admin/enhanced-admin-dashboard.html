@@ -613,6 +613,161 @@
             border-color: var(--warning);
             background: rgba(245, 158, 11, 0.05);
         }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+        }
+        
+        .modal-content {
+            background: var(--surface);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--ezra-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+        
+        /* Role Cards */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .role-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+        
+        .role-card:hover {
+            border-color: var(--ezra-gold);
+            transform: translateY(-2px);
+        }
+        
+        .role-card h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+        
+        .role-card p {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .permissions-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .permission-tag {
+            background: var(--background);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            border: 1px solid var(--border);
+        }
+        
+        .permission-tag:contains("✓") {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+            border-color: var(--success);
+        }
+        
+        .stat-icon.admin {
+            background: rgba(139, 69, 19, 0.1);
+            color: #8B4513;
+        }
     </style>
 </head>
 <body>
@@ -683,6 +838,19 @@
                     <div class="nav-item" data-page="monitoring">
                         <i class="fas fa-heartbeat"></i>
                         <span>Monitoring</span>
+                    </div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">Administration</div>
+                    <div class="nav-item" data-page="admin-management">
+                        <i class="fas fa-users-cog"></i>
+                        <span>Gestion Admins</span>
+                        <span class="badge" id="adminsBadge">1</span>
+                    </div>
+                    <div class="nav-item" data-page="roles">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Rôles & Permissions</span>
                     </div>
                 </div>
             </nav>
@@ -992,8 +1160,179 @@
                         <p>Page Monitoring en développement...</p>
                     </div>
                 </div>
+                
+                <!-- Page: Admin Management -->
+                <div id="admin-managementPage" class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Gestion des Administrateurs</h1>
+                        <p class="page-subtitle">Créer et gérer les comptes administrateurs</p>
+                    </div>
+                    
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Administrateurs Actuels</h2>
+                            <button class="btn" onclick="showAddAdminModal()">
+                                <i class="fas fa-plus"></i>
+                                Créer Admin
+                            </button>
+                        </div>
+                        
+                        <div id="adminsTableContainer">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Email</th>
+                                        <th>Rôle</th>
+                                        <th>Statut</th>
+                                        <th>Dernière connexion</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Super Admin</td>
+                                        <td>admin@ezraservice.com</td>
+                                        <td><span class="status-badge admin">Super Admin</span></td>
+                                        <td><span class="status-badge active">Actif</span></td>
+                                        <td>Maintenant</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="action-btn edit" onclick="editAdmin('super')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page: Roles & Permissions -->
+                <div id="rolesPage" class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Rôles & Permissions</h1>
+                        <p class="page-subtitle">Configurer les rôles et permissions d'accès</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon admin">
+                                    <i class="fas fa-crown"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value">1</div>
+                            <div class="stat-label">Super Admin</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon users">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Modérateurs</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon providers">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Support Agents</div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Configuration des Rôles</h2>
+                            <button class="btn" onclick="createCustomRole()">
+                                <i class="fas fa-plus"></i>
+                                Créer Rôle
+                            </button>
+                        </div>
+                        
+                        <div class="roles-grid">
+                            <div class="role-card">
+                                <h3>Super Admin</h3>
+                                <p>Accès complet à toutes les fonctionnalités</p>
+                                <div class="permissions-list">
+                                    <span class="permission-tag">✓ Tout gérer</span>
+                                    <span class="permission-tag">✓ Créer admins</span>
+                                    <span class="permission-tag">✓ Modifier système</span>
+                                </div>
+                            </div>
+                            
+                            <div class="role-card">
+                                <h3>Modérateur</h3>
+                                <p>Gestion utilisateurs et contenus</p>
+                                <div class="permissions-list">
+                                    <span class="permission-tag">✓ Gérer utilisateurs</span>
+                                    <span class="permission-tag">✓ Approuver prestataires</span>
+                                    <span class="permission-tag">✗ Créer admins</span>
+                                </div>
+                                <button class="btn btn-secondary" onclick="configureRole('moderator')">Configurer</button>
+                            </div>
+                            
+                            <div class="role-card">
+                                <h3>Support Agent</h3>
+                                <p>Assistance client et résolution problèmes</p>
+                                <div class="permissions-list">
+                                    <span class="permission-tag">✓ Voir utilisateurs</span>
+                                    <span class="permission-tag">✓ Gérer litiges</span>
+                                    <span class="permission-tag">✗ Modifier données</span>
+                                </div>
+                                <button class="btn btn-secondary" onclick="configureRole('support')">Configurer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
+    </div>
+    
+    <!-- Add Admin Modal -->
+    <div id="addAdminModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Créer Nouvel Administrateur</h2>
+                <button class="close-btn" onclick="hideAddAdminModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="addAdminForm">
+                    <div class="form-group">
+                        <label>Nom complet</label>
+                        <input type="text" id="adminName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="adminEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Rôle</label>
+                        <select id="adminRole" required>
+                            <option value="">Sélectionner un rôle</option>
+                            <option value="moderator">Modérateur</option>
+                            <option value="support">Support Agent</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Mot de passe temporaire</label>
+                        <input type="password" id="adminPassword" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="hideAddAdminModal()">Annuler</button>
+                <button class="btn" onclick="createAdmin()">Créer Admin</button>
+            </div>
+        </div>
     </div>
     
     <!-- Connection Status Indicator -->
@@ -1576,6 +1915,92 @@
         function exportBookings() {
             window.enhancedAdmin.showToast('Export des réservations en cours...', 'info');
         }
+        
+        // Admin Management Functions
+        function showAddAdminModal() {
+            document.getElementById('addAdminModal').style.display = 'flex';
+        }
+        
+        function hideAddAdminModal() {
+            document.getElementById('addAdminModal').style.display = 'none';
+            document.getElementById('addAdminForm').reset();
+        }
+        
+        function createAdmin() {
+            const name = document.getElementById('adminName').value;
+            const email = document.getElementById('adminEmail').value;
+            const role = document.getElementById('adminRole').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            if (!name || !email || !role || !password) {
+                window.enhancedAdmin.showToast('Tous les champs sont requis', 'error');
+                return;
+            }
+            
+            // Here you would typically make an API call to create the admin
+            console.log('Creating admin:', { name, email, role });
+            
+            window.enhancedAdmin.showToast(`Admin ${name} créé avec succès`, 'success');
+            hideAddAdminModal();
+            
+            // Add to the table (simulation)
+            const tableBody = document.querySelector('#adminsTableContainer tbody');
+            const newRow = `
+                <tr>
+                    <td>${name}</td>
+                    <td>${email}</td>
+                    <td><span class="status-badge ${role}">${role === 'moderator' ? 'Modérateur' : 'Support Agent'}</span></td>
+                    <td><span class="status-badge active">Actif</span></td>
+                    <td>Jamais</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn edit" onclick="editAdmin('${email}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="deleteAdmin('${email}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', newRow);
+            
+            // Update admin count badge
+            const currentCount = parseInt(document.getElementById('adminsBadge').textContent);
+            document.getElementById('adminsBadge').textContent = currentCount + 1;
+        }
+        
+        function editAdmin(adminId) {
+            window.enhancedAdmin.showToast(`Édition admin ${adminId}`, 'info');
+        }
+        
+        function deleteAdmin(adminId) {
+            if (adminId === 'super') {
+                window.enhancedAdmin.showToast('Impossible de supprimer le Super Admin', 'error');
+                return;
+            }
+            
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet administrateur ?')) {
+                window.enhancedAdmin.showToast(`Admin ${adminId} supprimé`, 'success');
+                // Remove from table and update count
+            }
+        }
+        
+        function configureRole(role) {
+            window.enhancedAdmin.showToast(`Configuration du rôle ${role}`, 'info');
+        }
+        
+        function createCustomRole() {
+            window.enhancedAdmin.showToast('Création de rôle personnalisé', 'info');
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                hideAddAdminModal();
+            }
+        });
         
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', () => {
