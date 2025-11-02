@@ -935,6 +935,16 @@
                         <i class="fas fa-shield-alt"></i>
                         <span>Rôles & Permissions</span>
                     </div>
+                    <div class="nav-item" data-page="audit-trail">
+                        <i class="fas fa-history"></i>
+                        <span>Archives & Audit</span>
+                        <span class="badge" id="deletedBadge">0</span>
+                    </div>
+                    <div class="nav-item" data-page="ban-management">
+                        <i class="fas fa-ban"></i>
+                        <span>Gestion Interdictions</span>
+                        <span class="badge" id="bannedBadge">0</span>
+                    </div>
                 </div>
             </nav>
             
@@ -1361,6 +1371,230 @@
                     </div>
                 </div>
                 
+                <!-- Page: Audit Trail & Archives -->
+                <div id="audit-trailPage" class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Archives & Audit Trail</h1>
+                        <p class="page-subtitle">Historique des suppressions et modifications</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon users">
+                                    <i class="fas fa-user-times"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="deletedUsersCount">0</div>
+                            <div class="stat-label">Utilisateurs Supprimés</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon providers">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="deletedProvidersCount">0</div>
+                            <div class="stat-label">Prestataires Supprimés</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon error">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="recentDeletionsCount">0</div>
+                            <div class="stat-label">Suppressions Récentes (7j)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Utilisateurs Supprimés</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="showDeletedFilters()">
+                                    <i class="fas fa-filter"></i>
+                                    Filtrer
+                                </button>
+                                <button class="btn btn-secondary" onclick="exportDeletedData()">
+                                    <i class="fas fa-download"></i>
+                                    Exporter
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="deletedUsersContainer">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Email</th>
+                                        <th>Rôle</th>
+                                        <th>Supprimé par</th>
+                                        <th>Date de suppression</th>
+                                        <th>Raison</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="7" class="loading">Aucun utilisateur supprimé</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Prestataires Supprimés</h2>
+                        </div>
+                        
+                        <div id="deletedProvidersContainer">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nom d'entreprise</th>
+                                        <th>Propriétaire</th>
+                                        <th>Email</th>
+                                        <th>CNI (4 derniers)</th>
+                                        <th>Supprimé par</th>
+                                        <th>Date de suppression</th>
+                                        <th>Raison</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="8" class="loading">Aucun prestataire supprimé</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page: Ban Management -->
+                <div id="ban-managementPage" class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Gestion des Interdictions</h1>
+                        <p class="page-subtitle">Bannissements et liste noire d'emails</p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon error">
+                                    <i class="fas fa-ban"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="bannedUsersCount">0</div>
+                            <div class="stat-label">Utilisateurs Bannis</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon warning">
+                                    <i class="fas fa-envelope-open-text"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="blacklistedEmailsCount">0</div>
+                            <div class="stat-label">Emails Blacklistés</div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <div class="stat-icon info">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="stat-value" id="tempBansCount">0</div>
+                            <div class="stat-label">Bans Temporaires</div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Ajouter à la Liste Noire</h2>
+                            <button class="btn" onclick="showBanModal()">
+                                <i class="fas fa-ban"></i>
+                                Bannir Email
+                            </button>
+                        </div>
+                        
+                        <div class="ban-form">
+                            <div class="filters-grid">
+                                <div class="filter-group">
+                                    <label>Email à bannir</label>
+                                    <input type="email" id="banEmailInput" placeholder="exemple@domain.com">
+                                </div>
+                                <div class="filter-group">
+                                    <label>Raison du bannissement</label>
+                                    <select id="banReasonSelect">
+                                        <option value="spam">Spam / Abus</option>
+                                        <option value="fraud">Fraude</option>
+                                        <option value="violation">Violation des conditions</option>
+                                        <option value="harassment">Harcèlement</option>
+                                        <option value="other">Autre</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <label>Type de ban</label>
+                                    <select id="banTypeSelect">
+                                        <option value="permanent">Permanent</option>
+                                        <option value="temporary">Temporaire (30 jours)</option>
+                                    </select>
+                                </div>
+                                <div class="filter-actions">
+                                    <button class="btn btn-danger" onclick="banEmail()">
+                                        <i class="fas fa-ban"></i>
+                                        Bannir
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Liste Noire Active</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="showBannedFilters()">
+                                    <i class="fas fa-filter"></i>
+                                    Filtrer
+                                </button>
+                                <button class="btn btn-secondary" onclick="exportBannedList()">
+                                    <i class="fas fa-download"></i>
+                                    Exporter
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div id="bannedListContainer">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Raison</th>
+                                        <th>Type</th>
+                                        <th>Banni par</th>
+                                        <th>Date de ban</th>
+                                        <th>Expire le</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="7" class="loading">Aucun email banni</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
                 <!-- Page: Admin Management -->
                 <div id="admin-managementPage" class="page-content">
                     <div class="page-header">
@@ -1553,6 +1787,9 @@
                 this.users = [];
                 this.bookings = [];
                 this.providers = [];
+                this.deletedUsers = [];
+                this.deletedProviders = [];
+                this.bannedEmails = [];
                 
                 this.init();
             }
@@ -1565,6 +1802,7 @@
                 try {
                     await this.initializeSupabase();
                     await this.loadDashboardData();
+                    this.loadDeletedData();
                     this.setupEventListeners();
                     this.setupRealTimeUpdates();
                     
@@ -1956,6 +2194,95 @@
                     console.error('Failed to load admins from localStorage:', error);
                     return [];
                 }
+            }
+            
+            // Audit Trail Functions
+            addToDeletedUsers(deletedUser) {
+                try {
+                    const existing = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
+                    existing.push(deletedUser);
+                    localStorage.setItem('ezra_deleted_users', JSON.stringify(existing));
+                    this.deletedUsers = existing;
+                    this.updateDeletedStats();
+                } catch (error) {
+                    console.error('Failed to save deleted user:', error);
+                }
+            }
+            
+            addToDeletedProviders(deletedProvider) {
+                try {
+                    const existing = JSON.parse(localStorage.getItem('ezra_deleted_providers') || '[]');
+                    existing.push(deletedProvider);
+                    localStorage.setItem('ezra_deleted_providers', JSON.stringify(existing));
+                    this.deletedProviders = existing;
+                    this.updateDeletedStats();
+                } catch (error) {
+                    console.error('Failed to save deleted provider:', error);
+                }
+            }
+            
+            loadDeletedData() {
+                try {
+                    this.deletedUsers = JSON.parse(localStorage.getItem('ezra_deleted_users') || '[]');
+                    this.deletedProviders = JSON.parse(localStorage.getItem('ezra_deleted_providers') || '[]');
+                    this.bannedEmails = JSON.parse(localStorage.getItem('ezra_banned_emails') || '[]');
+                    this.updateDeletedStats();
+                    this.updateBanStats();
+                } catch (error) {
+                    console.error('Failed to load deleted data:', error);
+                }
+            }
+            
+            updateDeletedStats() {
+                const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+                const recentDeletions = [
+                    ...this.deletedUsers.filter(u => new Date(u.deleted_at) >= sevenDaysAgo),
+                    ...this.deletedProviders.filter(p => new Date(p.deleted_at) >= sevenDaysAgo)
+                ];
+                
+                if (document.getElementById('deletedUsersCount')) {
+                    document.getElementById('deletedUsersCount').textContent = this.deletedUsers.length;
+                    document.getElementById('deletedProvidersCount').textContent = this.deletedProviders.length;
+                    document.getElementById('recentDeletionsCount').textContent = recentDeletions.length;
+                    document.getElementById('deletedBadge').textContent = this.deletedUsers.length + this.deletedProviders.length;
+                }
+            }
+            
+            // Ban Management Functions
+            addToBannedEmails(banData) {
+                try {
+                    const existing = JSON.parse(localStorage.getItem('ezra_banned_emails') || '[]');
+                    existing.push(banData);
+                    localStorage.setItem('ezra_banned_emails', JSON.stringify(existing));
+                    this.bannedEmails = existing;
+                    this.updateBanStats();
+                } catch (error) {
+                    console.error('Failed to save banned email:', error);
+                }
+            }
+            
+            updateBanStats() {
+                const activeBans = this.bannedEmails.filter(ban => {
+                    if (ban.type === 'permanent') return true;
+                    return new Date(ban.expires_at) > new Date();
+                });
+                
+                const tempBans = activeBans.filter(ban => ban.type === 'temporary');
+                
+                if (document.getElementById('bannedUsersCount')) {
+                    document.getElementById('bannedUsersCount').textContent = activeBans.length;
+                    document.getElementById('blacklistedEmailsCount').textContent = activeBans.length;
+                    document.getElementById('tempBansCount').textContent = tempBans.length;
+                    document.getElementById('bannedBadge').textContent = activeBans.length;
+                }
+            }
+            
+            isEmailBanned(email) {
+                return this.bannedEmails.some(ban => {
+                    if (ban.email.toLowerCase() !== email.toLowerCase()) return false;
+                    if (ban.type === 'permanent') return true;
+                    return new Date(ban.expires_at) > new Date();
+                });
             }
             
             updateStatsUI(stats) {
@@ -2360,8 +2687,31 @@
         }
         
         function deleteUser(userId) {
-            if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
-                window.enhancedAdmin.showToast(`Utilisateur ${userId} supprimé`, 'success');
+            const user = window.enhancedAdmin.users.find(u => u.id === userId);
+            if (!user) {
+                window.enhancedAdmin.showToast('Utilisateur non trouvé', 'error');
+                return;
+            }
+            
+            const reason = prompt(`Supprimer l'utilisateur ${user.full_name || user.email}?\n\nVeuillez indiquer la raison de la suppression:`, '');
+            if (reason === null) return; // User cancelled
+            
+            if (confirm(`⚠️ ATTENTION ⚠️\n\nSupprimer définitivement l'utilisateur?\n\nNom: ${user.full_name || 'N/A'}\nEmail: ${user.email}\nRaison: ${reason}\n\nCette action sera enregistrée dans l'audit trail.`)) {
+                // Add to deleted users archive
+                const deletedUser = {
+                    ...user,
+                    deleted_by: 'current_admin',
+                    deleted_at: new Date().toISOString(),
+                    deletion_reason: reason
+                };
+                
+                window.enhancedAdmin.addToDeletedUsers(deletedUser);
+                
+                // Remove from active users
+                window.enhancedAdmin.users = window.enhancedAdmin.users.filter(u => u.id !== userId);
+                window.enhancedAdmin.updateUsersUI(window.enhancedAdmin.users, 'allUsersContainer');
+                
+                window.enhancedAdmin.showToast(`Utilisateur ${user.full_name || user.email} supprimé et archivé`, 'success');
             }
         }
         
@@ -2766,6 +3116,112 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
                 hideAddAdminModal();
             }
         });
+        
+        // Ban Management Functions
+        function banEmail() {
+            const email = document.getElementById('banEmailInput').value.trim();
+            const reason = document.getElementById('banReasonSelect').value;
+            const type = document.getElementById('banTypeSelect').value;
+            
+            if (!email) {
+                window.enhancedAdmin.showToast('Email requis', 'error');
+                return;
+            }
+            
+            if (window.enhancedAdmin.isEmailBanned(email)) {
+                window.enhancedAdmin.showToast('Email déjà banni', 'error');
+                return;
+            }
+            
+            const banData = {
+                email: email.toLowerCase(),
+                reason: reason,
+                type: type,
+                banned_by: 'current_admin',
+                banned_at: new Date().toISOString(),
+                expires_at: type === 'temporary' ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : null
+            };
+            
+            window.enhancedAdmin.addToBannedEmails(banData);
+            updateBannedList();
+            
+            // Clear form
+            document.getElementById('banEmailInput').value = '';
+            
+            window.enhancedAdmin.showToast(`Email ${email} banni avec succès`, 'success');
+        }
+        
+        function updateBannedList() {
+            const container = document.querySelector('#bannedListContainer tbody');
+            if (!container) return;
+            
+            const activeBans = window.enhancedAdmin.bannedEmails.filter(ban => {
+                if (ban.type === 'permanent') return true;
+                return new Date(ban.expires_at) > new Date();
+            });
+            
+            if (activeBans.length === 0) {
+                container.innerHTML = '<tr><td colspan="7" class="loading">Aucun email banni</td></tr>';
+                return;
+            }
+            
+            container.innerHTML = activeBans.map(ban => `
+                <tr>
+                    <td><strong>${ban.email}</strong></td>
+                    <td>${ban.reason}</td>
+                    <td><span class="status-badge ${ban.type === 'permanent' ? 'error' : 'warning'}">${ban.type === 'permanent' ? 'Permanent' : 'Temporaire'}</span></td>
+                    <td>${ban.banned_by}</td>
+                    <td>${new Date(ban.banned_at).toLocaleDateString('fr-FR')}</td>
+                    <td>${ban.expires_at ? new Date(ban.expires_at).toLocaleDateString('fr-FR') : 'Jamais'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn approve" onclick="unbanEmail('${ban.email}')" title="Débannir (Super Admin seulement)">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function unbanEmail(email) {
+            if (!confirm(`⚠️ SUPER ADMIN SEULEMENT ⚠️\n\nDébannir l'email: ${email}?\n\nCette action ne peut être effectuée que par un Super Admin.`)) {
+                return;
+            }
+            
+            // Remove from banned list
+            window.enhancedAdmin.bannedEmails = window.enhancedAdmin.bannedEmails.filter(ban => ban.email !== email);
+            localStorage.setItem('ezra_banned_emails', JSON.stringify(window.enhancedAdmin.bannedEmails));
+            
+            window.enhancedAdmin.updateBanStats();
+            updateBannedList();
+            
+            window.enhancedAdmin.showToast(`Email ${email} débanni`, 'success');
+        }
+        
+        function restoreDeletedUser(userId) {
+            if (!confirm(`⚠️ SUPER ADMIN SEULEMENT ⚠️\n\nRestaurer l'utilisateur supprimé?\n\nCette action ne peut être effectuée que par un Super Admin.`)) {
+                return;
+            }
+            
+            const deletedUser = window.enhancedAdmin.deletedUsers.find(u => u.id === userId);
+            if (deletedUser) {
+                // Remove deletion metadata
+                const { deleted_by, deleted_at, deletion_reason, ...restoredUser } = deletedUser;
+                
+                // Add back to active users
+                window.enhancedAdmin.users.push(restoredUser);
+                
+                // Remove from deleted list
+                window.enhancedAdmin.deletedUsers = window.enhancedAdmin.deletedUsers.filter(u => u.id !== userId);
+                localStorage.setItem('ezra_deleted_users', JSON.stringify(window.enhancedAdmin.deletedUsers));
+                
+                window.enhancedAdmin.updateDeletedStats();
+                window.enhancedAdmin.updateUsersUI(window.enhancedAdmin.users, 'allUsersContainer');
+                
+                window.enhancedAdmin.showToast(`Utilisateur ${restoredUser.full_name || restoredUser.email} restauré`, 'success');
+            }
+        }
         
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', () => {
