@@ -3239,7 +3239,7 @@
                                 </div>
                                 <div class="filter-group">
                                     <label>Code confirmation</label>
-                                    <input type="text" id="confirmationCodeFilter" placeholder="ex: EZR-12345678">
+                                    <input type="text" id="disputeConfirmationCodeFilter" placeholder="ex: EZR-12345678">
                                 </div>
                                 <div class="filter-group">
                                     <button class="btn btn-primary" onclick="applyDisputeFilters()">
@@ -4275,6 +4275,12 @@
     </div>
 
     <script>
+        // Ezra Configuration - Replace with your actual Supabase credentials
+        window.EZRA_CONFIG = {
+            SUPABASE_URL: 'https://zouyaaeincpprkdkofgf.supabase.co',
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvdXlhYWVpbmNwcHJrZGtvZmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0OTQ4ODMsImV4cCI6MjA0NjA3MDg4M30.5zRZvCZKGHfJBc0QFN5_SEYwjKG8NTPF_HfJaXAOOmY'
+        };
+        
         // Enhanced Admin Dashboard with Full Navigation
         class EnhancedAdminDashboard {
             constructor() {
@@ -4336,13 +4342,17 @@
                     }
                 );
                 
+                // Test connection with a simple query
                 const { error } = await this.supabase
-                    .from('profiles')
+                    .from('users')
                     .select('count', { count: 'exact', head: true })
                     .limit(1);
                 
                 if (error) {
-                    console.warn('Connection test failed:', error);
+                    console.warn('Connection test failed, using demo mode:', error);
+                    this.demoMode = true;
+                } else {
+                    this.demoMode = false;
                 }
                 
                 console.log('✅ Supabase initialized');
