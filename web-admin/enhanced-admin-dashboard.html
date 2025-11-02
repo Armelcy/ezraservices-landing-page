@@ -4275,11 +4275,20 @@
     </div>
 
     <script>
-        // Ezra Configuration - UPDATE THESE WITH YOUR CURRENT SUPABASE KEYS
+        // Ezra Configuration - Easy Live/Demo Mode Switch
         window.EZRA_CONFIG = {
+            // 🎛️ DEMO MODE SWITCH - Set to false for live data
+            DEMO_MODE: true,
+            
+            // 📡 SUPABASE CONNECTION (Update when switching to live)
             SUPABASE_URL: 'https://zouyaaeincpprkdkofgf.supabase.co',
-            // ⚠️ UPDATE THIS: Go to Supabase → Settings → API → Copy "anon public" key
-            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvdXlhYWVpbmNwcHJrZGtvZmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0OTQ4ODMsImV4cCI6MjA0NjA3MDg4M30.5zRZvCZKGHfJBc0QFN5_SEYwjKG8NTPF_HfJaXAOOmY'
+            SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpvdXlhYWVpbmNwcHJrZGtvZmdmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0OTQ4ODMsImV4cCI6MjA0NjA3MDg4M30.5zRZvCZKGHfJBc0QFN5_SEYwjKG8NTPF_HfJaXAOOmY',
+            
+            // 🔄 REALTIME FEATURES (Enable when ready)
+            ENABLE_REALTIME: false,
+            
+            // 📊 DATA REFRESH INTERVAL (seconds)
+            REFRESH_INTERVAL: 300 // 5 minutes
         };
         
         // Enhanced Admin Dashboard with Full Navigation
@@ -4311,11 +4320,16 @@
                     this.setupRealTimeUpdates();
                     
                     console.log('✅ Dashboard initialized successfully');
-                    this.showConnectionStatus('Connecté', 'success');
                     
-                    setTimeout(() => {
-                        this.hideConnectionStatus();
-                    }, 3000);
+                    if (this.demoMode) {
+                        this.showConnectionStatus('Demo Mode - Données d\'exemple', 'warning');
+                        this.addDemoModeIndicator();
+                    } else {
+                        this.showConnectionStatus('Connecté - Données réelles', 'success');
+                        setTimeout(() => {
+                            this.hideConnectionStatus();
+                        }, 3000);
+                    }
                     
                 } catch (error) {
                     console.error('❌ Dashboard initialization failed:', error);
@@ -4326,6 +4340,13 @@
             async initializeSupabase() {
                 if (!window.EZRA_CONFIG) {
                     throw new Error('Configuration non trouvée');
+                }
+                
+                // Check if we're in demo mode
+                if (window.EZRA_CONFIG.DEMO_MODE) {
+                    console.log('🎭 Running in DEMO MODE - using sample data');
+                    this.demoMode = true;
+                    return;
                 }
                 
                 if (!window.supabase) {
@@ -5409,6 +5430,30 @@
             
             hideConnectionStatus() {
                 document.getElementById('connectionStatus').style.display = 'none';
+            }
+            
+            addDemoModeIndicator() {
+                // Add a persistent demo mode indicator
+                const indicator = document.createElement('div');
+                indicator.id = 'demoModeIndicator';
+                indicator.innerHTML = `
+                    <div style="
+                        position: fixed;
+                        top: 10px;
+                        right: 10px;
+                        background: #ff9800;
+                        color: white;
+                        padding: 8px 12px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        z-index: 9999;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    ">
+                        🎭 DEMO MODE
+                    </div>
+                `;
+                document.body.appendChild(indicator);
             }
             
             showToast(message, type = 'info') {
