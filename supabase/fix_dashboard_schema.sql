@@ -58,7 +58,9 @@ ALTER TABLE bookings
 ADD COLUMN IF NOT EXISTS confirmation_code TEXT;
 
 ALTER TABLE providers 
-ADD COLUMN IF NOT EXISTS cni_number TEXT,
+ADD COLUMN IF NOT EXISTS cni_number TEXT;
+
+ALTER TABLE providers 
 ADD COLUMN IF NOT EXISTS business_name TEXT;
 
 -- 5. Create indexes for performance
