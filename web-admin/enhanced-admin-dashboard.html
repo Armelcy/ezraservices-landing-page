@@ -851,6 +851,990 @@
             border-radius: 4px;
             color: var(--info);
         }
+
+        /* Analytics Charts Styling */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-container {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+        }
+
+        .chart-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .chart-container.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            margin-bottom: 1rem;
+        }
+
+        .chart-container:not(.full-width) .chart-wrapper {
+            height: 250px;
+        }
+
+        .chart-wrapper canvas {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .chart-stats {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .chart-stat {
+            text-align: center;
+        }
+
+        .chart-stat .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-stat .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .chart-toggle {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .chart-toggle:hover {
+            border-color: var(--ezra-gold);
+            color: var(--text-primary);
+        }
+
+        .chart-toggle.active {
+            background: var(--ezra-gold);
+            border-color: var(--ezra-gold);
+            color: var(--ezra-navy);
+            font-weight: 600;
+        }
+
+        /* Analytics Tabs */
+        .analytics-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: var(--background);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .tab-button:hover {
+            background: var(--surface);
+            color: var(--text-primary);
+        }
+
+        .tab-button.active {
+            background: var(--ezra-gold);
+            color: var(--ezra-navy);
+            font-weight: 600;
+        }
+
+        .analytics-tab-content {
+            display: none;
+        }
+
+        .analytics-tab-content.active {
+            display: block;
+        }
+
+        /* Chart responsiveness */
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .chart-wrapper {
+                height: 200px;
+            }
+            
+            .chart-stats {
+                gap: 1rem;
+            }
+            
+            .chart-controls {
+                gap: 0.25rem;
+            }
+            
+            .chart-toggle {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .analytics-tabs {
+                gap: 0.25rem;
+            }
+            
+            .tab-button {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Real-time Transaction Monitoring */
+        .realtime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .realtime-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.25rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--ezra-gold);
+            transition: all 0.2s ease;
+        }
+
+        .realtime-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .realtime-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .realtime-header h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .realtime-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .realtime-value.error {
+            color: var(--error);
+        }
+
+        .mini-chart-container {
+            height: 60px;
+            margin-top: 0.5rem;
+        }
+
+        .realtime-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Payment Methods Enhanced Styling */
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .payment-method-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            border: 1px solid var(--border);
+        }
+
+        .payment-method-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: var(--ezra-gold);
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            color: var(--ezra-gold);
+        }
+
+        .payment-header h4 {
+            flex: 1;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .payment-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .payment-status.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .payment-status.limited {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .payment-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .payment-stat {
+            text-align: center;
+        }
+
+        .payment-stat .stat-value {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .payment-stat .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .realtime-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+            
+            .payment-methods-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .payment-stats {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .realtime-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Campaign Comparison Cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .campaign-comparison-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid var(--border);
+            transition: all 0.2s ease;
+        }
+
+        .campaign-comparison-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .campaign-comparison-card.top-performer {
+            border-left: 4px solid var(--success);
+        }
+
+        .campaign-comparison-card.average-performer {
+            border-left: 4px solid var(--info);
+        }
+
+        .campaign-comparison-card.needs-attention {
+            border-left: 4px solid var(--error);
+        }
+
+        .comparison-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .performance-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .performance-badge.best {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .performance-badge.average {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .performance-badge.attention {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+        }
+
+        .comparison-header h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .comparison-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-item .metric-label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-item .metric-value {
+            display: block;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-item .metric-trend {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .metric-trend.positive {
+            color: var(--success);
+        }
+
+        .metric-trend.negative {
+            color: var(--error);
+        }
+
+        .metric-trend.neutral {
+            color: var(--text-secondary);
+        }
+
+        /* Funnel Metrics */
+        .funnel-metrics {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: 8px;
+        }
+
+        .funnel-step {
+            text-align: center;
+            flex: 1;
+        }
+
+        .funnel-step .step-label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .funnel-step .step-value {
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .funnel-step .step-rate {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--ezra-gold);
+        }
+
+        .funnel-arrow {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin: 0 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .comparison-metrics {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .funnel-metrics {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .funnel-arrow {
+                transform: rotate(90deg);
+                margin: 0.5rem 0;
+            }
+        }
+
+        /* Monitoring Charts Styles */
+        .monitoring-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #10b981, #f59e0b);
+        }
+
+        .chart-container {
+            height: 250px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .chart-container.large {
+            height: 300px;
+        }
+
+        .chart-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .chart-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            display: block;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .stat-value.error {
+            color: #ef4444;
+        }
+
+        .time-range-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+
+        .time-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .time-btn.active,
+        .time-btn:hover {
+            background: #ffffff;
+            color: #3b82f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .health-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .health-indicator.good {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .health-indicator.warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .health-indicator.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .monitoring-charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .chart-container {
+                height: 200px;
+            }
+            
+            .chart-container.large {
+                height: 250px;
+            }
+            
+            .chart-stats {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1rem;
+            }
+        }
+
+        /* Disputes Page Styles */
+        .disputes-charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .avg-time {
+            text-align: center;
+        }
+
+        .time-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #3b82f6;
+        }
+
+        .time-label {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .categories-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .category-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .category-name {
+            font-size: 0.875rem;
+            color: #374151;
+        }
+
+        .category-count {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .category-percentage {
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .status-filters {
+            display: flex;
+            gap: 0.5rem;
+            background: #f1f5f9;
+            padding: 0.25rem;
+            border-radius: 8px;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            background: #ffffff;
+            color: #3b82f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-count {
+            background: #e2e8f0;
+            color: #64748b;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .filter-count.urgent {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .dispute-timeline {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .timeline-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .timeline-progress {
+            font-size: 0.75rem;
+            color: #64748b;
+            background: #e2e8f0;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+        }
+
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .timeline-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 2rem;
+            right: 2rem;
+            height: 2px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-indicator {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9ca3af;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+
+        .timeline-step.completed .step-indicator {
+            background: #10b981;
+            color: #ffffff;
+        }
+
+        .timeline-step.active .step-indicator {
+            background: #3b82f6;
+            color: #ffffff;
+            animation: pulse 2s infinite;
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            color: #64748b;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .timeline-step.completed .step-label {
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        .timeline-step.active .step-label {
+            color: #3b82f6;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #3b82f6);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .disputes-charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .timeline-steps {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+            
+            .timeline-steps::before {
+                left: 1rem;
+                right: auto;
+                width: 2px;
+                height: calc(100% - 2rem);
+                top: 2rem;
+            }
+            
+            .timeline-step {
+                flex-direction: row;
+                width: 100%;
+            }
+            
+            .status-filters {
+                flex-wrap: wrap;
+            }
+            
+            .categories-stats {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1861,6 +2845,132 @@
                         </div>
                     </div>
                     
+                    <!-- Transaction Analytics Charts -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Analyse des Transactions</h2>
+                            <div class="header-actions">
+                                <select id="transactionPeriod" onchange="updateTransactionCharts(this.value)">
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d" selected>30 derniers jours</option>
+                                    <option value="90d">3 derniers mois</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">
+                                    <i class="fas fa-chart-line"></i>
+                                    Tendance des Transactions
+                                </h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="transactionTrendsChart"></canvas>
+                                    <div class="chart-legend">
+                                        <div class="legend-item">
+                                            <span class="legend-color" style="background: #10B981;"></span>
+                                            <span>Transactions réussies</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <span class="legend-color" style="background: #EF4444;"></span>
+                                            <span>Transactions échouées</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <h3 class="chart-title">
+                                    <i class="fas fa-credit-card"></i>
+                                    Répartition Méthodes de Paiement
+                                </h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="paymentMethodsChart"></canvas>
+                                    <div class="chart-stats">
+                                        <div class="chart-stat">
+                                            <span class="stat-number">3</span>
+                                            <span class="stat-label">Méthodes Actives</span>
+                                        </div>
+                                        <div class="chart-stat">
+                                            <span class="stat-number">97.2%</span>
+                                            <span class="stat-label">Taux de Succès Global</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container full-width">
+                            <h3 class="chart-title">
+                                <i class="fas fa-funnel-dollar"></i>
+                                Flux de Transactions et Revenus
+                            </h3>
+                            <div class="chart-wrapper">
+                                <canvas id="transactionRevenueChart"></canvas>
+                                <div class="chart-controls">
+                                    <button class="chart-toggle active" data-metric="volume">Volume</button>
+                                    <button class="chart-toggle" data-metric="revenue">Revenus</button>
+                                    <button class="chart-toggle" data-metric="fees">Commissions</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Real-time Transaction Monitor -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Surveillance Temps Réel</h2>
+                            <div class="header-actions">
+                                <div class="realtime-indicator">
+                                    <span class="status-dot success"></span>
+                                    <span>En direct</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="realtime-grid">
+                            <div class="realtime-card">
+                                <div class="realtime-header">
+                                    <h4>Transactions par Minute</h4>
+                                    <span class="realtime-value" id="realtimeTPM">23</span>
+                                </div>
+                                <div class="mini-chart-container">
+                                    <canvas id="realtimeTPMChart" width="200" height="80"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="realtime-card">
+                                <div class="realtime-header">
+                                    <h4>Revenus par Heure</h4>
+                                    <span class="realtime-value" id="realtimeRPH">142K FCFA</span>
+                                </div>
+                                <div class="mini-chart-container">
+                                    <canvas id="realtimeRPHChart" width="200" height="80"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="realtime-card">
+                                <div class="realtime-header">
+                                    <h4>Taux d'Erreur</h4>
+                                    <span class="realtime-value error" id="realtimeErrorRate">2.3%</span>
+                                </div>
+                                <div class="mini-chart-container">
+                                    <canvas id="realtimeErrorChart" width="200" height="80"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="realtime-card">
+                                <div class="realtime-header">
+                                    <h4>Temps de Réponse</h4>
+                                    <span class="realtime-value" id="realtimeResponseTime">1.8s</span>
+                                </div>
+                                <div class="mini-chart-container">
+                                    <canvas id="realtimeResponseChart" width="200" height="80"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Transaction Filters -->
                     <div class="content-section">
                         <div class="section-header">
@@ -2192,6 +3302,201 @@
                                     <button class="chart-toggle" data-metric="clicks">Clics</button>
                                     <button class="chart-toggle" data-metric="conversions">Conversions</button>
                                     <button class="chart-toggle" data-metric="cost">Coût</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campaign Analytics Dashboard -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Analyse Avancée des Campagnes</h2>
+                        </div>
+                        
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">
+                                    <i class="fas fa-bullseye"></i>
+                                    Efficacité par Type de Campagne
+                                </h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="campaignTypeChart"></canvas>
+                                    <div class="chart-legend">
+                                        <div class="legend-item">
+                                            <span class="legend-color" style="background: #10B981;"></span>
+                                            <span>Acquisition</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <span class="legend-color" style="background: #3B82F6;"></span>
+                                            <span>Rétention</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <span class="legend-color" style="background: #F59E0B;"></span>
+                                            <span>Saisonnière</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <h3 class="chart-title">
+                                    <i class="fas fa-chart-area"></i>
+                                    ROI par Canal
+                                </h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="campaignROIChart"></canvas>
+                                    <div class="chart-stats">
+                                        <div class="chart-stat">
+                                            <span class="stat-number">287%</span>
+                                            <span class="stat-label">ROI Moyen</span>
+                                        </div>
+                                        <div class="chart-stat">
+                                            <span class="stat-number">4.2</span>
+                                            <span class="stat-label">ROAS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chart-container full-width">
+                            <h3 class="chart-title">
+                                <i class="fas fa-funnel-dollar"></i>
+                                Entonnoir de Conversion des Campagnes
+                            </h3>
+                            <div class="chart-wrapper">
+                                <canvas id="campaignFunnelChart"></canvas>
+                                <div class="funnel-metrics">
+                                    <div class="funnel-step">
+                                        <div class="step-label">Impressions</div>
+                                        <div class="step-value">245,680</div>
+                                        <div class="step-rate">100%</div>
+                                    </div>
+                                    <div class="funnel-arrow">→</div>
+                                    <div class="funnel-step">
+                                        <div class="step-label">Clics</div>
+                                        <div class="step-value">7,861</div>
+                                        <div class="step-rate">3.2%</div>
+                                    </div>
+                                    <div class="funnel-arrow">→</div>
+                                    <div class="funnel-step">
+                                        <div class="step-label">Visites</div>
+                                        <div class="step-value">5,892</div>
+                                        <div class="step-rate">2.4%</div>
+                                    </div>
+                                    <div class="funnel-arrow">→</div>
+                                    <div class="funnel-step">
+                                        <div class="step-label">Conversions</div>
+                                        <div class="step-value">1,847</div>
+                                        <div class="step-rate">0.75%</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Campaign Performance Comparison -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Comparaison des Performances</h2>
+                            <div class="header-actions">
+                                <select id="comparisonMetric" onchange="updateComparisonChart(this.value)">
+                                    <option value="ctr">Taux de Clic</option>
+                                    <option value="conversion">Taux de Conversion</option>
+                                    <option value="cost" selected>Coût par Acquisition</option>
+                                    <option value="roi">Retour sur Investissement</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-grid">
+                            <div class="campaign-comparison-card top-performer">
+                                <div class="comparison-header">
+                                    <div class="performance-badge best">
+                                        <i class="fas fa-trophy"></i>
+                                        Meilleure Performance
+                                    </div>
+                                    <h4>Promotion Rentrée 2024</h4>
+                                </div>
+                                <div class="comparison-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">CPA</span>
+                                        <span class="metric-value">2,450 FCFA</span>
+                                        <span class="metric-trend positive">-23%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">CTR</span>
+                                        <span class="metric-value">4.8%</span>
+                                        <span class="metric-trend positive">+0.6%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">ROI</span>
+                                        <span class="metric-value">342%</span>
+                                        <span class="metric-trend positive">+18%</span>
+                                    </div>
+                                </div>
+                                <div class="mini-chart-container">
+                                    <canvas id="topPerformerChart" width="250" height="100"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-comparison-card average-performer">
+                                <div class="comparison-header">
+                                    <div class="performance-badge average">
+                                        <i class="fas fa-chart-line"></i>
+                                        Performance Moyenne
+                                    </div>
+                                    <h4>Black Friday Services</h4>
+                                </div>
+                                <div class="comparison-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">CPA</span>
+                                        <span class="metric-value">3,120 FCFA</span>
+                                        <span class="metric-trend neutral">+2%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">CTR</span>
+                                        <span class="metric-value">3.1%</span>
+                                        <span class="metric-trend neutral">-0.1%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">ROI</span>
+                                        <span class="metric-value">287%</span>
+                                        <span class="metric-trend positive">+5%</span>
+                                    </div>
+                                </div>
+                                <div class="mini-chart-container">
+                                    <canvas id="averagePerformerChart" width="250" height="100"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="campaign-comparison-card needs-attention">
+                                <div class="comparison-header">
+                                    <div class="performance-badge attention">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        Attention Requise
+                                    </div>
+                                    <h4>Fidélisation Clients</h4>
+                                </div>
+                                <div class="comparison-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">CPA</span>
+                                        <span class="metric-value">4,890 FCFA</span>
+                                        <span class="metric-trend negative">+45%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">CTR</span>
+                                        <span class="metric-value">1.8%</span>
+                                        <span class="metric-trend negative">-0.9%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">ROI</span>
+                                        <span class="metric-value">156%</span>
+                                        <span class="metric-trend negative">-12%</span>
+                                    </div>
+                                </div>
+                                <div class="mini-chart-container">
+                                    <canvas id="attentionNeededChart" width="250" height="100"></canvas>
                                 </div>
                             </div>
                         </div>
@@ -3067,15 +4372,122 @@
                         </div>
                     </div>
                     
-                    <!-- Priority Disputes -->
+                    <!-- Disputes Analytics Charts -->
                     <div class="content-section">
                         <div class="section-header">
-                            <h2 class="section-title">Litiges Prioritaires</h2>
+                            <h2 class="section-title">Analyse des Litiges</h2>
                             <div class="header-actions">
-                                <span class="priority-indicator high">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    3 Urgents
-                                </span>
+                                <div class="time-range-selector">
+                                    <button class="time-btn active" data-range="7d" onclick="updateDisputesRange('7d')">7J</button>
+                                    <button class="time-btn" data-range="30d" onclick="updateDisputesRange('30d')">30J</button>
+                                    <button class="time-btn" data-range="90d" onclick="updateDisputesRange('90d')">90J</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="disputes-charts-grid">
+                            <!-- Disputes Trend Chart -->
+                            <div class="chart-card">
+                                <div class="card-header">
+                                    <h3>
+                                        <i class="fas fa-chart-line"></i>
+                                        Tendance des Litiges
+                                    </h3>
+                                    <div class="chart-legend">
+                                        <span class="legend-item">
+                                            <span class="legend-color" style="background: #EF4444;"></span>
+                                            Nouveaux
+                                        </span>
+                                        <span class="legend-item">
+                                            <span class="legend-color" style="background: #10B981;"></span>
+                                            Résolus
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="disputesTrendChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Resolution Time Distribution -->
+                            <div class="chart-card">
+                                <div class="card-header">
+                                    <h3>
+                                        <i class="fas fa-stopwatch"></i>
+                                        Temps de Résolution
+                                    </h3>
+                                    <div class="avg-time">
+                                        <span class="time-value">2.4h</span>
+                                        <span class="time-label">Moyenne</span>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="resolutionTimeChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Dispute Categories -->
+                            <div class="chart-card full-width">
+                                <div class="card-header">
+                                    <h3>
+                                        <i class="fas fa-tags"></i>
+                                        Catégories de Litiges
+                                    </h3>
+                                    <div class="header-actions">
+                                        <button class="btn btn-sm btn-secondary" onclick="viewCategoryDetails()">
+                                            <i class="fas fa-chart-pie"></i>
+                                            Détails
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="disputeCategoriesChart"></canvas>
+                                </div>
+                                <div class="categories-stats">
+                                    <div class="category-stat">
+                                        <span class="category-name">Service non réalisé</span>
+                                        <span class="category-count">8 cas</span>
+                                        <span class="category-percentage">53%</span>
+                                    </div>
+                                    <div class="category-stat">
+                                        <span class="category-name">Qualité insuffisante</span>
+                                        <span class="category-count">4 cas</span>
+                                        <span class="category-percentage">27%</span>
+                                    </div>
+                                    <div class="category-stat">
+                                        <span class="category-name">Problème paiement</span>
+                                        <span class="category-count">2 cas</span>
+                                        <span class="category-percentage">13%</span>
+                                    </div>
+                                    <div class="category-stat">
+                                        <span class="category-name">Autres</span>
+                                        <span class="category-count">1 cas</span>
+                                        <span class="category-percentage">7%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Management Dashboard -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">Gestion des Cas</h2>
+                            <div class="header-actions">
+                                <div class="status-filters">
+                                    <button class="filter-btn active" data-status="all" onclick="filterDisputesByStatus('all')">
+                                        Tous <span class="filter-count">15</span>
+                                    </button>
+                                    <button class="filter-btn" data-status="urgent" onclick="filterDisputesByStatus('urgent')">
+                                        Urgent <span class="filter-count urgent">3</span>
+                                    </button>
+                                    <button class="filter-btn" data-status="in-progress" onclick="filterDisputesByStatus('in-progress')">
+                                        En cours <span class="filter-count">8</span>
+                                    </button>
+                                    <button class="filter-btn" data-status="pending" onclick="filterDisputesByStatus('pending')">
+                                        En attente <span class="filter-count">4</span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         
@@ -3118,6 +4530,43 @@
                                         </div>
                                     </div>
                                     
+                                    <!-- Progress Timeline -->
+                                    <div class="dispute-timeline">
+                                        <div class="timeline-header">
+                                            <span class="timeline-title">Progression du dossier</span>
+                                            <span class="timeline-progress">Étape 2/4</span>
+                                        </div>
+                                        <div class="timeline-steps">
+                                            <div class="timeline-step completed">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                                <span class="step-label">Signalement</span>
+                                            </div>
+                                            <div class="timeline-step active">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-eye"></i>
+                                                </div>
+                                                <span class="step-label">Investigation</span>
+                                            </div>
+                                            <div class="timeline-step">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-handshake"></i>
+                                                </div>
+                                                <span class="step-label">Médiation</span>
+                                            </div>
+                                            <div class="timeline-step">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-gavel"></i>
+                                                </div>
+                                                <span class="step-label">Résolution</span>
+                                            </div>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 50%"></div>
+                                        </div>
+                                    </div>
+
                                     <div class="dispute-actions">
                                         <button class="btn btn-sm btn-primary" onclick="viewDisputeDetails('DISP-2024-001247')">
                                             <i class="fas fa-eye"></i>
@@ -3130,6 +4579,10 @@
                                         <button class="btn btn-sm btn-warning" onclick="mediateDispute('DISP-2024-001247')">
                                             <i class="fas fa-handshake"></i>
                                             Médiation
+                                        </button>
+                                        <button class="btn btn-sm btn-info" onclick="addNote('DISP-2024-001247')">
+                                            <i class="fas fa-sticky-note"></i>
+                                            Note
                                         </button>
                                     </div>
                                 </div>
@@ -3173,6 +4626,43 @@
                                         </div>
                                     </div>
                                     
+                                    <!-- Progress Timeline -->
+                                    <div class="dispute-timeline">
+                                        <div class="timeline-header">
+                                            <span class="timeline-title">Progression du dossier</span>
+                                            <span class="timeline-progress">Étape 3/4</span>
+                                        </div>
+                                        <div class="timeline-steps">
+                                            <div class="timeline-step completed">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                                <span class="step-label">Signalement</span>
+                                            </div>
+                                            <div class="timeline-step completed">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-check"></i>
+                                                </div>
+                                                <span class="step-label">Investigation</span>
+                                            </div>
+                                            <div class="timeline-step active">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-handshake"></i>
+                                                </div>
+                                                <span class="step-label">Médiation</span>
+                                            </div>
+                                            <div class="timeline-step">
+                                                <div class="step-indicator">
+                                                    <i class="fas fa-gavel"></i>
+                                                </div>
+                                                <span class="step-label">Résolution</span>
+                                            </div>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+
                                     <div class="dispute-actions">
                                         <button class="btn btn-sm btn-primary" onclick="viewDisputeDetails('DISP-2024-001246')">
                                             <i class="fas fa-eye"></i>
@@ -3185,6 +4675,10 @@
                                         <button class="btn btn-sm btn-warning" onclick="mediateDispute('DISP-2024-001246')">
                                             <i class="fas fa-handshake"></i>
                                             Médiation
+                                        </button>
+                                        <button class="btn btn-sm btn-success" onclick="proposeResolution('DISP-2024-001246')">
+                                            <i class="fas fa-check-circle"></i>
+                                            Proposer Solution
                                         </button>
                                     </div>
                                 </div>
@@ -3516,92 +5010,154 @@
                             </div>
                         </div>
                         
-                        <div class="monitoring-grid">
-                            <div class="monitoring-card">
+                        <!-- Real-time Monitoring Charts -->
+                        <div class="monitoring-charts-grid">
+                            <!-- System Performance Chart -->
+                            <div class="chart-card">
                                 <div class="card-header">
-                                    <h3>Performance Serveur</h3>
-                                    <div class="health-indicator good">
-                                        <i class="fas fa-check-circle"></i>
-                                        Bon
-                                    </div>
-                                </div>
-                                <div class="metrics-list">
-                                    <div class="metric-item">
-                                        <span class="metric-label">CPU Usage</span>
-                                        <div class="metric-bar">
-                                            <div class="metric-fill" style="width: 34%"></div>
-                                        </div>
-                                        <span class="metric-value">34%</span>
-                                    </div>
-                                    <div class="metric-item">
-                                        <span class="metric-label">RAM Usage</span>
-                                        <div class="metric-bar">
-                                            <div class="metric-fill" style="width: 67%"></div>
-                                        </div>
-                                        <span class="metric-value">67%</span>
-                                    </div>
-                                    <div class="metric-item">
-                                        <span class="metric-label">Stockage</span>
-                                        <div class="metric-bar">
-                                            <div class="metric-fill" style="width: 23%"></div>
-                                        </div>
-                                        <span class="metric-value">23%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="monitoring-card">
-                                <div class="card-header">
-                                    <h3>Base de Données</h3>
+                                    <h3>
+                                        <i class="fas fa-server"></i>
+                                        Performance Système
+                                    </h3>
                                     <div class="health-indicator good">
                                         <i class="fas fa-check-circle"></i>
                                         Optimal
                                     </div>
                                 </div>
-                                <div class="metrics-list">
+                                <div class="chart-container">
+                                    <canvas id="systemPerformanceChart"></canvas>
+                                </div>
+                                <div class="chart-metrics">
                                     <div class="metric-item">
-                                        <span class="metric-label">Connexions Actives</span>
-                                        <span class="metric-value">23/100</span>
+                                        <span class="metric-label">CPU</span>
+                                        <span class="metric-value" id="cpuValue">34%</span>
                                     </div>
                                     <div class="metric-item">
-                                        <span class="metric-label">Requêtes/sec</span>
-                                        <span class="metric-value">147</span>
+                                        <span class="metric-label">RAM</span>
+                                        <span class="metric-value" id="ramValue">67%</span>
                                     </div>
                                     <div class="metric-item">
-                                        <span class="metric-label">Taille DB</span>
-                                        <span class="metric-value">2.3 GB</span>
-                                    </div>
-                                    <div class="metric-item">
-                                        <span class="metric-label">Temps Query Moyen</span>
-                                        <span class="metric-value">12ms</span>
+                                        <span class="metric-label">Stockage</span>
+                                        <span class="metric-value" id="storageValue">23%</span>
                                     </div>
                                 </div>
                             </div>
-                            
-                            <div class="monitoring-card">
+
+                            <!-- Database Performance Chart -->
+                            <div class="chart-card">
                                 <div class="card-header">
-                                    <h3>API Performance</h3>
+                                    <h3>
+                                        <i class="fas fa-database"></i>
+                                        Performance Base de Données
+                                    </h3>
+                                    <div class="health-indicator good">
+                                        <i class="fas fa-check-circle"></i>
+                                        Excellent
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="databasePerformanceChart"></canvas>
+                                </div>
+                                <div class="chart-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Connexions</span>
+                                        <span class="metric-value" id="dbConnections">23/100</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Requêtes/sec</span>
+                                        <span class="metric-value" id="dbQueries">147</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- API Response Time Chart -->
+                            <div class="chart-card full-width">
+                                <div class="card-header">
+                                    <h3>
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        Temps de Réponse API (Temps Réel)
+                                    </h3>
+                                    <div class="header-actions">
+                                        <div class="time-range-selector">
+                                            <button class="time-btn active" data-range="1h">1H</button>
+                                            <button class="time-btn" data-range="6h">6H</button>
+                                            <button class="time-btn" data-range="24h">24H</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chart-container large">
+                                    <canvas id="apiResponseChart"></canvas>
+                                </div>
+                                <div class="chart-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Moyenne</span>
+                                        <span class="stat-value" id="avgResponse">247ms</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">95e Percentile</span>
+                                        <span class="stat-value" id="p95Response">425ms</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">99e Percentile</span>
+                                        <span class="stat-value" id="p99Response">890ms</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Erreurs</span>
+                                        <span class="stat-value error" id="errorRate">2.1%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Error Rate Monitoring -->
+                            <div class="chart-card">
+                                <div class="card-header">
+                                    <h3>
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        Taux d'Erreur
+                                    </h3>
                                     <div class="health-indicator warning">
                                         <i class="fas fa-exclamation-triangle"></i>
                                         Attention
                                     </div>
                                 </div>
-                                <div class="metrics-list">
+                                <div class="chart-container">
+                                    <canvas id="errorRateChart"></canvas>
+                                </div>
+                                <div class="chart-metrics">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Erreurs 4xx</span>
+                                        <span class="metric-value" id="error4xx">1.2%</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Erreurs 5xx</span>
+                                        <span class="metric-value" id="error5xx">0.9%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Throughput Chart -->
+                            <div class="chart-card">
+                                <div class="card-header">
+                                    <h3>
+                                        <i class="fas fa-exchange-alt"></i>
+                                        Débit API
+                                    </h3>
+                                    <div class="health-indicator good">
+                                        <i class="fas fa-check-circle"></i>
+                                        Stable
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="throughputChart"></canvas>
+                                </div>
+                                <div class="chart-metrics">
                                     <div class="metric-item">
                                         <span class="metric-label">Requêtes/min</span>
-                                        <span class="metric-value">1,247</span>
-                                    </div>
-                                    <div class="metric-item">
-                                        <span class="metric-label">Taux d'Erreur</span>
-                                        <span class="metric-value error">2.1%</span>
-                                    </div>
-                                    <div class="metric-item">
-                                        <span class="metric-label">99e Percentile</span>
-                                        <span class="metric-value">890ms</span>
+                                        <span class="metric-value" id="requestsPerMin">1,247</span>
                                     </div>
                                     <div class="metric-item">
                                         <span class="metric-label">Endpoints Actifs</span>
-                                        <span class="metric-value">47/48</span>
+                                        <span class="metric-value" id="activeEndpoints">47/48</span>
                                     </div>
                                 </div>
                             </div>
@@ -5408,6 +6964,26 @@
                     case 'bookings':
                         this.updateBookingsUI(this.bookings, 'allBookingsContainer');
                         break;
+                    case 'analytics':
+                        console.log('📊 Initializing analytics charts...');
+                        setTimeout(() => this.initializeAnalyticsCharts(), 100);
+                        break;
+                    case 'transactions':
+                        console.log('💳 Initializing transaction charts...');
+                        setTimeout(() => this.initializeTransactionCharts(), 100);
+                        break;
+                    case 'campaigns':
+                        console.log('📢 Initializing campaign charts...');
+                        setTimeout(() => this.initializeCampaignCharts(), 100);
+                        break;
+                    case 'monitoring':
+                        console.log('📊 Initializing monitoring charts...');
+                        setTimeout(() => this.initializeMonitoringCharts(), 100);
+                        break;
+                    case 'disputes':
+                        console.log('⚖️ Initializing disputes charts...');
+                        setTimeout(() => this.initializeDisputesCharts(), 100);
+                        break;
                     case 'audit':
                         // Load deleted users and providers from database
                         console.log('🔄 Loading audit trail data...');
@@ -5486,6 +7062,1430 @@
             handleSearch(query) {
                 console.log('Search:', query);
                 this.showToast(`Recherche: "${query}"`, 'info');
+            }
+
+            initializeAnalyticsCharts() {
+                console.log('🎨 Creating interactive analytics charts...');
+                
+                // Destroy existing charts if they exist
+                if (window.analyticsCharts) {
+                    Object.values(window.analyticsCharts).forEach(chart => {
+                        if (chart && typeof chart.destroy === 'function') {
+                            chart.destroy();
+                        }
+                    });
+                }
+                window.analyticsCharts = {};
+
+                // Chart.js default configuration
+                Chart.defaults.font.family = "'Inter', sans-serif";
+                Chart.defaults.color = '#64748B';
+                Chart.defaults.plugins.legend.labels.usePointStyle = true;
+
+                // 1. Users Growth Chart (Line Chart)
+                this.createUsersChart();
+                
+                // 2. Services Distribution Chart (Doughnut Chart) 
+                this.createServicesChart();
+                
+                // 3. Revenue & Transactions Chart (Line/Bar Chart)
+                this.createRevenueChart();
+                
+                console.log('✅ Analytics charts initialized successfully');
+            }
+
+            createUsersChart() {
+                const ctx = document.getElementById('usersChart');
+                if (!ctx) return;
+
+                // Sample data - in demo mode
+                const last30Days = [];
+                const newUsers = [];
+                const activeUsers = [];
+                
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    last30Days.push(date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
+                    
+                    // Generate realistic demo data
+                    newUsers.push(Math.floor(Math.random() * 15) + 5);
+                    activeUsers.push(Math.floor(Math.random() * 80) + 120);
+                }
+
+                window.analyticsCharts.usersChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: last30Days,
+                        datasets: [{
+                            label: 'Nouveaux utilisateurs',
+                            data: newUsers,
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#10B981',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }, {
+                            label: 'Utilisateurs actifs',
+                            data: activeUsers,
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#3B82F6',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false // Using custom legend below
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                displayColors: true,
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#F1F5F9'
+                                },
+                                border: {
+                                    display: false
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                });
+            }
+
+            createServicesChart() {
+                const ctx = document.getElementById('servicesChart');
+                if (!ctx) return;
+
+                const serviceData = [
+                    { name: 'Ménage', value: 35, color: '#10B981' },
+                    { name: 'Plomberie', value: 25, color: '#3B82F6' },
+                    { name: 'Électricité', value: 20, color: '#F59E0B' },
+                    { name: 'Jardinage', value: 12, color: '#EF4444' },
+                    { name: 'Autres', value: 8, color: '#8B5CF6' }
+                ];
+
+                window.analyticsCharts.servicesChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: serviceData.map(s => s.name),
+                        datasets: [{
+                            data: serviceData.map(s => s.value),
+                            backgroundColor: serviceData.map(s => s.color),
+                            borderWidth: 3,
+                            borderColor: '#ffffff',
+                            hoverBorderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '65%',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.parsed}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createRevenueChart() {
+                const ctx = document.getElementById('revenueChart');
+                if (!ctx) return;
+
+                // Sample data for last 6 months
+                const last6Months = [];
+                const revenueData = [];
+                const transactionsData = [];
+                const commissionsData = [];
+                
+                for (let i = 5; i >= 0; i--) {
+                    const date = new Date();
+                    date.setMonth(date.getMonth() - i);
+                    last6Months.push(date.toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' }));
+                    
+                    // Generate realistic demo data (in thousands)
+                    const revenue = Math.floor(Math.random() * 500) + 800;
+                    revenueData.push(revenue);
+                    transactionsData.push(Math.floor(revenue * 0.8));
+                    commissionsData.push(Math.floor(revenue * 0.15));
+                }
+
+                window.analyticsCharts.revenueChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: last6Months,
+                        datasets: [{
+                            label: 'Revenus (K FCFA)',
+                            data: revenueData,
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#10B981',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 8
+                        }, {
+                            label: 'Transactions (K FCFA)',
+                            data: transactionsData,
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#3B82F6',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 8
+                        }, {
+                            label: 'Commissions (K FCFA)',
+                            data: commissionsData,
+                            borderColor: '#F59E0B',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            pointBackgroundColor: '#F59E0B',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 5,
+                            pointHoverRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false // Using custom controls below
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                mode: 'index',
+                                intersect: false,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} FCFA`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#F1F5F9'
+                                },
+                                border: {
+                                    display: false
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + 'K';
+                                    }
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    }
+                });
+
+                // Add interactivity to chart controls
+                this.setupChartControls();
+            }
+
+            setupChartControls() {
+                // Add event listeners to chart toggle buttons
+                document.querySelectorAll('.chart-toggle').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        // Update active state
+                        document.querySelectorAll('.chart-toggle').forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        // Get dataset type
+                        const dataset = button.dataset.dataset;
+                        this.updateRevenueChart(dataset);
+                    });
+                });
+            }
+
+            updateRevenueChart(dataset) {
+                const chart = window.analyticsCharts.revenueChart;
+                if (!chart) return;
+
+                // Show/hide datasets based on selection
+                chart.data.datasets.forEach((ds, index) => {
+                    if (dataset === 'revenue' && index === 0) {
+                        ds.hidden = false;
+                    } else if (dataset === 'transactions' && index === 1) {
+                        ds.hidden = false;
+                    } else if (dataset === 'commissions' && index === 2) {
+                        ds.hidden = false;
+                    } else {
+                        ds.hidden = true;
+                    }
+                });
+
+                chart.update('active');
+                this.showToast(`Affichage: ${dataset}`, 'info');
+            }
+
+            initializeTransactionCharts() {
+                console.log('💳 Creating interactive transaction charts...');
+                
+                // Destroy existing transaction charts if they exist
+                if (window.transactionCharts) {
+                    Object.values(window.transactionCharts).forEach(chart => {
+                        if (chart && typeof chart.destroy === 'function') {
+                            chart.destroy();
+                        }
+                    });
+                }
+                window.transactionCharts = {};
+
+                // 1. Transaction Trends Chart
+                this.createTransactionTrendsChart();
+                
+                // 2. Payment Methods Distribution Chart
+                this.createPaymentMethodsChart();
+                
+                // 3. Transaction Revenue Chart
+                this.createTransactionRevenueChart();
+                
+                // 4. Real-time Mini Charts
+                this.createRealtimeCharts();
+                
+                console.log('✅ Transaction charts initialized successfully');
+            }
+
+            createTransactionTrendsChart() {
+                const ctx = document.getElementById('transactionTrendsChart');
+                if (!ctx) return;
+
+                // Generate last 30 days data
+                const last30Days = [];
+                const successfulTransactions = [];
+                const failedTransactions = [];
+                
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    last30Days.push(date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
+                    
+                    // Generate realistic demo data
+                    const baseSuccess = Math.floor(Math.random() * 30) + 40;
+                    const baseFailed = Math.floor(Math.random() * 5) + 1;
+                    
+                    successfulTransactions.push(baseSuccess);
+                    failedTransactions.push(baseFailed);
+                }
+
+                window.transactionCharts.trendsChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: last30Days,
+                        datasets: [{
+                            label: 'Transactions réussies',
+                            data: successfulTransactions,
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#10B981',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }, {
+                            label: 'Transactions échouées',
+                            data: failedTransactions,
+                            borderColor: '#EF4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#EF4444',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#F1F5F9'
+                                },
+                                border: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createPaymentMethodsChart() {
+                const ctx = document.getElementById('paymentMethodsChart');
+                if (!ctx) return;
+
+                const paymentData = [
+                    { name: 'MTN Mobile Money', value: 65, color: '#F59E0B' },
+                    { name: 'Orange Money', value: 30, color: '#FF6B00' },
+                    { name: 'Virements Bancaires', value: 5, color: '#3B82F6' }
+                ];
+
+                window.transactionCharts.paymentChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: paymentData.map(p => p.name),
+                        datasets: [{
+                            data: paymentData.map(p => p.value),
+                            backgroundColor: paymentData.map(p => p.color),
+                            borderWidth: 3,
+                            borderColor: '#ffffff',
+                            hoverBorderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '65%',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.label}: ${context.parsed}%`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createTransactionRevenueChart() {
+                const ctx = document.getElementById('transactionRevenueChart');
+                if (!ctx) return;
+
+                // Generate last 6 months data
+                const last6Months = [];
+                const volumeData = [];
+                const revenueData = [];
+                const feesData = [];
+                
+                for (let i = 5; i >= 0; i--) {
+                    const date = new Date();
+                    date.setMonth(date.getMonth() - i);
+                    last6Months.push(date.toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' }));
+                    
+                    // Generate realistic demo data
+                    const volume = Math.floor(Math.random() * 500) + 800;
+                    const revenue = Math.floor(volume * 2.5);
+                    const fees = Math.floor(revenue * 0.12);
+                    
+                    volumeData.push(volume);
+                    revenueData.push(revenue);
+                    feesData.push(fees);
+                }
+
+                window.transactionCharts.revenueChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: last6Months,
+                        datasets: [{
+                            label: 'Volume (Transactions)',
+                            data: volumeData,
+                            backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                            borderColor: '#10B981',
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Revenus (K FCFA)',
+                            data: revenueData,
+                            backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                            borderColor: '#3B82F6',
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            yAxisID: 'y1'
+                        }, {
+                            label: 'Commissions (K FCFA)',
+                            data: feesData,
+                            backgroundColor: 'rgba(245, 158, 11, 0.7)',
+                            borderColor: '#F59E0B',
+                            borderWidth: 2,
+                            borderRadius: 6,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#F1F5F9'
+                                },
+                                border: {
+                                    display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Volume'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                beginAtZero: true,
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                                border: {
+                                    display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Montant (K FCFA)'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                this.setupTransactionChartControls();
+            }
+
+            createRealtimeCharts() {
+                // Create mini sparkline charts for real-time monitoring
+                this.createSparklineChart('realtimeTPMChart', '#10B981');
+                this.createSparklineChart('realtimeRPHChart', '#3B82F6');
+                this.createSparklineChart('realtimeErrorChart', '#EF4444');
+                this.createSparklineChart('realtimeResponseChart', '#F59E0B');
+            }
+
+            createSparklineChart(canvasId, color) {
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+
+                // Generate sparkline data (last 20 data points)
+                const sparklineData = [];
+                for (let i = 0; i < 20; i++) {
+                    sparklineData.push(Math.random() * 100 + 50);
+                }
+
+                window.transactionCharts[canvasId] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array(20).fill(''),
+                        datasets: [{
+                            data: sparklineData,
+                            borderColor: color,
+                            backgroundColor: color + '20',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: false
+                            },
+                            y: {
+                                display: false
+                            }
+                        },
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        }
+                    }
+                });
+            }
+
+            setupTransactionChartControls() {
+                // Add event listeners for transaction chart controls
+                document.querySelectorAll('#transactionRevenueChart').forEach(() => {
+                    const container = document.querySelector('#transactionRevenueChart').closest('.chart-container');
+                    const toggles = container.querySelectorAll('.chart-toggle');
+                    
+                    toggles.forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            
+                            toggles.forEach(btn => btn.classList.remove('active'));
+                            button.classList.add('active');
+                            
+                            const metric = button.dataset.metric;
+                            this.updateTransactionRevenueChart(metric);
+                        });
+                    });
+                });
+            }
+
+            updateTransactionRevenueChart(metric) {
+                const chart = window.transactionCharts.revenueChart;
+                if (!chart) return;
+
+                // Show/hide datasets based on selection
+                chart.data.datasets.forEach((ds, index) => {
+                    if (metric === 'volume' && index === 0) {
+                        ds.hidden = false;
+                    } else if (metric === 'revenue' && index === 1) {
+                        ds.hidden = false;
+                    } else if (metric === 'fees' && index === 2) {
+                        ds.hidden = false;
+                    } else {
+                        ds.hidden = true;
+                    }
+                });
+
+                chart.update('active');
+                this.showToast(`Affichage: ${metric}`, 'info');
+            }
+
+            initializeCampaignCharts() {
+                console.log('📢 Creating interactive campaign charts...');
+                
+                // Destroy existing campaign charts if they exist
+                if (window.campaignCharts) {
+                    Object.values(window.campaignCharts).forEach(chart => {
+                        if (chart && typeof chart.destroy === 'function') {
+                            chart.destroy();
+                        }
+                    });
+                }
+                window.campaignCharts = {};
+
+                // 1. Campaign Performance Chart (main chart)
+                this.createCampaignPerformanceChart();
+                
+                // 2. Campaign Type Effectiveness Chart
+                this.createCampaignTypeChart();
+                
+                // 3. ROI by Channel Chart
+                this.createCampaignROIChart();
+                
+                // 4. Conversion Funnel Chart
+                this.createCampaignFunnelChart();
+                
+                // 5. Campaign Comparison Mini Charts
+                this.createCampaignComparisonCharts();
+                
+                console.log('✅ Campaign charts initialized successfully');
+            }
+
+            initializeMonitoringCharts() {
+                console.log('📊 Creating interactive monitoring charts...');
+                
+                // Destroy existing monitoring charts if they exist
+                if (window.monitoringCharts) {
+                    Object.values(window.monitoringCharts).forEach(chart => {
+                        if (chart && typeof chart.destroy === 'function') {
+                            chart.destroy();
+                        }
+                    });
+                }
+                
+                window.monitoringCharts = {};
+                
+                this.createSystemPerformanceChart();
+                this.createDatabasePerformanceChart();
+                this.createAPIResponseChart();
+                this.createErrorRateChart();
+                this.createThroughputChart();
+                this.setupMonitoringTimeControls();
+                this.startRealTimeUpdates();
+                
+                console.log('✅ Monitoring charts initialized successfully');
+            }
+
+            initializeDisputesCharts() {
+                console.log('⚖️ Creating interactive disputes charts...');
+                
+                // Destroy existing disputes charts if they exist
+                if (window.disputesCharts) {
+                    Object.values(window.disputesCharts).forEach(chart => {
+                        if (chart && typeof chart.destroy === 'function') {
+                            chart.destroy();
+                        }
+                    });
+                }
+                
+                window.disputesCharts = {};
+                
+                this.createDisputesTrendChart();
+                this.createResolutionTimeChart();
+                this.createDisputeCategoriesChart();
+                
+                console.log('✅ Disputes charts initialized successfully');
+            }
+
+            createDisputesTrendChart() {
+                const ctx = document.getElementById('disputesTrendChart');
+                if (!ctx) return;
+
+                // Generate trend data for the last 7 days
+                const labels = [];
+                const newDisputesData = [];
+                const resolvedDisputesData = [];
+                
+                for (let i = 6; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    labels.push(date.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric' }));
+                    
+                    newDisputesData.push(Math.floor(Math.random() * 5) + 1);
+                    resolvedDisputesData.push(Math.floor(Math.random() * 8) + 2);
+                }
+
+                window.disputesCharts.trend = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Nouveaux Litiges',
+                            data: newDisputesData,
+                            borderColor: '#EF4444',
+                            backgroundColor: '#EF444420',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }, {
+                            label: 'Litiges Résolus',
+                            data: resolvedDisputesData,
+                            borderColor: '#10B981',
+                            backgroundColor: '#10B98120',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false // Legend is handled by custom HTML
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Nombre de cas'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createResolutionTimeChart() {
+                const ctx = document.getElementById('resolutionTimeChart');
+                if (!ctx) return;
+
+                const data = {
+                    labels: ['< 1h', '1-4h', '4-12h', '12-24h', '> 24h'],
+                    datasets: [{
+                        data: [25, 35, 20, 15, 5],
+                        backgroundColor: [
+                            '#10B981',
+                            '#3B82F6',
+                            '#F59E0B',
+                            '#EF4444',
+                            '#8B5CF6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                };
+
+                window.disputesCharts.resolutionTime = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '65%'
+                    }
+                });
+            }
+
+            createDisputeCategoriesChart() {
+                const ctx = document.getElementById('disputeCategoriesChart');
+                if (!ctx) return;
+
+                const data = {
+                    labels: ['Service non réalisé', 'Qualité insuffisante', 'Problème paiement', 'Retard', 'Communication', 'Autres'],
+                    datasets: [{
+                        data: [8, 4, 2, 3, 2, 1],
+                        backgroundColor: [
+                            '#EF4444',
+                            '#F59E0B',
+                            '#3B82F6',
+                            '#8B5CF6',
+                            '#10B981',
+                            '#6B7280'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                };
+
+                window.disputesCharts.categories = new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Nombre de cas'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createCampaignPerformanceChart() {
+                const ctx = document.getElementById('campaignPerformanceChart');
+                if (!ctx) return;
+
+                // Generate last 30 days performance data
+                const last30Days = [];
+                const impressionsData = [];
+                const clicksData = [];
+                const conversionsData = [];
+                const costData = [];
+                
+                for (let i = 29; i >= 0; i--) {
+                    const date = new Date();
+                    date.setDate(date.getDate() - i);
+                    last30Days.push(date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }));
+                    
+                    // Generate realistic demo data
+                    const baseImpressions = Math.floor(Math.random() * 5000) + 7000;
+                    const baseClicks = Math.floor(baseImpressions * (Math.random() * 0.02 + 0.025));
+                    const baseConversions = Math.floor(baseClicks * (Math.random() * 0.15 + 0.12));
+                    const baseCost = Math.floor(baseClicks * (Math.random() * 200 + 150));
+                    
+                    impressionsData.push(baseImpressions);
+                    clicksData.push(baseClicks);
+                    conversionsData.push(baseConversions);
+                    costData.push(baseCost);
+                }
+
+                window.campaignCharts.performanceChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: last30Days,
+                        datasets: [{
+                            label: 'Impressions',
+                            data: impressionsData,
+                            borderColor: '#10B981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Clics',
+                            data: clicksData,
+                            borderColor: '#3B82F6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }, {
+                            label: 'Conversions',
+                            data: conversionsData,
+                            borderColor: '#F59E0B',
+                            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }, {
+                            label: 'Coût (K FCFA)',
+                            data: costData,
+                            borderColor: '#EF4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            borderWidth: 3,
+                            fill: false,
+                            tension: 0.4,
+                            yAxisID: 'y2'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#F1F5F9'
+                                },
+                                border: {
+                                    display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Impressions'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                beginAtZero: true,
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                                border: {
+                                    display: false
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Clics / Conversions'
+                                }
+                            },
+                            y2: {
+                                type: 'linear',
+                                display: false,
+                                position: 'right',
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                this.setupCampaignChartControls();
+            }
+
+            createCampaignTypeChart() {
+                const ctx = document.getElementById('campaignTypeChart');
+                if (!ctx) return;
+
+                const campaignTypes = [
+                    { name: 'Acquisition', performance: 85, color: '#10B981' },
+                    { name: 'Rétention', performance: 72, color: '#3B82F6' },
+                    { name: 'Saisonnière', performance: 93, color: '#F59E0B' }
+                ];
+
+                window.campaignCharts.typeChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['CTR', 'Conversion', 'ROI', 'Coût/Acq', 'Rétention', 'Satisfaction'],
+                        datasets: campaignTypes.map(type => ({
+                            label: type.name,
+                            data: [
+                                Math.random() * 40 + 60,
+                                Math.random() * 30 + 70,
+                                Math.random() * 20 + 80,
+                                Math.random() * 25 + 75,
+                                Math.random() * 15 + 85,
+                                Math.random() * 10 + 90
+                            ],
+                            borderColor: type.color,
+                            backgroundColor: type.color + '20',
+                            borderWidth: 2,
+                            pointBackgroundColor: type.color,
+                            pointBorderColor: '#ffffff',
+                            pointRadius: 4
+                        }))
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8
+                            }
+                        },
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100,
+                                grid: {
+                                    color: '#F1F5F9'
+                                },
+                                pointLabels: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    color: '#64748B'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createCampaignROIChart() {
+                const ctx = document.getElementById('campaignROIChart');
+                if (!ctx) return;
+
+                const channels = [
+                    { name: 'Google Ads', roi: 342, color: '#4285F4' },
+                    { name: 'Facebook', roi: 287, color: '#1877F2' },
+                    { name: 'Instagram', roi: 298, color: '#E4405F' },
+                    { name: 'WhatsApp', roi: 256, color: '#25D366' },
+                    { name: 'Email', roi: 189, color: '#F59E0B' }
+                ];
+
+                window.campaignCharts.roiChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: channels.map(c => c.name),
+                        datasets: [{
+                            data: channels.map(c => c.roi),
+                            backgroundColor: channels.map(c => c.color + '80'),
+                            borderColor: channels.map(c => c.color),
+                            borderWidth: 2,
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `ROI: ${context.parsed.y}%`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                border: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#F1F5F9'
+                                },
+                                border: {
+                                    display: false
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createCampaignFunnelChart() {
+                const ctx = document.getElementById('campaignFunnelChart');
+                if (!ctx) return;
+
+                const funnelData = [
+                    { stage: 'Impressions', value: 245680, percentage: 100 },
+                    { stage: 'Clics', value: 7861, percentage: 3.2 },
+                    { stage: 'Visites', value: 5892, percentage: 2.4 },
+                    { stage: 'Conversions', value: 1847, percentage: 0.75 }
+                ];
+
+                window.campaignCharts.funnelChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: funnelData.map(f => f.stage),
+                        datasets: [{
+                            data: funnelData.map(f => f.percentage),
+                            backgroundColor: [
+                                '#10B981',
+                                '#3B82F6', 
+                                '#F59E0B',
+                                '#EF4444'
+                            ],
+                            borderWidth: 3,
+                            borderColor: '#ffffff',
+                            hoverBorderWidth: 4,
+                            hoverOffset: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '40%',
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#E5E7EB',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        const stage = funnelData[context.dataIndex];
+                                        return `${stage.stage}: ${stage.value.toLocaleString()} (${stage.percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createCampaignComparisonCharts() {
+                // Create mini performance charts for campaign comparison cards
+                this.createComparisonMiniChart('topPerformerChart', '#10B981', 'high');
+                this.createComparisonMiniChart('averagePerformerChart', '#3B82F6', 'medium');
+                this.createComparisonMiniChart('attentionNeededChart', '#EF4444', 'low');
+            }
+
+            createComparisonMiniChart(canvasId, color, performance) {
+                const ctx = document.getElementById(canvasId);
+                if (!ctx) return;
+
+                // Generate performance trend data
+                const trendData = [];
+                let baseValue = performance === 'high' ? 80 : performance === 'medium' ? 60 : 40;
+                
+                for (let i = 0; i < 15; i++) {
+                    const variation = (Math.random() - 0.5) * 10;
+                    baseValue = Math.max(10, Math.min(100, baseValue + variation));
+                    trendData.push(baseValue);
+                }
+
+                window.campaignCharts[canvasId] = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: Array(15).fill(''),
+                        datasets: [{
+                            data: trendData,
+                            borderColor: color,
+                            backgroundColor: color + '30',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            pointHoverRadius: 4,
+                            pointBackgroundColor: color,
+                            pointBorderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                display: false
+                            },
+                            y: {
+                                display: false,
+                                beginAtZero: true
+                            }
+                        },
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        }
+                    }
+                });
+            }
+
+            setupCampaignChartControls() {
+                // Add event listeners for campaign chart controls
+                document.querySelectorAll('#campaignPerformanceChart').forEach(() => {
+                    const container = document.querySelector('#campaignPerformanceChart').closest('.chart-container');
+                    const toggles = container.querySelectorAll('.chart-toggle');
+                    
+                    toggles.forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            
+                            toggles.forEach(btn => btn.classList.remove('active'));
+                            button.classList.add('active');
+                            
+                            const metric = button.dataset.metric;
+                            this.updateCampaignPerformanceChart(metric);
+                        });
+                    });
+                });
+            }
+
+            updateCampaignPerformanceChart(metric) {
+                const chart = window.campaignCharts.performanceChart;
+                if (!chart) return;
+
+                // Show/hide datasets based on selection
+                chart.data.datasets.forEach((ds, index) => {
+                    if (metric === 'impressions' && index === 0) {
+                        ds.hidden = false;
+                    } else if (metric === 'clicks' && index === 1) {
+                        ds.hidden = false;
+                    } else if (metric === 'conversions' && index === 2) {
+                        ds.hidden = false;
+                    } else if (metric === 'cost' && index === 3) {
+                        ds.hidden = false;
+                    } else {
+                        ds.hidden = true;
+                    }
+                });
+
+                chart.update('active');
+                this.showToast(`Affichage: ${metric}`, 'info');
             }
         }
         
@@ -6147,7 +9147,9 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
         
         function refreshAnalytics() {
             window.enhancedAdmin.showToast('Actualisation des données analytiques...', 'info');
-            // TODO: Implement analytics refresh
+            if (window.enhancedAdmin) {
+                window.enhancedAdmin.initializeAnalyticsCharts();
+            }
         }
         
         function showAnalyticsFilters() {
@@ -6156,11 +9158,465 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
                 filters.style.display = filters.style.display === 'none' ? 'block' : 'none';
             }
         }
+
+        // Chart period update function
+        function updateChartPeriod(period) {
+            window.enhancedAdmin.showToast(`Période mise à jour: ${period}`, 'info');
+            // Re-initialize charts with new period data
+            if (window.enhancedAdmin) {
+                window.enhancedAdmin.initializeAnalyticsCharts();
+            }
+        }
+
+        // Analytics tab functions
+        function showAnalyticsTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.analytics-tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            const targetTab = document.getElementById(`${tabName}Analytics`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+            
+            // Add active class to clicked button
+            event.target.closest('.tab-button').classList.add('active');
+            
+            window.enhancedAdmin.showToast(`Onglet ${tabName} activé`, 'info');
+        }
+
+        // Transaction chart functions
+        function updateTransactionCharts(period) {
+            window.enhancedAdmin.showToast(`Période mise à jour: ${period}`, 'info');
+            if (window.enhancedAdmin) {
+                window.enhancedAdmin.initializeTransactionCharts();
+            }
+        }
+
+        function refreshTransactions() {
+            window.enhancedAdmin.showToast('Actualisation des données de transactions...', 'info');
+            if (window.enhancedAdmin) {
+                window.enhancedAdmin.initializeTransactionCharts();
+            }
+        }
+
+        function exportTransactions() {
+            window.enhancedAdmin.showToast('Export des transactions en cours...', 'info');
+            // TODO: Implement transaction export
+        }
+
+        function detectFraud() {
+            window.enhancedAdmin.showToast('Détection de fraudes en cours...', 'warning');
+            // TODO: Implement fraud detection
+        }
+
+        // Campaign chart functions
+        function updateCampaignChart(period) {
+            window.enhancedAdmin.showToast(`Période campagne mise à jour: ${period}`, 'info');
+            if (window.enhancedAdmin) {
+                window.enhancedAdmin.initializeCampaignCharts();
+            }
+        }
+
+        function updateComparisonChart(metric) {
+            window.enhancedAdmin.showToast(`Métrique de comparaison: ${metric}`, 'info');
+            // TODO: Update comparison chart based on metric
+        }
+
+        function exportCampaigns() {
+            window.enhancedAdmin.showToast('Export des rapports de campagnes...', 'info');
+            // TODO: Implement campaign export
+        }
+
+        function createCampaign() {
+            window.enhancedAdmin.showToast('Création d\'une nouvelle campagne...', 'info');
+            // TODO: Implement campaign creation
+        }
         
         function generateCustomReport() {
             window.enhancedAdmin.showToast('Génération de rapport personnalisé...', 'info');
             // TODO: Implement custom report generation
         }
+
+            createSystemPerformanceChart() {
+                const ctx = document.getElementById('systemPerformanceChart');
+                if (!ctx) return;
+
+                const data = {
+                    labels: ['CPU', 'RAM', 'Stockage', 'Réseau'],
+                    datasets: [{
+                        label: 'Usage (%)',
+                        data: [34, 67, 23, 45],
+                        backgroundColor: [
+                            '#3B82F6',
+                            '#10B981', 
+                            '#F59E0B',
+                            '#8B5CF6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                };
+
+                window.monitoringCharts.systemPerformance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 12,
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '65%',
+                        elements: {
+                            arc: {
+                                borderWidth: 2
+                            }
+                        }
+                    }
+                });
+            }
+
+            createDatabasePerformanceChart() {
+                const ctx = document.getElementById('databasePerformanceChart');
+                if (!ctx) return;
+
+                // Generate time-based data for database metrics
+                const labels = [];
+                const connectionData = [];
+                const queryData = [];
+                
+                for (let i = 23; i >= 0; i--) {
+                    const hour = new Date();
+                    hour.setHours(hour.getHours() - i);
+                    labels.push(hour.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                    
+                    connectionData.push(15 + Math.random() * 20);
+                    queryData.push(100 + Math.random() * 100);
+                }
+
+                window.monitoringCharts.databasePerformance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Connexions Actives',
+                            data: connectionData,
+                            borderColor: '#3B82F6',
+                            backgroundColor: '#3B82F620',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Requêtes/sec',
+                            data: queryData,
+                            borderColor: '#10B981',
+                            backgroundColor: '#10B98120',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Connexions'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Requêtes/sec'
+                                },
+                                grid: {
+                                    drawOnChartArea: false,
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createAPIResponseChart() {
+                const ctx = document.getElementById('apiResponseChart');
+                if (!ctx) return;
+
+                // Generate realistic API response time data
+                const labels = [];
+                const responseData = [];
+                const errorData = [];
+                
+                for (let i = 59; i >= 0; i--) {
+                    const time = new Date();
+                    time.setMinutes(time.getMinutes() - i);
+                    labels.push(time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                    
+                    responseData.push(200 + Math.random() * 400 + Math.sin(i / 10) * 100);
+                    errorData.push(Math.random() * 5);
+                }
+
+                window.monitoringCharts.apiResponse = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Temps de Réponse (ms)',
+                            data: responseData,
+                            borderColor: '#3B82F6',
+                            backgroundColor: '#3B82F610',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Taux d\'Erreur (%)',
+                            data: errorData,
+                            borderColor: '#EF4444',
+                            backgroundColor: '#EF444420',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.3,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Temps (ms)'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Erreurs (%)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                                max: 10
+                            }
+                        }
+                    }
+                });
+            }
+
+            createErrorRateChart() {
+                const ctx = document.getElementById('errorRateChart');
+                if (!ctx) return;
+
+                const data = {
+                    labels: ['4xx Erreurs', '5xx Erreurs', 'Succès'],
+                    datasets: [{
+                        data: [1.2, 0.9, 97.9],
+                        backgroundColor: [
+                            '#F59E0B',
+                            '#EF4444',
+                            '#10B981'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                };
+
+                window.monitoringCharts.errorRate = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            createThroughputChart() {
+                const ctx = document.getElementById('throughputChart');
+                if (!ctx) return;
+
+                // Generate throughput data
+                const labels = [];
+                const throughputData = [];
+                
+                for (let i = 11; i >= 0; i--) {
+                    const time = new Date();
+                    time.setHours(time.getHours() - i);
+                    labels.push(time.toLocaleTimeString('fr-FR', { hour: '2-digit' }) + 'h');
+                    
+                    throughputData.push(800 + Math.random() * 800);
+                }
+
+                window.monitoringCharts.throughput = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Requêtes/min',
+                            data: throughputData,
+                            backgroundColor: '#3B82F6',
+                            borderColor: '#1D4ED8',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Requêtes/min'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            setupMonitoringTimeControls() {
+                document.querySelectorAll('.time-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        const range = button.dataset.range;
+                        this.updateMonitoringTimeRange(range);
+                    });
+                });
+            }
+
+            updateMonitoringTimeRange(range) {
+                console.log(`Updating monitoring charts for ${range} range`);
+                // Regenerate chart data based on time range
+                this.createAPIResponseChart();
+                this.createDatabasePerformanceChart();
+                this.createThroughputChart();
+            }
+
+            startRealTimeUpdates() {
+                // Update monitoring charts every 30 seconds
+                if (this.monitoringInterval) {
+                    clearInterval(this.monitoringInterval);
+                }
+                
+                this.monitoringInterval = setInterval(() => {
+                    this.updateRealTimeMetrics();
+                }, 30000);
+            }
+
+            updateRealTimeMetrics() {
+                // Update system metrics in real-time
+                const cpuValue = 30 + Math.random() * 20;
+                const ramValue = 60 + Math.random() * 20;
+                const storageValue = 20 + Math.random() * 10;
+                
+                document.getElementById('cpuValue').textContent = Math.round(cpuValue) + '%';
+                document.getElementById('ramValue').textContent = Math.round(ramValue) + '%';
+                document.getElementById('storageValue').textContent = Math.round(storageValue) + '%';
+                
+                // Update database metrics
+                document.getElementById('dbConnections').textContent = Math.round(20 + Math.random() * 10) + '/100';
+                document.getElementById('dbQueries').textContent = Math.round(140 + Math.random() * 20);
+                
+                // Update API metrics
+                document.getElementById('avgResponse').textContent = Math.round(240 + Math.random() * 20) + 'ms';
+                document.getElementById('requestsPerMin').textContent = (1200 + Math.round(Math.random() * 100)).toLocaleString();
+                
+                console.log('📊 Real-time metrics updated');
+            }
         
         // Transactions Functions
         function exportTransactions() {
