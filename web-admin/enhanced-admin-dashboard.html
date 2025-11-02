@@ -4344,7 +4344,7 @@
                 
                 // Test connection with a simple query
                 const { error } = await this.supabase
-                    .from('users')
+                    .from('profiles')
                     .select('count', { count: 'exact', head: true })
                     .limit(1);
                 
