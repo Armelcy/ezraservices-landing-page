@@ -4425,6 +4425,11 @@
                         <i class="fas fa-credit-card"></i>
                         <span>Transactions</span>
                     </div>
+                    <div class="nav-item" data-page="financial-management">
+                        <i class="fas fa-wallet"></i>
+                        <span>Gestion Financière</span>
+                        <span class="badge" id="escrowBadge">-</span>
+                    </div>
                 </div>
                 
                 <div class="nav-section">
@@ -9756,6 +9761,511 @@
                                     <span class="permission-tag">✗ Modifier données</span>
                                 </div>
                                 <button class="btn btn-secondary" onclick="configureRole('support')">Configurer</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page: Financial Management -->
+                <div id="financial-managementPage" class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Gestion Financière</h1>
+                        <p class="page-subtitle">Surveillance des paiements, escrow et revenus de la plateforme</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportFinancialReport()">
+                                <i class="fas fa-file-export"></i>
+                                Rapport Financier
+                            </button>
+                            <button class="btn btn-warning" onclick="refreshFinancialData()">
+                                <i class="fas fa-sync-alt"></i>
+                                Actualiser
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Financial Overview Cards -->
+                    <div class="financial-overview-grid grid-container grid-4 grid-gap-lg">
+                        <div class="financial-overview-card card-base excellent">
+                            <div class="financial-card-header">
+                                <div class="financial-icon-wrapper revenue">
+                                    <i class="fas fa-chart-line financial-icon"></i>
+                                </div>
+                                <div class="financial-info">
+                                    <h4>Revenus Plateforme</h4>
+                                    <span class="financial-subtitle">Commission 15%</span>
+                                </div>
+                                <div class="financial-trend positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+12.5%</span>
+                                </div>
+                            </div>
+                            <div class="financial-amount">2,847,500 XAF</div>
+                            <div class="financial-period">Ce mois</div>
+                        </div>
+                        
+                        <div class="financial-overview-card card-base warning">
+                            <div class="financial-card-header">
+                                <div class="financial-icon-wrapper escrow">
+                                    <i class="fas fa-shield-alt financial-icon"></i>
+                                </div>
+                                <div class="financial-info">
+                                    <h4>Fonds en Escrow</h4>
+                                    <span class="financial-subtitle">En attente</span>
+                                </div>
+                                <div class="escrow-count">
+                                    <span class="count-number">23</span>
+                                    <span class="count-label">transactions</span>
+                                </div>
+                            </div>
+                            <div class="financial-amount">1,245,000 XAF</div>
+                            <div class="financial-period">À libérer</div>
+                        </div>
+                        
+                        <div class="financial-overview-card card-base good">
+                            <div class="financial-card-header">
+                                <div class="financial-icon-wrapper payouts">
+                                    <i class="fas fa-money-bill-wave financial-icon"></i>
+                                </div>
+                                <div class="financial-info">
+                                    <h4>Paiements Instantanés</h4>
+                                    <span class="financial-subtitle">Frais 3%</span>
+                                </div>
+                                <div class="financial-trend positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+8.2%</span>
+                                </div>
+                            </div>
+                            <div class="financial-amount">187,500 XAF</div>
+                            <div class="financial-period">Frais collectés</div>
+                        </div>
+                        
+                        <div class="financial-overview-card card-base info">
+                            <div class="financial-card-header">
+                                <div class="financial-icon-wrapper volume">
+                                    <i class="fas fa-exchange-alt financial-icon"></i>
+                                </div>
+                                <div class="financial-info">
+                                    <h4>Volume Total</h4>
+                                    <span class="financial-subtitle">Toutes transactions</span>
+                                </div>
+                                <div class="financial-trend positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+15.8%</span>
+                                </div>
+                            </div>
+                            <div class="financial-amount">18,983,500 XAF</div>
+                            <div class="financial-period">Ce mois</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Money Integration Status -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-mobile-alt"></i>
+                                Intégrations Mobile Money
+                            </h2>
+                            <div class="header-actions">
+                                <button class="btn btn-sm btn-outline-primary" onclick="testMobileMoneyConnections()">
+                                    <i class="fas fa-plug"></i>
+                                    Tester Connexions
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mobile-money-grid grid-container grid-2 grid-gap-lg">
+                            <!-- MTN MoMo Integration -->
+                            <div class="mobile-money-card card-base">
+                                <div class="mobile-money-header">
+                                    <div class="provider-logo mtn">
+                                        <i class="fas fa-sim-card"></i>
+                                        <span class="provider-name">MTN MoMo</span>
+                                    </div>
+                                    <div class="integration-status online">
+                                        <div class="status-dot"></div>
+                                        <span>Opérationnel</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mobile-money-metrics">
+                                    <div class="money-metric">
+                                        <div class="metric-icon success">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Transactions Réussies</span>
+                                            <span class="metric-value">847</span>
+                                            <span class="metric-rate">98.2%</span>
+                                        </div>
+                                    </div>
+                                    <div class="money-metric">
+                                        <div class="metric-icon warning">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Échecs</span>
+                                            <span class="metric-value">15</span>
+                                            <span class="metric-rate">1.8%</span>
+                                        </div>
+                                    </div>
+                                    <div class="money-metric">
+                                        <div class="metric-icon info">
+                                            <i class="fas fa-coins"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Volume (30j)</span>
+                                            <span class="metric-value">12.4M XAF</span>
+                                            <span class="metric-rate">+23%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mobile-money-actions">
+                                    <button class="action-btn primary" onclick="viewMTNTransactions()">
+                                        <i class="fas fa-list"></i>
+                                        Voir Transactions
+                                    </button>
+                                    <button class="action-btn secondary" onclick="testMTNConnection()">
+                                        <i class="fas fa-vial"></i>
+                                        Test Sandbox
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Orange Money Integration -->
+                            <div class="mobile-money-card card-base">
+                                <div class="mobile-money-header">
+                                    <div class="provider-logo orange">
+                                        <i class="fas fa-mobile"></i>
+                                        <span class="provider-name">Orange Money</span>
+                                    </div>
+                                    <div class="integration-status online">
+                                        <div class="status-dot"></div>
+                                        <span>Opérationnel</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mobile-money-metrics">
+                                    <div class="money-metric">
+                                        <div class="metric-icon success">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Transactions Réussies</span>
+                                            <span class="metric-value">623</span>
+                                            <span class="metric-rate">96.8%</span>
+                                        </div>
+                                    </div>
+                                    <div class="money-metric">
+                                        <div class="metric-icon warning">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Échecs</span>
+                                            <span class="metric-value">21</span>
+                                            <span class="metric-rate">3.2%</span>
+                                        </div>
+                                    </div>
+                                    <div class="money-metric">
+                                        <div class="metric-icon info">
+                                            <i class="fas fa-coins"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Volume (30j)</span>
+                                            <span class="metric-value">8.7M XAF</span>
+                                            <span class="metric-rate">+18%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mobile-money-actions">
+                                    <button class="action-btn primary" onclick="viewOrangeTransactions()">
+                                        <i class="fas fa-list"></i>
+                                        Voir Transactions
+                                    </button>
+                                    <button class="action-btn secondary" onclick="testOrangeConnection()">
+                                        <i class="fas fa-vial"></i>
+                                        Test Sandbox
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Escrow Management -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-shield-alt"></i>
+                                Gestion des Fonds en Escrow
+                            </h2>
+                            <div class="header-actions">
+                                <select class="form-select" id="escrowFilter" onchange="filterEscrowTransactions(this.value)">
+                                    <option value="all">Toutes les transactions</option>
+                                    <option value="pending">En attente</option>
+                                    <option value="ready">Prêtes à libérer</option>
+                                    <option value="disputed">En litige</option>
+                                </select>
+                                <button class="btn btn-sm btn-warning" onclick="bulkReleaseEscrow()">
+                                    <i class="fas fa-unlock"></i>
+                                    Libération Groupée
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="escrow-management-container">
+                            <div class="escrow-transactions-table">
+                                <table class="data-table enhanced">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="selectAllEscrow" onchange="toggleSelectAllEscrow()">
+                                            </th>
+                                            <th>ID Transaction</th>
+                                            <th>Client</th>
+                                            <th>Prestataire</th>
+                                            <th>Montant</th>
+                                            <th>Date Escrow</th>
+                                            <th>Statut Service</th>
+                                            <th>Délai Auto</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="escrowTransactionsTable">
+                                        <tr class="escrow-row ready">
+                                            <td><input type="checkbox" class="escrow-checkbox" data-transaction-id="ESC001"></td>
+                                            <td>
+                                                <span class="transaction-id">ESC001</span>
+                                                <small class="booking-id">Réservation #BK847</small>
+                                            </td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <div class="user-avatar">MC</div>
+                                                    <div class="user-details">
+                                                        <span class="user-name">Marie Claire</span>
+                                                        <small class="user-email">marie.c@email.cm</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <div class="user-avatar provider">JP</div>
+                                                    <div class="user-details">
+                                                        <span class="user-name">Jean Paul Services</span>
+                                                        <small class="user-email">Nettoyage domicile</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="amount-value">25,000 XAF</span>
+                                                <small class="fee-info">Commission: 3,750 XAF</small>
+                                            </td>
+                                            <td>
+                                                <span class="date-value">15 Nov 2024</span>
+                                                <small class="time-value">14:30</small>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge completed">Service Terminé</span>
+                                                <small class="completion-time">Il y a 2h</small>
+                                            </td>
+                                            <td>
+                                                <div class="auto-release-timer ready">
+                                                    <i class="fas fa-clock"></i>
+                                                    <span>Prêt maintenant</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn success" onclick="releaseEscrow('ESC001')" title="Libérer fonds">
+                                                        <i class="fas fa-unlock"></i>
+                                                    </button>
+                                                    <button class="action-btn info" onclick="viewEscrowDetails('ESC001')" title="Voir détails">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn warning" onclick="holdEscrow('ESC001')" title="Mettre en attente">
+                                                        <i class="fas fa-pause"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr class="escrow-row pending">
+                                            <td><input type="checkbox" class="escrow-checkbox" data-transaction-id="ESC002"></td>
+                                            <td>
+                                                <span class="transaction-id">ESC002</span>
+                                                <small class="booking-id">Réservation #BK848</small>
+                                            </td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <div class="user-avatar">AM</div>
+                                                    <div class="user-details">
+                                                        <span class="user-name">Ahmed Moussa</span>
+                                                        <small class="user-email">ahmed.m@email.cm</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <div class="user-avatar provider">SF</div>
+                                                    <div class="user-details">
+                                                        <span class="user-name">Sarah Fixes</span>
+                                                        <small class="user-email">Réparation électrique</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="amount-value">45,000 XAF</span>
+                                                <small class="fee-info">Commission: 6,750 XAF</small>
+                                            </td>
+                                            <td>
+                                                <span class="date-value">15 Nov 2024</span>
+                                                <small class="time-value">16:45</small>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge in-progress">En cours</span>
+                                                <small class="progress-info">Début: 17:00</small>
+                                            </td>
+                                            <td>
+                                                <div class="auto-release-timer pending">
+                                                    <i class="fas fa-hourglass-half"></i>
+                                                    <span>En attente service</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn secondary" onclick="releaseEscrow('ESC002')" title="Libération manuelle" disabled>
+                                                        <i class="fas fa-unlock"></i>
+                                                    </button>
+                                                    <button class="action-btn info" onclick="viewEscrowDetails('ESC002')" title="Voir détails">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn warning" onclick="holdEscrow('ESC002')" title="Mettre en attente">
+                                                        <i class="fas fa-pause"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr class="escrow-row disputed">
+                                            <td><input type="checkbox" class="escrow-checkbox" data-transaction-id="ESC003"></td>
+                                            <td>
+                                                <span class="transaction-id">ESC003</span>
+                                                <small class="booking-id">Réservation #BK846</small>
+                                            </td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <div class="user-avatar">FK</div>
+                                                    <div class="user-details">
+                                                        <span class="user-name">Fatima Kamga</span>
+                                                        <small class="user-email">fatima.k@email.cm</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="user-info">
+                                                    <div class="user-avatar provider">MP</div>
+                                                    <div class="user-details">
+                                                        <span class="user-name">Martin Plomberie</span>
+                                                        <small class="user-email">Services plomberie</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="amount-value">67,500 XAF</span>
+                                                <small class="fee-info">Commission: 10,125 XAF</small>
+                                            </td>
+                                            <td>
+                                                <span class="date-value">14 Nov 2024</span>
+                                                <small class="time-value">09:15</small>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge disputed">En litige</span>
+                                                <small class="dispute-info">Litige #LT001</small>
+                                            </td>
+                                            <td>
+                                                <div class="auto-release-timer blocked">
+                                                    <i class="fas fa-ban"></i>
+                                                    <span>Bloqué - Litige</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="action-btn secondary" onclick="releaseEscrow('ESC003')" title="Libération impossible" disabled>
+                                                        <i class="fas fa-unlock"></i>
+                                                    </button>
+                                                    <button class="action-btn info" onclick="viewEscrowDetails('ESC003')" title="Voir détails">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn danger" onclick="viewDispute('LT001')" title="Voir litige">
+                                                        <i class="fas fa-gavel"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Revenue Analytics -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-chart-area"></i>
+                                Analyse des Revenus
+                            </h2>
+                            <div class="header-actions">
+                                <select class="form-select" id="revenueTimeframe" onchange="updateRevenueCharts(this.value)">
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d" selected>30 derniers jours</option>
+                                    <option value="90d">3 derniers mois</option>
+                                    <option value="1y">Dernière année</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="revenue-analytics-grid grid-container grid-2 grid-gap-lg">
+                            <!-- Revenue Breakdown Chart -->
+                            <div class="revenue-chart-card card-base">
+                                <div class="chart-header">
+                                    <h4>Répartition des Revenus</h4>
+                                    <span class="chart-subtitle">Commission plateforme vs frais services</span>
+                                </div>
+                                <div class="revenue-chart-container">
+                                    <canvas id="revenueBreakdownChart" width="400" height="250"></canvas>
+                                </div>
+                                <div class="revenue-legend">
+                                    <div class="legend-item">
+                                        <div class="legend-color commission"></div>
+                                        <span>Commission Services (15%): 2,847,500 XAF</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-color instant-fees"></div>
+                                        <span>Frais Paiements Instantanés (3%): 187,500 XAF</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Revenue Trend Chart -->
+                            <div class="revenue-chart-card card-base">
+                                <div class="chart-header">
+                                    <h4>Évolution des Revenus</h4>
+                                    <span class="chart-subtitle">Tendance mensuelle et prédictions</span>
+                                </div>
+                                <div class="revenue-chart-container">
+                                    <canvas id="revenueTrendChart" width="400" height="250"></canvas>
+                                </div>
+                                <div class="revenue-insights">
+                                    <div class="insight-item positive">
+                                        <i class="fas fa-trending-up"></i>
+                                        <span>Croissance mensuelle: +12.5%</span>
+                                    </div>
+                                    <div class="insight-item info">
+                                        <i class="fas fa-calculator"></i>
+                                        <span>Prédiction mois prochain: 3.2M XAF</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
