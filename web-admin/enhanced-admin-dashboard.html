@@ -2859,6 +2859,1526 @@
                 flex-direction: column;
             }
         }
+        
+        /* Enhanced System Alerts Dashboard */
+        .alerts-summary-grid {
+            margin-bottom: 2rem;
+        }
+        
+        .alert-summary-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .alert-summary-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .alert-summary-card.critical::before {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+        
+        .alert-summary-card.warning::before {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        
+        .alert-summary-card.info::before {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+        }
+        
+        .alert-summary-card.resolved::before {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+        
+        .alert-summary-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .alert-summary-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: white;
+            font-size: 1.25rem;
+        }
+        
+        .alert-summary-card.critical .alert-summary-icon {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .alert-summary-card.warning .alert-summary-icon {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .alert-summary-card.info .alert-summary-icon {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .alert-summary-card.resolved .alert-summary-icon {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .alert-summary-content {
+            margin-bottom: 1rem;
+        }
+        
+        .alert-count {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .alert-type {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .alert-trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .alert-trend-indicator.critical {
+            color: var(--error);
+        }
+        
+        .alert-trend-indicator.warning {
+            color: var(--warning);
+        }
+        
+        .alert-trend-indicator.info {
+            color: var(--info);
+        }
+        
+        .alert-trend-indicator.positive {
+            color: var(--success);
+        }
+        
+        .alerts-container-enhanced {
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .alerts-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+        
+        .alerts-section-title {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .alerts-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .alert-control-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+        }
+        
+        .alert-control-btn:hover {
+            background: var(--ezra-gold);
+            color: white;
+            border-color: var(--ezra-gold);
+        }
+        
+        .alerts-list-enhanced {
+            padding: 0;
+        }
+        
+        .alert-item-enhanced {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .alert-item-enhanced:last-child {
+            border-bottom: none;
+        }
+        
+        .alert-item-enhanced:hover {
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+        
+        .alert-priority-bar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .alert-item-enhanced.critical .alert-priority-bar {
+            background: linear-gradient(180deg, #ef4444, #dc2626);
+        }
+        
+        .alert-item-enhanced.warning .alert-priority-bar {
+            background: linear-gradient(180deg, #f59e0b, #d97706);
+        }
+        
+        .alert-item-enhanced.info .alert-priority-bar {
+            background: linear-gradient(180deg, #3b82f6, #2563eb);
+        }
+        
+        .alert-icon-enhanced {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+            position: relative;
+            flex-shrink: 0;
+        }
+        
+        .alert-item-enhanced.critical .alert-icon-enhanced {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .alert-item-enhanced.warning .alert-icon-enhanced {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .alert-item-enhanced.info .alert-icon-enhanced {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .alert-pulse {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 12px;
+            height: 12px;
+            background: #ef4444;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+        
+        .alert-content-enhanced {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .alert-header-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            gap: 1rem;
+        }
+        
+        .alert-title-enhanced {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+        
+        .alert-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .alert-description-enhanced {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .detail-value.critical {
+            color: var(--error);
+        }
+        
+        .detail-value.warning {
+            color: var(--warning);
+        }
+        
+        .detail-value.info {
+            color: var(--info);
+        }
+        
+        .alert-meta-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .alert-severity-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .alert-severity-badge.critical {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .alert-severity-badge.warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .alert-severity-badge.info {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .alert-source {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-family: 'Roboto Mono', monospace;
+            background: var(--background);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+        }
+        
+        .alert-actions-enhanced {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        
+        .action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            font-size: 0.875rem;
+        }
+        
+        .action-btn.primary {
+            border-color: var(--ezra-gold);
+            color: var(--ezra-gold);
+        }
+        
+        .action-btn.primary:hover {
+            background: var(--ezra-gold);
+            color: white;
+        }
+        
+        .action-btn.secondary:hover {
+            background: var(--text-secondary);
+            color: white;
+        }
+        
+        .action-btn.critical {
+            border-color: var(--error);
+            color: var(--error);
+        }
+        
+        .action-btn.critical:hover {
+            background: var(--error);
+            color: white;
+        }
+        
+        .alert-analytics-section {
+            margin-top: 2rem;
+        }
+        
+        /* Alert charts styling */
+        #alertTrendsChart {
+            max-height: 200px;
+        }
+        
+        /* Form select styling for alerts filter */
+        .form-select {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .form-select:focus {
+            outline: none;
+            border-color: var(--ezra-gold);
+            box-shadow: 0 0 0 3px rgba(214, 158, 46, 0.1);
+        }
+        
+        /* Responsive alerts */
+        @media (max-width: 768px) {
+            .alerts-summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .alert-item-enhanced {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .alert-header-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            
+            .alert-details-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .alert-actions-enhanced {
+                flex-direction: row;
+                justify-content: flex-end;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .alerts-summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .alert-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Enhanced Case Management System */
+        .case-management-controls {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .status-filters-enhanced {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .filter-btn-enhanced:hover,
+        .filter-btn-enhanced.active {
+            background: var(--ezra-gold);
+            color: white;
+            border-color: var(--ezra-gold);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(214, 158, 46, 0.2);
+        }
+        
+        .filter-btn-enhanced.urgent:hover,
+        .filter-btn-enhanced.urgent.active {
+            background: var(--error);
+            border-color: var(--error);
+        }
+        
+        .filter-btn-enhanced.progress:hover,
+        .filter-btn-enhanced.progress.active {
+            background: var(--info);
+            border-color: var(--info);
+        }
+        
+        .filter-btn-enhanced.pending:hover,
+        .filter-btn-enhanced.pending.active {
+            background: var(--warning);
+            border-color: var(--warning);
+        }
+        
+        .filter-icon {
+            font-size: 1rem;
+        }
+        
+        .filter-label {
+            font-weight: 500;
+        }
+        
+        .filter-count-enhanced {
+            background: var(--background);
+            color: var(--text-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .filter-count-enhanced.urgent {
+            background: var(--error);
+            color: white;
+        }
+        
+        .case-actions-toolbar {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .toolbar-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+        }
+        
+        .toolbar-btn:hover {
+            background: var(--text-secondary);
+            color: white;
+        }
+        
+        .toolbar-btn.primary {
+            background: var(--ezra-gold);
+            color: white;
+            border-color: var(--ezra-gold);
+        }
+        
+        .toolbar-btn.primary:hover {
+            background: var(--ezra-gold-dark);
+        }
+        
+        /* Case Analytics Cards */
+        .case-analytics-grid {
+            margin-bottom: 2rem;
+        }
+        
+        .case-metric-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .case-metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .case-metric-card.urgent::before {
+            background: linear-gradient(90deg, #ef4444, #dc2626);
+        }
+        
+        .case-metric-card.progress::before {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+        }
+        
+        .case-metric-card.resolution::before {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+        
+        .case-metric-card.success::before {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+        
+        .case-metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .case-metric-card .metric-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .case-metric-card .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+        
+        .case-metric-card.urgent .metric-icon {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .case-metric-card.progress .metric-icon {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .case-metric-card.resolution .metric-icon {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .case-metric-card.success .metric-icon {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .case-metric-card .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .case-metric-card .metric-number {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .case-metric-card .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+        
+        .case-metric-card .metric-sublabel {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        /* Enhanced Case Cards */
+        .cases-container-enhanced {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .case-card-enhanced {
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .case-card-enhanced:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        
+        .case-priority-indicator {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .case-card-enhanced.high-priority .case-priority-indicator {
+            background: linear-gradient(180deg, #ef4444, #dc2626);
+        }
+        
+        .case-card-enhanced.medium-priority .case-priority-indicator {
+            background: linear-gradient(180deg, #f59e0b, #d97706);
+        }
+        
+        .case-card-enhanced.low-priority .case-priority-indicator {
+            background: linear-gradient(180deg, #10b981, #059669);
+        }
+        
+        .case-header-enhanced {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            padding: 1.5rem 1.5rem 0;
+            gap: 1rem;
+        }
+        
+        .case-info-enhanced {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .case-title-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .case-title-enhanced {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        
+        .case-category-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.75rem;
+            background: var(--background);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .case-metadata {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .case-id-enhanced {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--ezra-gold);
+            font-weight: 600;
+        }
+        
+        .case-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .case-status-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+        
+        .priority-badge-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .priority-badge-enhanced.urgent {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .priority-badge-enhanced.medium {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .priority-badge-enhanced.low {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .case-progress-indicator {
+            position: relative;
+        }
+        
+        .progress-circle {
+            position: relative;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .case-content-enhanced {
+            padding: 1.5rem;
+            padding-top: 1rem;
+        }
+        
+        /* Participants Section */
+        .participants-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .participant-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .participant-card.client .participant-avatar {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .participant-card.provider .participant-avatar {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .participant-details {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .participant-name {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            margin-bottom: 0.125rem;
+        }
+        
+        .participant-role {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .participant-stats {
+            display: flex;
+            gap: 0.375rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.125rem 0.375rem;
+            background: var(--background);
+            border-radius: 4px;
+            font-size: 0.625rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .stat-badge.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .dispute-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            flex-shrink: 0;
+        }
+        
+        .connector-line {
+            width: 2px;
+            height: 20px;
+            background: var(--border);
+        }
+        
+        .connector-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--ezra-gold);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+        
+        /* Case Summary */
+        .case-summary-enhanced {
+            margin-bottom: 1.5rem;
+        }
+        
+        .summary-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            gap: 1rem;
+        }
+        
+        .summary-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .case-amount-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            padding: 0.5rem 0.75rem;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+        
+        .amount-label {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.125rem;
+        }
+        
+        .amount-value {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--info);
+        }
+        
+        .summary-content .summary-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+        
+        .case-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .case-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .case-tag.primary {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+        
+        .case-tag.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+        
+        .case-tag.secondary {
+            background: rgba(107, 114, 128, 0.1);
+            color: var(--text-secondary);
+        }
+        
+        .case-tag.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+        
+        /* Enhanced Timeline */
+        .case-timeline-enhanced {
+            margin-bottom: 1.5rem;
+        }
+        
+        .timeline-header-enhanced {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            gap: 1rem;
+        }
+        
+        .timeline-title-wrapper .timeline-title {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .timeline-progress-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .timeline-actions {
+            display: flex;
+            gap: 0.25rem;
+        }
+        
+        .timeline-action-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.375rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        
+        .timeline-action-btn:hover {
+            background: var(--ezra-gold);
+            color: white;
+            border-color: var(--ezra-gold);
+        }
+        
+        .timeline-track {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+        }
+        
+        .timeline-track::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            transform: translateY(-50%);
+            z-index: 0;
+        }
+        
+        .timeline-step-enhanced {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-indicator-enhanced {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-step-enhanced.completed .step-indicator-enhanced {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        
+        .timeline-step-enhanced.active .step-indicator-enhanced {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        
+        .timeline-step-enhanced.pending .step-indicator-enhanced {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .step-pulse {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            left: -4px;
+            bottom: -4px;
+            border: 2px solid #f59e0b;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        .step-content {
+            text-align: center;
+        }
+        
+        .step-label-enhanced {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 0.125rem;
+        }
+        
+        .step-time {
+            display: block;
+            font-size: 0.625rem;
+            color: var(--text-muted);
+        }
+        
+        /* Enhanced Actions */
+        .case-actions-enhanced {
+            padding: 1.5rem;
+            border-top: 1px solid var(--border);
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+        
+        .primary-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .action-btn-enhanced {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            flex: 1;
+            justify-content: center;
+            min-width: 120px;
+        }
+        
+        .action-btn-enhanced.primary {
+            background: var(--ezra-gold);
+            color: white;
+        }
+        
+        .action-btn-enhanced.primary:hover {
+            background: var(--ezra-gold-dark);
+            transform: translateY(-1px);
+        }
+        
+        .action-btn-enhanced.success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .action-btn-enhanced.success:hover {
+            background: #059669;
+            transform: translateY(-1px);
+        }
+        
+        .action-btn-enhanced.warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .action-btn-enhanced.warning:hover {
+            background: #d97706;
+            transform: translateY(-1px);
+        }
+        
+        .secondary-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        
+        .action-btn-mini {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+        }
+        
+        .action-btn-mini:hover {
+            background: var(--ezra-gold);
+            color: white;
+            border-color: var(--ezra-gold);
+        }
+        
+        /* Resolution Models */
+        .resolution-models-grid {
+            margin-bottom: 2rem;
+        }
+        
+        .resolution-model-card {
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .resolution-model-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .model-header {
+            padding: 1.5rem 1.5rem 1rem;
+            text-align: center;
+        }
+        
+        .model-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            margin: 0 auto 1rem;
+        }
+        
+        .model-icon.refund {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .model-icon.compensation {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .model-icon.mediation {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+        }
+        
+        .model-title {
+            margin: 0 0 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .model-usage {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .model-content {
+            padding: 0 1.5rem 1rem;
+        }
+        
+        .model-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .model-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: var(--background);
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+        
+        .model-actions {
+            padding: 1rem 1.5rem 1.5rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .model-btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+        }
+        
+        .model-btn.primary {
+            background: var(--ezra-gold);
+            color: white;
+        }
+        
+        .model-btn.primary:hover {
+            background: var(--ezra-gold-dark);
+        }
+        
+        .model-btn.secondary {
+            background: var(--surface);
+            border-color: var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .model-btn.secondary:hover {
+            background: var(--text-secondary);
+            color: white;
+        }
+        
+        /* Responsive Design for Case Management */
+        @media (max-width: 768px) {
+            .case-management-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .status-filters-enhanced {
+                flex-wrap: wrap;
+            }
+            
+            .filter-btn-enhanced {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .case-actions-toolbar {
+                justify-content: center;
+            }
+            
+            .case-analytics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .case-header-enhanced {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .case-status-wrapper {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .participants-enhanced {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .dispute-connector {
+                flex-direction: row;
+                width: 100%;
+            }
+            
+            .connector-line {
+                height: 2px;
+                width: 100%;
+            }
+            
+            .timeline-track {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .timeline-track::before {
+                width: 2px;
+                height: 100%;
+                left: 50%;
+                top: 0;
+                bottom: 0;
+                transform: translateX(-50%);
+            }
+            
+            .primary-actions {
+                flex-direction: column;
+            }
+            
+            .action-btn-enhanced {
+                min-width: 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .case-analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .resolution-models-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .model-actions {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -4894,85 +6414,161 @@
                     <!-- Campaign Analytics -->
                     <div class="content-section">
                         <div class="section-header">
-                            <h2 class="section-title">Analyse des Audiences</h2>
+                            <h2 class="section-title">
+                                <i class="fas fa-users-cog"></i>
+                                Intelligence Audience Avancée
+                            </h2>
+                            <div class="header-actions">
+                                <select class="form-select" id="audienceTimeframe" onchange="updateAudienceAnalytics(this.value)">
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d" selected>30 derniers jours</option>
+                                    <option value="90d">3 derniers mois</option>
+                                </select>
+                                <button class="btn btn-sm btn-outline-primary" onclick="generateAudienceReport()">
+                                    <i class="fas fa-file-alt"></i>
+                                    Rapport Détaillé
+                                </button>
+                            </div>
                         </div>
                         
-                        <div class="audience-analytics grid-container grid-2 grid-gap-lg">
-                            <div class="audience-card card-base">
+                        <div class="audience-intelligence-grid grid-container grid-auto-400 grid-gap-lg">
+                            <!-- Advanced Demographics Chart -->
+                            <div class="audience-intelligence-card card-base">
                                 <div class="card-header-enhanced">
-                                    <h4>Répartition par Âge</h4>
-                                    <i class="fas fa-users"></i>
+                                    <div class="intelligence-icon-wrapper">
+                                        <i class="fas fa-chart-pie intelligence-icon"></i>
+                                    </div>
+                                    <div class="intelligence-title">
+                                        <h4>Démographie Interactive</h4>
+                                        <span class="intelligence-subtitle">Segments utilisateurs détaillés</span>
+                                    </div>
+                                    <div class="intelligence-status active">
+                                        <i class="fas fa-eye"></i>
+                                        <span>Analyse active</span>
+                                    </div>
                                 </div>
-                                <div class="audience-chart">
-                                    <div class="age-group">
-                                        <span class="age-label">18-25 ans</span>
-                                        <div class="age-bar">
-                                            <div class="age-fill" style="width: 25%"></div>
+                                
+                                <div class="demographics-chart-container">
+                                    <canvas id="advancedDemographicsChart" width="350" height="200"></canvas>
+                                </div>
+                                
+                                <div class="demographics-insights">
+                                    <div class="insight-item trending">
+                                        <i class="fas fa-trending-up insight-icon"></i>
+                                        <div class="insight-content">
+                                            <span class="insight-text">Croissance 25-34 ans</span>
+                                            <span class="insight-value">+24%</span>
                                         </div>
-                                        <span class="age-percent">25%</span>
                                     </div>
-                                    <div class="age-group">
-                                        <span class="age-label">26-35 ans</span>
-                                        <div class="age-bar">
-                                            <div class="age-fill" style="width: 35%"></div>
+                                    <div class="insight-item highlight">
+                                        <i class="fas fa-crown insight-icon"></i>
+                                        <div class="insight-content">
+                                            <span class="insight-text">Segment principal</span>
+                                            <span class="insight-value">18-25 ans (38%)</span>
                                         </div>
-                                        <span class="age-percent">35%</span>
-                                    </div>
-                                    <div class="age-group">
-                                        <span class="age-label">36-45 ans</span>
-                                        <div class="age-bar">
-                                            <div class="age-fill" style="width: 28%"></div>
-                                        </div>
-                                        <span class="age-percent">28%</span>
-                                    </div>
-                                    <div class="age-group">
-                                        <span class="age-label">46+ ans</span>
-                                        <div class="age-bar">
-                                            <div class="age-fill" style="width: 12%"></div>
-                                        </div>
-                                        <span class="age-percent">12%</span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="audience-card card-base">
+                            <!-- Geographic Heatmap -->
+                            <div class="audience-intelligence-card card-base">
                                 <div class="card-header-enhanced">
-                                    <h4>Top Villes</h4>
-                                    <i class="fas fa-map-marker-alt"></i>
+                                    <div class="intelligence-icon-wrapper">
+                                        <i class="fas fa-map-marked-alt intelligence-icon"></i>
+                                    </div>
+                                    <div class="intelligence-title">
+                                        <h4>Cartographie Géographique</h4>
+                                        <span class="intelligence-subtitle">Distribution géographique en temps réel</span>
+                                    </div>
+                                    <div class="intelligence-status excellent">
+                                        <i class="fas fa-globe"></i>
+                                        <span>Global</span>
+                                    </div>
                                 </div>
-                                <div class="cities-list">
-                                    <div class="city-item">
-                                        <span class="city-name">Douala</span>
-                                        <span class="city-percent">45%</span>
+                                
+                                <div class="geographic-chart-container">
+                                    <canvas id="geographicHeatmapChart" width="350" height="200"></canvas>
+                                </div>
+                                
+                                <div class="geographic-insights">
+                                    <div class="geo-metric">
+                                        <div class="geo-circle douala">
+                                            <span class="geo-percentage">45%</span>
+                                        </div>
+                                        <span class="geo-label">Douala</span>
                                     </div>
-                                    <div class="city-item">
-                                        <span class="city-name">Yaoundé</span>
-                                        <span class="city-percent">38%</span>
+                                    <div class="geo-metric">
+                                        <div class="geo-circle yaounde">
+                                            <span class="geo-percentage">38%</span>
+                                        </div>
+                                        <span class="geo-label">Yaoundé</span>
                                     </div>
-                                    <div class="city-item">
-                                        <span class="city-name">Bafoussam</span>
-                                        <span class="city-percent">12%</span>
+                                    <div class="geo-metric">
+                                        <div class="geo-circle other">
+                                            <span class="geo-percentage">17%</span>
+                                        </div>
+                                        <span class="geo-label">Autres</span>
                                     </div>
-                                    <div class="city-item">
-                                        <span class="city-name">Autres</span>
-                                        <span class="city-percent">5%</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Behavioral Flow Analysis -->
+                            <div class="audience-intelligence-card card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="intelligence-icon-wrapper">
+                                        <i class="fas fa-project-diagram intelligence-icon"></i>
+                                    </div>
+                                    <div class="intelligence-title">
+                                        <h4>Flux Comportemental</h4>
+                                        <span class="intelligence-subtitle">Parcours utilisateur intelligent</span>
+                                    </div>
+                                    <div class="intelligence-status processing">
+                                        <div class="processing-dots">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <span>Analyse</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="behavior-flow-chart">
+                                    <canvas id="behaviorFlowChart" width="350" height="200"></canvas>
+                                </div>
+                                
+                                <div class="behavior-metrics-grid">
+                                    <div class="behavior-metric">
+                                        <div class="metric-icon-wrapper mobile">
+                                            <i class="fas fa-mobile-alt"></i>
+                                        </div>
+                                        <div class="metric-info">
+                                            <span class="metric-value">78%</span>
+                                            <span class="metric-label">Mobile</span>
+                                        </div>
+                                    </div>
+                                    <div class="behavior-metric">
+                                        <div class="metric-icon-wrapper engagement">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="metric-info">
+                                            <span class="metric-value">4.2min</span>
+                                            <span class="metric-label">Temps Moyen</span>
+                                        </div>
+                                    </div>
+                                    <div class="behavior-metric">
+                                        <div class="metric-icon-wrapper conversion">
+                                            <i class="fas fa-target"></i>
+                                        </div>
+                                        <div class="metric-info">
+                                            <span class="metric-value">42%</span>
+                                            <span class="metric-label">Conversion</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Additional Audience Insights -->
-                        <div class="content-section">
-                            <div class="section-header">
-                                <h2 class="section-title">Comportement des Utilisateurs</h2>
-                            </div>
                             
-                            <div class="behavior-analytics grid-container grid-3 grid-gap-md">
-                                <div class="audience-card card-base">
-                                    <div class="card-header-enhanced">
-                                        <h4>Appareils Utilisés</h4>
-                                        <i class="fas fa-devices"></i>
-                                    </div>
                                     <div class="devices-chart">
                                     <div class="device-item">
                                         <i class="fas fa-mobile-alt"></i>
@@ -5634,126 +7230,630 @@
                         </div>
                     </div>
 
-                    <!-- Case Management Dashboard -->
+                    <!-- Enhanced Case Management Dashboard -->
                     <div class="content-section">
                         <div class="section-header">
-                            <h2 class="section-title">Gestion des Cas</h2>
+                            <h2 class="section-title">
+                                <i class="fas fa-gavel"></i>
+                                Système de Gestion des Cas Avancé
+                            </h2>
                             <div class="header-actions">
-                                <div class="status-filters">
-                                    <button class="filter-btn active" data-status="all" onclick="filterDisputesByStatus('all')">
-                                        Tous <span class="filter-count">15</span>
-                                    </button>
-                                    <button class="filter-btn" data-status="urgent" onclick="filterDisputesByStatus('urgent')">
-                                        Urgent <span class="filter-count urgent">3</span>
-                                    </button>
-                                    <button class="filter-btn" data-status="in-progress" onclick="filterDisputesByStatus('in-progress')">
-                                        En cours <span class="filter-count">8</span>
-                                    </button>
-                                    <button class="filter-btn" data-status="pending" onclick="filterDisputesByStatus('pending')">
-                                        En attente <span class="filter-count">4</span>
-                                    </button>
+                                <div class="case-management-controls">
+                                    <div class="status-filters-enhanced">
+                                        <button class="filter-btn-enhanced active" data-status="all" onclick="filterDisputesByStatus('all')">
+                                            <span class="filter-icon">
+                                                <i class="fas fa-list"></i>
+                                            </span>
+                                            <span class="filter-label">Tous les cas</span>
+                                            <span class="filter-count-enhanced">15</span>
+                                        </button>
+                                        <button class="filter-btn-enhanced urgent" data-status="urgent" onclick="filterDisputesByStatus('urgent')">
+                                            <span class="filter-icon">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </span>
+                                            <span class="filter-label">Urgents</span>
+                                            <span class="filter-count-enhanced urgent">3</span>
+                                        </button>
+                                        <button class="filter-btn-enhanced progress" data-status="in-progress" onclick="filterDisputesByStatus('in-progress')">
+                                            <span class="filter-icon">
+                                                <i class="fas fa-spinner"></i>
+                                            </span>
+                                            <span class="filter-label">En cours</span>
+                                            <span class="filter-count-enhanced">8</span>
+                                        </button>
+                                        <button class="filter-btn-enhanced pending" data-status="pending" onclick="filterDisputesByStatus('pending')">
+                                            <span class="filter-icon">
+                                                <i class="fas fa-clock"></i>
+                                            </span>
+                                            <span class="filter-label">En attente</span>
+                                            <span class="filter-count-enhanced">4</span>
+                                        </button>
+                                    </div>
+                                    <div class="case-actions-toolbar">
+                                        <button class="toolbar-btn" onclick="exportCases()" title="Exporter les cas">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                        <button class="toolbar-btn" onclick="bulkAssign()" title="Attribution en lot">
+                                            <i class="fas fa-users"></i>
+                                        </button>
+                                        <button class="toolbar-btn" onclick="generateReport()" title="Rapport">
+                                            <i class="fas fa-chart-bar"></i>
+                                        </button>
+                                        <button class="toolbar-btn primary" onclick="createNewCase()" title="Nouveau cas">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="priority-disputes-list">
-                            <div class="dispute-card high-priority">
-                                <div class="dispute-header">
-                                    <div class="dispute-info">
-                                        <h4 class="dispute-title">Service non réalisé - Plomberie</h4>
-                                        <span class="dispute-id">#DISP-2024-001247</span>
+                        <!-- Quick Analytics Cards -->
+                        <div class="case-analytics-grid grid-container grid-4 grid-gap-lg">
+                            <div class="case-metric-card urgent">
+                                <div class="metric-header">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-fire"></i>
                                     </div>
-                                    <div class="dispute-meta">
-                                        <span class="priority-badge high">Urgent</span>
-                                        <span class="time-elapsed">Il y a 4h</span>
+                                    <div class="metric-trend">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span>+2</span>
+                                    </div>
+                                </div>
+                                <div class="metric-content">
+                                    <div class="metric-number">3</div>
+                                    <div class="metric-label">Cas Urgents</div>
+                                    <div class="metric-sublabel">Nécessitent attention immédiate</div>
+                                </div>
+                            </div>
+                            
+                            <div class="case-metric-card progress">
+                                <div class="metric-header">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-cog"></i>
+                                    </div>
+                                    <div class="metric-trend">
+                                        <i class="fas fa-arrow-down"></i>
+                                        <span>-1</span>
+                                    </div>
+                                </div>
+                                <div class="metric-content">
+                                    <div class="metric-number">8</div>
+                                    <div class="metric-label">En Traitement</div>
+                                    <div class="metric-sublabel">Investigation en cours</div>
+                                </div>
+                            </div>
+                            
+                            <div class="case-metric-card resolution">
+                                <div class="metric-header">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="metric-trend">
+                                        <i class="fas fa-minus"></i>
+                                        <span>2.4h</span>
+                                    </div>
+                                </div>
+                                <div class="metric-content">
+                                    <div class="metric-number">2.4h</div>
+                                    <div class="metric-label">Temps Moyen</div>
+                                    <div class="metric-sublabel">Résolution des cas</div>
+                                </div>
+                            </div>
+                            
+                            <div class="case-metric-card success">
+                                <div class="metric-header">
+                                    <div class="metric-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="metric-trend positive">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span>92%</span>
+                                    </div>
+                                </div>
+                                <div class="metric-content">
+                                    <div class="metric-number">92%</div>
+                                    <div class="metric-label">Taux Satisfaction</div>
+                                    <div class="metric-sublabel">Résolutions acceptées</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Enhanced Cases List -->
+                        <div class="cases-container-enhanced">
+                            <div class="case-card-enhanced high-priority">
+                                <div class="case-priority-indicator"></div>
+                                <div class="case-header-enhanced">
+                                    <div class="case-info-enhanced">
+                                        <div class="case-title-wrapper">
+                                            <h4 class="case-title-enhanced">Service non réalisé - Plomberie</h4>
+                                            <span class="case-category-tag">
+                                                <i class="fas fa-wrench"></i>
+                                                Plomberie
+                                            </span>
+                                        </div>
+                                        <div class="case-metadata">
+                                            <span class="case-id-enhanced">#DISP-2024-001247</span>
+                                            <span class="case-timestamp">Créé il y a 4h</span>
+                                        </div>
+                                    </div>
+                                    <div class="case-status-wrapper">
+                                        <div class="priority-badge-enhanced urgent">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            <span>Urgent</span>
+                                        </div>
+                                        <div class="case-progress-indicator">
+                                            <div class="progress-circle" data-progress="50">
+                                                <svg class="progress-ring" width="40" height="40">
+                                                    <circle class="progress-ring-circle" stroke="#e5e7eb" stroke-width="3" fill="transparent" r="16" cx="20" cy="20"/>
+                                                    <circle class="progress-ring-circle progress-bar" stroke="#f59e0b" stroke-width="3" fill="transparent" r="16" cx="20" cy="20" stroke-dasharray="100.48" stroke-dashoffset="50.24"/>
+                                                </svg>
+                                                <span class="progress-text">2/4</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 
-                                <div class="dispute-details">
-                                    <div class="participants">
-                                        <div class="participant client">
-                                            <i class="fas fa-user"></i>
-                                            <div class="participant-info">
-                                                <strong>Pierre Kamga</strong>
-                                                <span>Client</span>
+                                <div class="case-content-enhanced">
+                                    <!-- Participants Section -->
+                                    <div class="participants-enhanced">
+                                        <div class="participant-card client">
+                                            <div class="participant-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="participant-details">
+                                                <span class="participant-name">Pierre Kamga</span>
+                                                <span class="participant-role">Client demandeur</span>
+                                                <div class="participant-stats">
+                                                    <span class="stat-badge">
+                                                        <i class="fas fa-star"></i>
+                                                        4.8
+                                                    </span>
+                                                    <span class="stat-badge">
+                                                        <i class="fas fa-shopping-bag"></i>
+                                                        12 services
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="vs-indicator">VS</div>
-                                        <div class="participant provider">
-                                            <i class="fas fa-user-tie"></i>
-                                            <div class="participant-info">
-                                                <strong>Jean Dupont</strong>
-                                                <span>Prestataire</span>
+                                        
+                                        <div class="dispute-connector">
+                                            <div class="connector-line"></div>
+                                            <div class="connector-icon">
+                                                <i class="fas fa-balance-scale"></i>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="participant-card provider">
+                                            <div class="participant-avatar">
+                                                <i class="fas fa-user-tie"></i>
+                                            </div>
+                                            <div class="participant-details">
+                                                <span class="participant-name">Jean Dupont</span>
+                                                <span class="participant-role">Prestataire accusé</span>
+                                                <div class="participant-stats">
+                                                    <span class="stat-badge warning">
+                                                        <i class="fas fa-star"></i>
+                                                        4.2
+                                                    </span>
+                                                    <span class="stat-badge">
+                                                        <i class="fas fa-tools"></i>
+                                                        89 services
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <div class="dispute-summary">
-                                        <p><strong>Réclamation:</strong> Le prestataire ne s'est pas présenté au rendez-vous convenu. Aucune communication préalable.</p>
-                                        <div class="dispute-amount">
-                                            <strong>Montant en litige:</strong> 15,000 FCFA
+                                    <!-- Case Summary -->
+                                    <div class="case-summary-enhanced">
+                                        <div class="summary-header">
+                                            <h5 class="summary-title">
+                                                <i class="fas fa-file-alt"></i>
+                                                Résumé du Litige
+                                            </h5>
+                                            <div class="case-amount-badge">
+                                                <span class="amount-label">Montant</span>
+                                                <span class="amount-value">15,000 FCFA</span>
+                                            </div>
+                                        </div>
+                                        <div class="summary-content">
+                                            <p class="summary-text">
+                                                Le prestataire ne s'est pas présenté au rendez-vous convenu sans préavis. 
+                                                Le client demande un remboursement complet et compensation pour les désagréments.
+                                            </p>
+                                            <div class="case-tags">
+                                                <span class="case-tag primary">
+                                                    <i class="fas fa-clock"></i>
+                                                    Absence non justifiée
+                                                </span>
+                                                <span class="case-tag warning">
+                                                    <i class="fas fa-phone-slash"></i>
+                                                    Non-communication
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                     
-                                    <!-- Progress Timeline -->
-                                    <div class="dispute-timeline">
-                                        <div class="timeline-header">
-                                            <span class="timeline-title">Progression du dossier</span>
-                                            <span class="timeline-progress">Étape 2/4</span>
+                                    <!-- Enhanced Timeline -->
+                                    <div class="case-timeline-enhanced">
+                                        <div class="timeline-header-enhanced">
+                                            <div class="timeline-title-wrapper">
+                                                <h5 class="timeline-title">
+                                                    <i class="fas fa-route"></i>
+                                                    Progression du Dossier
+                                                </h5>
+                                                <span class="timeline-progress-text">Étape 2 sur 4</span>
+                                            </div>
+                                            <div class="timeline-actions">
+                                                <button class="timeline-action-btn" onclick="addTimelineEvent('DISP-2024-001247')" title="Ajouter événement">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                                <button class="timeline-action-btn" onclick="viewFullHistory('DISP-2024-001247')" title="Historique complet">
+                                                    <i class="fas fa-history"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="timeline-steps">
-                                            <div class="timeline-step completed">
-                                                <div class="step-indicator">
-                                                    <i class="fas fa-check"></i>
+                                        
+                                        <div class="timeline-track">
+                                            <div class="timeline-step-enhanced completed">
+                                                <div class="step-indicator-enhanced">
+                                                    <i class="fas fa-flag"></i>
                                                 </div>
-                                                <span class="step-label">Signalement</span>
-                                            </div>
-                                            <div class="timeline-step active">
-                                                <div class="step-indicator">
-                                                    <i class="fas fa-eye"></i>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Signalement</span>
+                                                    <span class="step-time">2 Nov, 14:32</span>
                                                 </div>
-                                                <span class="step-label">Investigation</span>
                                             </div>
-                                            <div class="timeline-step">
-                                                <div class="step-indicator">
+                                            
+                                            <div class="timeline-step-enhanced active">
+                                                <div class="step-indicator-enhanced">
+                                                    <i class="fas fa-search"></i>
+                                                    <div class="step-pulse"></div>
+                                                </div>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Investigation</span>
+                                                    <span class="step-time">En cours</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="timeline-step-enhanced pending">
+                                                <div class="step-indicator-enhanced">
                                                     <i class="fas fa-handshake"></i>
                                                 </div>
-                                                <span class="step-label">Médiation</span>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Médiation</span>
+                                                    <span class="step-time">À venir</span>
+                                                </div>
                                             </div>
-                                            <div class="timeline-step">
-                                                <div class="step-indicator">
+                                            
+                                            <div class="timeline-step-enhanced pending">
+                                                <div class="step-indicator-enhanced">
                                                     <i class="fas fa-gavel"></i>
                                                 </div>
-                                                <span class="step-label">Résolution</span>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Résolution</span>
+                                                    <span class="step-time">À venir</span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="progress-bar">
-                                            <div class="progress-fill" style="width: 50%"></div>
-                                        </div>
                                     </div>
-
-                                    <div class="dispute-actions">
-                                        <button class="btn btn-sm btn-primary" onclick="viewDisputeDetails('DISP-2024-001247')">
+                                </div>
+                                
+                                <!-- Enhanced Actions -->
+                                <div class="case-actions-enhanced">
+                                    <div class="primary-actions">
+                                        <button class="action-btn-enhanced primary" onclick="viewDisputeDetails('DISP-2024-001247')">
                                             <i class="fas fa-eye"></i>
-                                            Voir Détails
+                                            <span>Détails Complets</span>
                                         </button>
-                                        <button class="btn btn-sm btn-success" onclick="quickResolve('DISP-2024-001247', 'refund')">
-                                            <i class="fas fa-undo"></i>
-                                            Remboursement
+                                        <button class="action-btn-enhanced success" onclick="quickResolve('DISP-2024-001247', 'refund')">
+                                            <i class="fas fa-money-bill-wave"></i>
+                                            <span>Remboursement</span>
                                         </button>
-                                        <button class="btn btn-sm btn-warning" onclick="mediateDispute('DISP-2024-001247')">
+                                        <button class="action-btn-enhanced warning" onclick="mediateDispute('DISP-2024-001247')">
                                             <i class="fas fa-handshake"></i>
-                                            Médiation
+                                            <span>Médiation</span>
                                         </button>
-                                        <button class="btn btn-sm btn-info" onclick="addNote('DISP-2024-001247')">
+                                    </div>
+                                    <div class="secondary-actions">
+                                        <button class="action-btn-mini" onclick="assignToMe('DISP-2024-001247')" title="M'assigner">
+                                            <i class="fas fa-user-plus"></i>
+                                        </button>
+                                        <button class="action-btn-mini" onclick="addNote('DISP-2024-001247')" title="Ajouter note">
                                             <i class="fas fa-sticky-note"></i>
-                                            Note
+                                        </button>
+                                        <button class="action-btn-mini" onclick="escalateCase('DISP-2024-001247')" title="Escalader">
+                                            <i class="fas fa-level-up-alt"></i>
+                                        </button>
+                                        <button class="action-btn-mini" onclick="scheduleFollowUp('DISP-2024-001247')" title="Programmer suivi">
+                                            <i class="fas fa-calendar-plus"></i>
                                         </button>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="dispute-card medium-priority">
+                            <div class="case-card-enhanced medium-priority">
+                                <div class="case-priority-indicator"></div>
+                                <div class="case-header-enhanced">
+                                    <div class="case-info-enhanced">
+                                        <div class="case-title-wrapper">
+                                            <h4 class="case-title-enhanced">Qualité du service - Ménage</h4>
+                                            <span class="case-category-tag">
+                                                <i class="fas fa-broom"></i>
+                                                Ménage
+                                            </span>
+                                        </div>
+                                        <div class="case-metadata">
+                                            <span class="case-id-enhanced">#DISP-2024-001246</span>
+                                            <span class="case-timestamp">Créé il y a 1 jour</span>
+                                        </div>
+                                    </div>
+                                    <div class="case-status-wrapper">
+                                        <div class="priority-badge-enhanced medium">
+                                            <i class="fas fa-exclamation"></i>
+                                            <span>Moyen</span>
+                                        </div>
+                                        <div class="case-progress-indicator">
+                                            <div class="progress-circle" data-progress="75">
+                                                <svg class="progress-ring" width="40" height="40">
+                                                    <circle class="progress-ring-circle" stroke="#e5e7eb" stroke-width="3" fill="transparent" r="16" cx="20" cy="20"/>
+                                                    <circle class="progress-ring-circle progress-bar" stroke="#10b981" stroke-width="3" fill="transparent" r="16" cx="20" cy="20" stroke-dasharray="100.48" stroke-dashoffset="25.12"/>
+                                                </svg>
+                                                <span class="progress-text">3/4</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="case-content-enhanced">
+                                    <div class="participants-enhanced">
+                                        <div class="participant-card client">
+                                            <div class="participant-avatar">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="participant-details">
+                                                <span class="participant-name">Marie Tchuente</span>
+                                                <span class="participant-role">Cliente insatisfaite</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="dispute-connector">
+                                            <div class="connector-line"></div>
+                                            <div class="connector-icon">
+                                                <i class="fas fa-balance-scale"></i>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="participant-card provider">
+                                            <div class="participant-avatar">
+                                                <i class="fas fa-user-tie"></i>
+                                            </div>
+                                            <div class="participant-details">
+                                                <span class="participant-name">Lucie Mballa</span>
+                                                <span class="participant-role">Prestataire défendeur</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="case-summary-enhanced">
+                                        <div class="summary-header">
+                                            <h5 class="summary-title">
+                                                <i class="fas fa-file-alt"></i>
+                                                Détails du Différend
+                                            </h5>
+                                            <div class="case-amount-badge">
+                                                <span class="amount-label">Montant</span>
+                                                <span class="amount-value">8,500 FCFA</span>
+                                            </div>
+                                        </div>
+                                        <div class="summary-content">
+                                            <p class="summary-text">
+                                                Service de ménage incomplet selon les standards convenus. 
+                                                Négociation en cours pour une prestation additionnelle gratuite.
+                                            </p>
+                                            <div class="case-tags">
+                                                <span class="case-tag secondary">
+                                                    <i class="fas fa-star-half-alt"></i>
+                                                    Qualité insuffisante
+                                                </span>
+                                                <span class="case-tag success">
+                                                    <i class="fas fa-handshake"></i>
+                                                    Médiation active
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="case-timeline-enhanced">
+                                        <div class="timeline-header-enhanced">
+                                            <div class="timeline-title-wrapper">
+                                                <h5 class="timeline-title">
+                                                    <i class="fas fa-route"></i>
+                                                    Progression
+                                                </h5>
+                                                <span class="timeline-progress-text">Étape 3/4</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="timeline-track">
+                                            <div class="timeline-step-enhanced completed">
+                                                <div class="step-indicator-enhanced">
+                                                    <i class="fas fa-flag"></i>
+                                                </div>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Signalement</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="timeline-step-enhanced completed">
+                                                <div class="step-indicator-enhanced">
+                                                    <i class="fas fa-search"></i>
+                                                </div>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Investigation</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="timeline-step-enhanced active">
+                                                <div class="step-indicator-enhanced">
+                                                    <i class="fas fa-handshake"></i>
+                                                    <div class="step-pulse"></div>
+                                                </div>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Médiation</span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="timeline-step-enhanced pending">
+                                                <div class="step-indicator-enhanced">
+                                                    <i class="fas fa-gavel"></i>
+                                                </div>
+                                                <div class="step-content">
+                                                    <span class="step-label-enhanced">Résolution</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="case-actions-enhanced">
+                                    <div class="primary-actions">
+                                        <button class="action-btn-enhanced primary" onclick="viewDisputeDetails('DISP-2024-001246')">
+                                            <i class="fas fa-eye"></i>
+                                            <span>Détails</span>
+                                        </button>
+                                        <button class="action-btn-enhanced warning" onclick="mediateDispute('DISP-2024-001246')">
+                                            <i class="fas fa-handshake"></i>
+                                            <span>Médiation</span>
+                                        </button>
+                                        <button class="action-btn-enhanced success" onclick="proposeResolution('DISP-2024-001246')">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Solution</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Resolution Models Section -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-clipboard-list"></i>
+                                Modèles de Résolution Intelligents
+                            </h2>
+                        </div>
+                        
+                        <div class="resolution-models-grid grid-container grid-3 grid-gap-lg">
+                            <div class="resolution-model-card">
+                                <div class="model-header">
+                                    <div class="model-icon refund">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <h4 class="model-title">Remboursement Complet</h4>
+                                    <span class="model-usage">Utilisé 12 fois ce mois</span>
+                                </div>
+                                <div class="model-content">
+                                    <p class="model-description">
+                                        Remboursement intégral pour services non rendus ou défaillants
+                                    </p>
+                                    <div class="model-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-value">95%</span>
+                                            <span class="stat-label">Satisfaction</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value">2.1h</span>
+                                            <span class="stat-label">Temps moyen</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="model-btn primary" onclick="applyResolutionModel('refund')">
+                                        <i class="fas fa-check"></i>
+                                        Appliquer
+                                    </button>
+                                    <button class="model-btn secondary" onclick="customizeModel('refund')">
+                                        <i class="fas fa-cog"></i>
+                                        Personnaliser
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="resolution-model-card">
+                                <div class="model-header">
+                                    <div class="model-icon compensation">
+                                        <i class="fas fa-gift"></i>
+                                    </div>
+                                    <h4 class="model-title">Compensation Service</h4>
+                                    <span class="model-usage">Utilisé 8 fois ce mois</span>
+                                </div>
+                                <div class="model-content">
+                                    <p class="model-description">
+                                        Service gratuit supplémentaire en compensation
+                                    </p>
+                                    <div class="model-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-value">88%</span>
+                                            <span class="stat-label">Satisfaction</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value">3.2h</span>
+                                            <span class="stat-label">Temps moyen</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="model-btn primary" onclick="applyResolutionModel('compensation')">
+                                        <i class="fas fa-check"></i>
+                                        Appliquer
+                                    </button>
+                                    <button class="model-btn secondary" onclick="customizeModel('compensation')">
+                                        <i class="fas fa-cog"></i>
+                                        Personnaliser
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="resolution-model-card">
+                                <div class="model-header">
+                                    <div class="model-icon mediation">
+                                        <i class="fas fa-balance-scale"></i>
+                                    </div>
+                                    <h4 class="model-title">Médiation Structurée</h4>
+                                    <span class="model-usage">Utilisé 15 fois ce mois</span>
+                                </div>
+                                <div class="model-content">
+                                    <p class="model-description">
+                                        Processus de médiation guidée entre les parties
+                                    </p>
+                                    <div class="model-stats">
+                                        <div class="stat-item">
+                                            <span class="stat-value">76%</span>
+                                            <span class="stat-label">Réussite</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-value">5.7h</span>
+                                            <span class="stat-label">Temps moyen</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="model-actions">
+                                    <button class="model-btn primary" onclick="applyResolutionModel('mediation')">
+                                        <i class="fas fa-check"></i>
+                                        Appliquer
+                                    </button>
+                                    <button class="model-btn secondary" onclick="customizeModel('mediation')">
+                                        <i class="fas fa-cog"></i>
+                                        Personnaliser
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- old content continues...
                                 <div class="dispute-header">
                                     <div class="dispute-info">
                                         <h4 class="dispute-title">Qualité du service - Ménage</h4>
@@ -6106,50 +8206,199 @@
                         </div>
                     </div>
                     
-                    <!-- System Health Overview -->
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon success">
-                                    <i class="fas fa-heartbeat"></i>
-                                </div>
+                    <!-- Enhanced Performance Metrics Dashboard -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-chart-line"></i>
+                                Métriques de Performance en Temps Réel
+                            </h2>
+                            <div class="header-actions">
+                                <select id="metricsTimeRange" onchange="updateMetricsTimeRange()">
+                                    <option value="1h">Dernière heure</option>
+                                    <option value="24h" selected>Dernières 24h</option>
+                                    <option value="7d">7 derniers jours</option>
+                                    <option value="30d">30 derniers jours</option>
+                                </select>
                             </div>
-                            <div class="stat-value" id="systemHealth">Excellent</div>
-                            <div class="stat-label">État du Système</div>
-                            <div class="stat-trend positive">↗ Stable depuis 15j</div>
                         </div>
                         
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon info">
-                                    <i class="fas fa-tachometer-alt"></i>
+                        <div class="metrics-dashboard grid-container grid-auto-350 grid-gap-lg">
+                            <!-- API Response Time Card -->
+                            <div class="metric-card-enhanced card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="metric-icon-wrapper">
+                                        <i class="fas fa-tachometer-alt metric-icon"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <h4>Temps de Réponse API</h4>
+                                        <span class="metric-subtitle">Performance en temps réel</span>
+                                    </div>
+                                    <div class="metric-status excellent">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Excellent</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-chart-modern">
+                                    <canvas id="responseTimeChart" width="300" height="150"></canvas>
+                                </div>
+                                
+                                <div class="metric-stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Moyenne</span>
+                                        <span class="stat-value">247ms</span>
+                                        <span class="stat-trend positive">↓ -12ms</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">95e Percentile</span>
+                                        <span class="stat-value">634ms</span>
+                                        <span class="stat-trend neutral">→ stable</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Max</span>
+                                        <span class="stat-value">12ms</span>
+                                        <span class="stat-trend excellent">↓ excellent</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="stat-value" id="responseTime">247ms</div>
-                            <div class="stat-label">Temps de Réponse Moyen</div>
-                            <div class="stat-trend positive">↘ -12ms vs hier</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon success">
-                                    <i class="fas fa-check-circle"></i>
+                            
+                            <!-- Traffic Users Card -->
+                            <div class="metric-card-enhanced card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="metric-icon-wrapper">
+                                        <i class="fas fa-users metric-icon"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <h4>Trafic Utilisateurs</h4>
+                                        <span class="metric-subtitle">Activité en temps réel</span>
+                                    </div>
+                                    <div class="metric-status good">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span>En hausse</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-chart-modern">
+                                    <canvas id="userTrafficChart" width="300" height="150"></canvas>
+                                </div>
+                                
+                                <div class="metric-stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Pics</span>
+                                        <span class="stat-value">1,842</span>
+                                        <span class="stat-trend positive">↑ +15%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Moyenne</span>
+                                        <span class="stat-value">967</span>
+                                        <span class="stat-trend positive">↑ +8%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Total</span>
+                                        <span class="stat-value">232k</span>
+                                        <span class="stat-trend positive">↑ +12%</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="stat-value" id="uptime">99.97%</div>
-                            <div class="stat-label">Disponibilité (30j)</div>
-                            <div class="stat-trend positive">↗ +0.02% vs mois dernier</div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-header">
-                                <div class="stat-icon warning">
-                                    <i class="fas fa-exclamation-triangle"></i>
+                            
+                            <!-- System Health Card -->
+                            <div class="metric-card-enhanced card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="metric-icon-wrapper">
+                                        <i class="fas fa-heartbeat metric-icon"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <h4>Santé du Système</h4>
+                                        <span class="metric-subtitle">État global</span>
+                                    </div>
+                                    <div class="metric-status excellent">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Excellent</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-indicators-grid">
+                                    <div class="health-indicator">
+                                        <div class="health-circle excellent">
+                                            <span class="health-percentage">99.9%</span>
+                                        </div>
+                                        <span class="health-label">Uptime</span>
+                                    </div>
+                                    <div class="health-indicator">
+                                        <div class="health-circle good">
+                                            <span class="health-percentage">87%</span>
+                                        </div>
+                                        <span class="health-label">CPU</span>
+                                    </div>
+                                    <div class="health-indicator">
+                                        <div class="health-circle excellent">
+                                            <span class="health-percentage">76%</span>
+                                        </div>
+                                        <span class="health-label">Mémoire</span>
+                                    </div>
+                                    <div class="health-indicator">
+                                        <div class="health-circle good">
+                                            <span class="health-percentage">54%</span>
+                                        </div>
+                                        <span class="health-label">Disque</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="system-details">
+                                    <div class="detail-item">
+                                        <span class="detail-label">Dernière maintenance:</span>
+                                        <span class="detail-value">Il y a 3 jours</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <span class="detail-label">Version système:</span>
+                                        <span class="detail-value">v2.4.1</span>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="stat-value" id="activeAlerts">2</div>
-                            <div class="stat-label">Alertes Actives</div>
-                            <div class="stat-trend negative">↗ +1 depuis ce matin</div>
+                            
+                            <!-- Active Alerts Card -->
+                            <div class="metric-card-enhanced card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="metric-icon-wrapper">
+                                        <i class="fas fa-exclamation-triangle metric-icon"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <h4>Alertes Actives</h4>
+                                        <span class="metric-subtitle">Surveillance continue</span>
+                                    </div>
+                                    <div class="metric-status warning">
+                                        <i class="fas fa-bell"></i>
+                                        <span>2 Alertes</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="alerts-quick-summary">
+                                    <div class="alert-type-count critical">
+                                        <div class="alert-count-number">0</div>
+                                        <span class="alert-count-label">Critiques</span>
+                                    </div>
+                                    <div class="alert-type-count warning">
+                                        <div class="alert-count-number">2</div>
+                                        <span class="alert-count-label">Avertissements</span>
+                                    </div>
+                                    <div class="alert-type-count info">
+                                        <div class="alert-count-number">3</div>
+                                        <span class="alert-count-label">Informations</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="alerts-quick-list">
+                                    <div class="alert-quick-item warning">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span>Taux d'erreur API élevé (2.1%)</span>
+                                    </div>
+                                    <div class="alert-quick-item info">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Pic de trafic détecté (+34%)</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -6488,60 +8737,330 @@
                         </div>
                     </div>
                     
-                    <!-- Active Alerts -->
+                    <!-- Enhanced System Alerts Dashboard -->
                     <div class="content-section">
                         <div class="section-header">
-                            <h2 class="section-title">Alertes Système</h2>
+                            <h2 class="section-title">
+                                <i class="fas fa-shield-alt"></i>
+                                Surveillance Système Avancée
+                            </h2>
                             <div class="header-actions">
+                                <select id="alertsFilter" class="form-select" onchange="filterAlerts(this.value)">
+                                    <option value="all">Toutes les alertes</option>
+                                    <option value="critical">Critiques</option>
+                                    <option value="warning">Avertissements</option>
+                                    <option value="info">Informations</option>
+                                </select>
                                 <button class="btn btn-sm btn-secondary" onclick="acknowledgeAllAlerts()">
-                                    <i class="fas fa-check"></i>
+                                    <i class="fas fa-check-circle"></i>
                                     Acquitter Tout
+                                </button>
+                                <button class="btn btn-sm btn-primary" onclick="refreshAlerts()">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Actualiser
                                 </button>
                             </div>
                         </div>
                         
-                        <div class="alerts-list">
-                            <div class="alert-item warning">
-                                <div class="alert-icon">
+                        <!-- Alert Summary Cards -->
+                        <div class="alerts-summary-grid grid-container grid-4 grid-gap-lg">
+                            <div class="alert-summary-card critical">
+                                <div class="alert-summary-icon">
+                                    <i class="fas fa-exclamation-circle"></i>
+                                </div>
+                                <div class="alert-summary-content">
+                                    <span class="alert-count">0</span>
+                                    <span class="alert-type">Critiques</span>
+                                </div>
+                                <div class="alert-trend-indicator critical">
+                                    <i class="fas fa-arrow-down"></i>
+                                    <span>Stable</span>
+                                </div>
+                            </div>
+                            
+                            <div class="alert-summary-card warning">
+                                <div class="alert-summary-icon">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </div>
-                                <div class="alert-content">
-                                    <h4 class="alert-title">Taux d'erreur API élevé</h4>
-                                    <p class="alert-description">Le taux d'erreur de l'API a dépassé le seuil de 2% (actuellement 2.1%)</p>
-                                    <div class="alert-meta">
-                                        <span class="alert-time">Il y a 23 minutes</span>
-                                        <span class="alert-severity warning">Attention</span>
-                                    </div>
+                                <div class="alert-summary-content">
+                                    <span class="alert-count">3</span>
+                                    <span class="alert-type">Avertissements</span>
                                 </div>
-                                <div class="alert-actions">
-                                    <button class="btn btn-sm btn-primary" onclick="investigateAlert('api_error_rate')">
-                                        Investiguer
+                                <div class="alert-trend-indicator warning">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+1 aujourd'hui</span>
+                                </div>
+                            </div>
+                            
+                            <div class="alert-summary-card info">
+                                <div class="alert-summary-icon">
+                                    <i class="fas fa-info-circle"></i>
+                                </div>
+                                <div class="alert-summary-content">
+                                    <span class="alert-count">5</span>
+                                    <span class="alert-type">Informations</span>
+                                </div>
+                                <div class="alert-trend-indicator info">
+                                    <i class="fas fa-minus"></i>
+                                    <span>Normal</span>
+                                </div>
+                            </div>
+                            
+                            <div class="alert-summary-card resolved">
+                                <div class="alert-summary-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="alert-summary-content">
+                                    <span class="alert-count">12</span>
+                                    <span class="alert-type">Résolues (24h)</span>
+                                </div>
+                                <div class="alert-trend-indicator positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>+5 résolues</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Active Alerts List Enhanced -->
+                        <div class="alerts-container-enhanced">
+                            <div class="alerts-header">
+                                <h3 class="alerts-section-title">Alertes Actives</h3>
+                                <div class="alerts-controls">
+                                    <button class="alert-control-btn" onclick="sortAlerts('time')" title="Trier par heure">
+                                        <i class="fas fa-clock"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-secondary" onclick="acknowledgeAlert('api_error_rate')">
-                                        Acquitter
+                                    <button class="alert-control-btn" onclick="sortAlerts('severity')" title="Trier par sévérité">
+                                        <i class="fas fa-sort-amount-down"></i>
+                                    </button>
+                                    <button class="alert-control-btn" onclick="toggleAlertsView()" title="Basculer la vue">
+                                        <i class="fas fa-th-list"></i>
                                     </button>
                                 </div>
                             </div>
                             
-                            <div class="alert-item info">
-                                <div class="alert-icon">
-                                    <i class="fas fa-info-circle"></i>
-                                </div>
-                                <div class="alert-content">
-                                    <h4 class="alert-title">Pic de trafic détecté</h4>
-                                    <p class="alert-description">Augmentation inhabituelle du trafic (+34% par rapport à la normale)</p>
-                                    <div class="alert-meta">
-                                        <span class="alert-time">Il y a 1 heure</span>
-                                        <span class="alert-severity info">Information</span>
+                            <div class="alerts-list-enhanced">
+                                <div class="alert-item-enhanced critical">
+                                    <div class="alert-priority-bar"></div>
+                                    <div class="alert-icon-enhanced">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                        <div class="alert-pulse"></div>
+                                    </div>
+                                    <div class="alert-content-enhanced">
+                                        <div class="alert-header-row">
+                                            <h4 class="alert-title-enhanced">Base de données surchargée</h4>
+                                            <span class="alert-timestamp">Il y a 5 minutes</span>
+                                        </div>
+                                        <p class="alert-description-enhanced">
+                                            La base de données principale affiche une utilisation de 92% avec des temps de réponse dégradés.
+                                        </p>
+                                        <div class="alert-details-grid">
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Utilisation CPU:</span>
+                                                <span class="detail-value critical">92%</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Temps réponse:</span>
+                                                <span class="detail-value warning">1.8s</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Connexions:</span>
+                                                <span class="detail-value">245/250</span>
+                                            </div>
+                                        </div>
+                                        <div class="alert-meta-enhanced">
+                                            <span class="alert-severity-badge critical">
+                                                <i class="fas fa-fire"></i>
+                                                Critique
+                                            </span>
+                                            <span class="alert-source">DB-Primary-01</span>
+                                        </div>
+                                    </div>
+                                    <div class="alert-actions-enhanced">
+                                        <button class="action-btn critical" onclick="escalateAlert('db_overload')" title="Escalader">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </button>
+                                        <button class="action-btn primary" onclick="investigateAlert('db_overload')" title="Investiguer">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                        <button class="action-btn secondary" onclick="acknowledgeAlert('db_overload')" title="Acquitter">
+                                            <i class="fas fa-check"></i>
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="alert-actions">
-                                    <button class="btn btn-sm btn-primary" onclick="viewTrafficDetails()">
-                                        Voir Détails
-                                    </button>
-                                    <button class="btn btn-sm btn-secondary" onclick="acknowledgeAlert('traffic_spike')">
-                                        Acquitter
-                                    </button>
+                                
+                                <div class="alert-item-enhanced warning">
+                                    <div class="alert-priority-bar"></div>
+                                    <div class="alert-icon-enhanced">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </div>
+                                    <div class="alert-content-enhanced">
+                                        <div class="alert-header-row">
+                                            <h4 class="alert-title-enhanced">Taux d'erreur API élevé</h4>
+                                            <span class="alert-timestamp">Il y a 23 minutes</span>
+                                        </div>
+                                        <p class="alert-description-enhanced">
+                                            Le taux d'erreur de l'API a dépassé le seuil de 2% et continue d'augmenter.
+                                        </p>
+                                        <div class="alert-details-grid">
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Taux d'erreur:</span>
+                                                <span class="detail-value warning">2.8%</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Requêtes/min:</span>
+                                                <span class="detail-value">1,247</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Code principal:</span>
+                                                <span class="detail-value">503</span>
+                                            </div>
+                                        </div>
+                                        <div class="alert-meta-enhanced">
+                                            <span class="alert-severity-badge warning">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                                Attention
+                                            </span>
+                                            <span class="alert-source">API-Gateway</span>
+                                        </div>
+                                    </div>
+                                    <div class="alert-actions-enhanced">
+                                        <button class="action-btn primary" onclick="investigateAlert('api_error_rate')" title="Investiguer">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                        <button class="action-btn secondary" onclick="acknowledgeAlert('api_error_rate')" title="Acquitter">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert-item-enhanced info">
+                                    <div class="alert-priority-bar"></div>
+                                    <div class="alert-icon-enhanced">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="alert-content-enhanced">
+                                        <div class="alert-header-row">
+                                            <h4 class="alert-title-enhanced">Pic de trafic détecté</h4>
+                                            <span class="alert-timestamp">Il y a 1 heure</span>
+                                        </div>
+                                        <p class="alert-description-enhanced">
+                                            Augmentation inhabituelle du trafic avec mise à l'échelle automatique activée.
+                                        </p>
+                                        <div class="alert-details-grid">
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Augmentation:</span>
+                                                <span class="detail-value info">+34%</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Utilisateurs:</span>
+                                                <span class="detail-value">2,847</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Origine:</span>
+                                                <span class="detail-value">Mobile App</span>
+                                            </div>
+                                        </div>
+                                        <div class="alert-meta-enhanced">
+                                            <span class="alert-severity-badge info">
+                                                <i class="fas fa-info-circle"></i>
+                                                Information
+                                            </span>
+                                            <span class="alert-source">Load-Balancer</span>
+                                        </div>
+                                    </div>
+                                    <div class="alert-actions-enhanced">
+                                        <button class="action-btn primary" onclick="viewTrafficDetails()" title="Voir détails">
+                                            <i class="fas fa-chart-line"></i>
+                                        </button>
+                                        <button class="action-btn secondary" onclick="acknowledgeAlert('traffic_spike')" title="Acquitter">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="alert-item-enhanced warning">
+                                    <div class="alert-priority-bar"></div>
+                                    <div class="alert-icon-enhanced">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="alert-content-enhanced">
+                                        <div class="alert-header-row">
+                                            <h4 class="alert-title-enhanced">Tentatives de connexion suspectes</h4>
+                                            <span class="alert-timestamp">Il y a 2 heures</span>
+                                        </div>
+                                        <p class="alert-description-enhanced">
+                                            Détection de tentatives de connexion répétées depuis des adresses IP suspectes.
+                                        </p>
+                                        <div class="alert-details-grid">
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Tentatives:</span>
+                                                <span class="detail-value warning">47</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">IP bloquées:</span>
+                                                <span class="detail-value">12</span>
+                                            </div>
+                                            <div class="alert-detail">
+                                                <span class="detail-label">Géolocalisation:</span>
+                                                <span class="detail-value">Multiple</span>
+                                            </div>
+                                        </div>
+                                        <div class="alert-meta-enhanced">
+                                            <span class="alert-severity-badge warning">
+                                                <i class="fas fa-shield-alt"></i>
+                                                Sécurité
+                                            </span>
+                                            <span class="alert-source">Security-Module</span>
+                                        </div>
+                                    </div>
+                                    <div class="alert-actions-enhanced">
+                                        <button class="action-btn critical" onclick="reviewSecurityLogs()" title="Examiner logs">
+                                            <i class="fas fa-file-shield"></i>
+                                        </button>
+                                        <button class="action-btn secondary" onclick="acknowledgeAlert('suspicious_login')" title="Acquitter">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Alert Analytics Chart -->
+                        <div class="alert-analytics-section">
+                            <div class="chart-container-enhanced card-base">
+                                <div class="chart-header-enhanced">
+                                    <div class="chart-title-wrapper">
+                                        <h3 class="chart-title">
+                                            <i class="fas fa-chart-area"></i>
+                                            Tendances des Alertes (7 derniers jours)
+                                        </h3>
+                                        <span class="chart-subtitle">Distribution et résolution</span>
+                                    </div>
+                                    <div class="chart-controls">
+                                        <button class="chart-toggle active" data-period="7d">7J</button>
+                                        <button class="chart-toggle" data-period="30d">30J</button>
+                                        <button class="chart-toggle" data-period="90d">90J</button>
+                                    </div>
+                                </div>
+                                <div class="chart-wrapper-enhanced">
+                                    <canvas id="alertTrendsChart" width="400" height="200"></canvas>
+                                </div>
+                                <div class="chart-legend-enhanced">
+                                    <div class="legend-item">
+                                        <div class="legend-indicator" style="background: linear-gradient(135deg, #EF4444, #f87171);"></div>
+                                        <span class="legend-label">Critiques</span>
+                                        <span class="legend-value">2 résolues</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-indicator" style="background: linear-gradient(135deg, #F59E0B, #fbbf24);"></div>
+                                        <span class="legend-label">Avertissements</span>
+                                        <span class="legend-value">8 résolues</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-indicator" style="background: linear-gradient(135deg, #3B82F6, #60a5fa);"></div>
+                                        <span class="legend-label">Informations</span>
+                                        <span class="legend-value">15 résolues</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -6748,171 +9267,137 @@
                         </div>
                     </div>
                     
-                    <!-- Performance Metrics -->
+                    <!-- Enhanced Real-time System Intelligence -->
                     <div class="content-section">
                         <div class="section-header">
-                            <h2 class="section-title">Métriques de Performance</h2>
+                            <h2 class="section-title">
+                                <i class="fas fa-brain"></i>
+                                Intelligence Système Temps Réel
+                            </h2>
                             <div class="header-actions">
-                                <select id="metricsTimeRange" onchange="updateMetricsTimeRange()">
-                                    <option value="1h">Dernière heure</option>
-                                    <option value="24h" selected>Dernières 24h</option>
-                                    <option value="7d">7 derniers jours</option>
-                                    <option value="30d">30 derniers jours</option>
-                                </select>
+                                <button class="btn btn-sm btn-outline-primary" onclick="togglePredictiveMode()">
+                                    <i class="fas fa-magic"></i>
+                                    Mode Prédictif
+                                </button>
+                                <button class="btn btn-sm btn-secondary" onclick="exportIntelligenceReport()">
+                                    <i class="fas fa-file-export"></i>
+                                    Export IA
+                                </button>
                             </div>
                         </div>
                         
-                        <div class="metrics-dashboard grid-container grid-auto-350 grid-gap-lg">
-                            <!-- API Response Time Card -->
-                            <div class="metric-card-enhanced card-base">
-                                <div class="card-header-enhanced">
-                                    <div class="metric-icon-wrapper">
-                                        <i class="fas fa-tachometer-alt metric-icon"></i>
+                        <div class="intelligence-grid grid-container grid-2 grid-gap-lg">
+                            <!-- AI Performance Predictor -->
+                            <div class="intelligence-card-enhanced card-base">
+                                <div class="intelligence-header">
+                                    <div class="ai-icon-wrapper">
+                                        <i class="fas fa-robot ai-icon pulsing"></i>
                                     </div>
-                                    <div class="metric-info">
-                                        <h4>Temps de Réponse API</h4>
-                                        <span class="metric-subtitle">Performance en temps réel</span>
+                                    <div class="ai-title">
+                                        <h4>Prédicteur IA Performance</h4>
+                                        <span class="ai-confidence">Confiance: 96.2%</span>
                                     </div>
-                                    <div class="metric-status excellent">
-                                        <i class="fas fa-check-circle"></i>
-                                        <span>Excellent</span>
+                                    <div class="ai-status-indicator processing">
+                                        <div class="ai-dots">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                        <span>Analyse en cours</span>
                                     </div>
                                 </div>
                                 
-                                <div class="metric-chart-modern">
-                                    <canvas id="responseTimeChart" width="300" height="150"></canvas>
+                                <div class="ai-predictions-list">
+                                    <div class="prediction-item high">
+                                        <i class="fas fa-arrow-up prediction-trend"></i>
+                                        <div class="prediction-content">
+                                            <span class="prediction-text">Pic de trafic attendu</span>
+                                            <span class="prediction-time">dans 2h 15min</span>
+                                        </div>
+                                        <div class="prediction-confidence">94%</div>
+                                    </div>
+                                    <div class="prediction-item medium">
+                                        <i class="fas fa-exclamation-triangle prediction-trend"></i>
+                                        <div class="prediction-content">
+                                            <span class="prediction-text">Ressources limitées détectées</span>
+                                            <span class="prediction-time">CPU: 23h restantes</span>
+                                        </div>
+                                        <div class="prediction-confidence">87%</div>
+                                    </div>
+                                    <div class="prediction-item low">
+                                        <i class="fas fa-check prediction-trend"></i>
+                                        <div class="prediction-content">
+                                            <span class="prediction-text">Stabilité optimale maintenue</span>
+                                            <span class="prediction-time">7 prochains jours</span>
+                                        </div>
+                                        <div class="prediction-confidence">99%</div>
+                                    </div>
                                 </div>
                                 
-                                <div class="metric-stats-grid">
-                                    <div class="stat-item">
-                                        <span class="stat-label">Moyenne</span>
-                                        <span class="stat-value">247ms</span>
-                                        <span class="stat-trend positive">↓ -12ms</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">95e Percentile</span>
-                                        <span class="stat-value">634ms</span>
-                                        <span class="stat-trend neutral">→ stable</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Max</span>
-                                        <span class="stat-value">1.2s</span>
-                                        <span class="stat-trend negative">↑ +0.3s</span>
-                                    </div>
+                                <div class="ai-action-buttons">
+                                    <button class="ai-action-btn primary" onclick="applyAIRecommendations()">
+                                        <i class="fas fa-magic"></i>
+                                        Appliquer Recommandations
+                                    </button>
+                                    <button class="ai-action-btn secondary" onclick="viewAIDetails()">
+                                        <i class="fas fa-chart-area"></i>
+                                        Détails IA
+                                    </button>
                                 </div>
                             </div>
                             
-                            <!-- Traffic Users Card -->
-                            <div class="metric-card-enhanced card-base">
-                                <div class="card-header-enhanced">
-                                    <div class="metric-icon-wrapper">
-                                        <i class="fas fa-users metric-icon"></i>
+                            <!-- Real-time Anomaly Detection -->
+                            <div class="intelligence-card-enhanced card-base">
+                                <div class="intelligence-header">
+                                    <div class="ai-icon-wrapper">
+                                        <i class="fas fa-search-plus ai-icon scanning"></i>
                                     </div>
-                                    <div class="metric-info">
-                                        <h4>Trafic Utilisateurs</h4>
-                                        <span class="metric-subtitle">Activité système</span>
+                                    <div class="ai-title">
+                                        <h4>Détection d'Anomalies</h4>
+                                        <span class="ai-confidence">ML Model v2.1</span>
                                     </div>
-                                    <div class="metric-status good">
-                                        <i class="fas fa-thumbs-up"></i>
-                                        <span>Optimal</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="metric-chart-modern">
-                                    <canvas id="trafficChart" width="300" height="150"></canvas>
-                                </div>
-                                
-                                <div class="metric-stats-grid">
-                                    <div class="stat-item">
-                                        <span class="stat-label">Pic</span>
-                                        <span class="stat-value">1,842</span>
-                                        <span class="stat-trend positive">↑ +12%</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Moyenne</span>
-                                        <span class="stat-value">967</span>
-                                        <span class="stat-trend positive">↑ +8%</span>
-                                    </div>
-                                    <div class="stat-item">
-                                        <span class="stat-label">Minimum</span>
-                                        <span class="stat-value">232</span>
-                                        <span class="stat-trend neutral">→ -2%</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- System Health Card -->
-                            <div class="metric-card-enhanced card-base">
-                                <div class="card-header-enhanced">
-                                    <div class="metric-icon-wrapper">
-                                        <i class="fas fa-heartbeat metric-icon"></i>
-                                    </div>
-                                    <div class="metric-info">
-                                        <h4>Santé Système</h4>
-                                        <span class="metric-subtitle">Infrastructure globale</span>
-                                    </div>
-                                    <div class="metric-status excellent">
-                                        <i class="fas fa-shield-alt"></i>
-                                        <span>Sécurisé</span>
+                                    <div class="ai-status-indicator excellent">
+                                        <i class="fas fa-shield-check"></i>
+                                        <span>Normal</span>
                                     </div>
                                 </div>
                                 
-                                <div class="health-indicators">
-                                    <div class="health-metric">
-                                        <div class="health-circle excellent">
-                                            <span class="health-value">98%</span>
+                                <div class="anomaly-metrics-grid">
+                                    <div class="anomaly-metric">
+                                        <div class="anomaly-circle normal">
+                                            <span class="anomaly-score">0.02</span>
                                         </div>
-                                        <span class="health-label">CPU</span>
+                                        <span class="anomaly-label">Score Global</span>
                                     </div>
-                                    <div class="health-metric">
-                                        <div class="health-circle good">
-                                            <span class="health-value">76%</span>
+                                    <div class="anomaly-metric">
+                                        <div class="anomaly-circle excellent">
+                                            <span class="anomaly-score">12</span>
                                         </div>
-                                        <span class="health-label">RAM</span>
+                                        <span class="anomaly-label">Patterns Appris</span>
                                     </div>
-                                    <div class="health-metric">
-                                        <div class="health-circle warning">
-                                            <span class="health-value">85%</span>
+                                    <div class="anomaly-metric">
+                                        <div class="anomaly-circle good">
+                                            <span class="anomaly-score">3h</span>
                                         </div>
-                                        <span class="health-label">Disque</span>
+                                        <span class="anomaly-label">Dernière Analyse</span>
                                     </div>
                                 </div>
                                 
-                                <div class="system-details">
-                                    <div class="detail-item">
-                                        <i class="fas fa-server"></i>
-                                        <span>Serveurs actifs: 12/12</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-database"></i>
-                                        <span>Connexions DB: 342/500</span>
-                                    </div>
-                                    <div class="detail-item">
-                                        <i class="fas fa-network-wired"></i>
-                                        <span>Latence réseau: 12ms</span>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-                            
-                            <div class="metric-chart-container">
-                                <h4>Trafic Utilisateurs</h4>
-                                <div class="chart-placeholder">
-                                    <div class="chart-info">
-                                        <div class="chart-stat">
-                                            <span class="stat-label">Pics</span>
-                                            <span class="stat-value">1,842/h</span>
-                                        </div>
-                                        <div class="chart-stat">
-                                            <span class="stat-label">Moyenne</span>
-                                            <span class="stat-value">967/h</span>
-                                        </div>
-                                        <div class="chart-stat">
-                                            <span class="stat-label">Total</span>
-                                            <span class="stat-value">23.2K</span>
+                                <div class="anomaly-timeline">
+                                    <div class="timeline-item resolved">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-title">Anomalie résolue</span>
+                                            <span class="timeline-time">Il y a 3h</span>
                                         </div>
                                     </div>
-                                    <canvas id="trafficChart" width="400" height="200"></canvas>
+                                    <div class="timeline-item normal">
+                                        <div class="timeline-dot"></div>
+                                        <div class="timeline-content">
+                                            <span class="timeline-title">Comportement normal</span>
+                                            <span class="timeline-time">En cours</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
