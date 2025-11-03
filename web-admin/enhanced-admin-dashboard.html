@@ -591,6 +591,452 @@
             font-size: 0.875rem;
         }
         
+        /* Enhanced Performance Metrics */
+        .metric-card-enhanced {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-icon-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--ezra-gold) 0%, #f4e6a1 100%);
+        }
+        
+        .metric-icon {
+            color: white;
+            font-size: 1.25rem;
+        }
+        
+        .metric-info h4 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .metric-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .metric-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .metric-status.excellent {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+        
+        .metric-status.good {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+        
+        .metric-status.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+        
+        .metric-chart-modern {
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .metric-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-item .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-item .stat-value {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-trend {
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .stat-trend.positive {
+            color: var(--success);
+        }
+        
+        .stat-trend.negative {
+            color: var(--error);
+        }
+        
+        .stat-trend.neutral {
+            color: var(--text-secondary);
+        }
+        
+        /* Health Indicators */
+        .health-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 1.5rem;
+        }
+        
+        .health-metric {
+            text-align: center;
+        }
+        
+        .health-circle {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            position: relative;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .health-circle.excellent {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+        
+        .health-circle.good {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+        
+        .health-circle.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        }
+        
+        .health-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .system-details {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .detail-item i {
+            color: var(--ezra-gold);
+            width: 16px;
+        }
+        
+        /* Enhanced Chart Containers */
+        .chart-container-enhanced {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        
+        .chart-header-enhanced {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chart-title-wrapper h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .chart-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .chart-toggle {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-toggle.active,
+        .chart-toggle:hover {
+            background: var(--ezra-gold);
+            color: white;
+            border-color: var(--ezra-gold);
+        }
+        
+        .chart-status .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .chart-wrapper-enhanced {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #fafbfc 0%, #ffffff 100%);
+        }
+        
+        .chart-legend-enhanced {
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .chart-legend-enhanced .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+        
+        .legend-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .legend-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--success);
+            margin-left: auto;
+        }
+        
+        .chart-stats-enhanced {
+            padding: 1rem 1.5rem;
+            display: flex;
+            gap: 1rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .chart-stat-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .stat-icon-wrapper.success {
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+        }
+        
+        .stat-icon-wrapper.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        }
+        
+        .stat-content .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        
+        .stat-content .stat-label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin: 0.25rem 0;
+        }
+        
+        .stat-content .stat-trend {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        /* Enhanced Fraud Detection */
+        .fraud-alert-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .alert-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .alert-icon-wrapper.low {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+        }
+        
+        .alert-icon-wrapper.medium {
+            background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        }
+        
+        .alert-icon-wrapper.high {
+            background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+        }
+        
+        .alert-info h4 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .alert-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .alert-count-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+        }
+        
+        .alert-count-badge.low {
+            background: var(--info);
+        }
+        
+        .alert-count-badge.medium {
+            background: var(--warning);
+        }
+        
+        .alert-count-badge.high {
+            background: var(--error);
+        }
+        
+        .alert-content {
+            padding: 1rem 1.5rem;
+        }
+        
+        .alert-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .alert-metrics .metric-item {
+            text-align: center;
+            padding: 0.75rem;
+            background: var(--background);
+            border-radius: 8px;
+        }
+        
+        .alert-metrics .metric-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+        
+        .alert-metrics .metric-value {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .alert-actions {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        
+        .btn-outline:hover {
+            background: var(--ezra-gold);
+            color: white;
+            border-color: var(--ezra-gold);
+        }
+        
         .card-header-enhanced {
             display: flex;
             align-items: center;
@@ -2950,37 +3396,72 @@
                             </div>
                         </div>
                         
-                        <div class="charts-grid">
-                            <div class="chart-container">
-                                <h3 class="chart-title">Évolution des Utilisateurs</h3>
-                                <div class="chart-wrapper">
-                                    <canvas id="usersChart" width="400" height="200"></canvas>
-                                    <div class="chart-legend">
-                                        <div class="legend-item">
-                                            <span class="legend-color" style="background: #4CAF50;"></span>
-                                            <span>Nouveaux utilisateurs</span>
-                                        </div>
-                                        <div class="legend-item">
-                                            <span class="legend-color" style="background: #2196F3;"></span>
-                                            <span>Utilisateurs actifs</span>
-                                        </div>
+                        <div class="charts-grid grid-container grid-2 grid-gap-lg">
+                            <div class="chart-container-enhanced card-base">
+                                <div class="chart-header-enhanced">
+                                    <div class="chart-title-wrapper">
+                                        <h3 class="chart-title">Évolution des Utilisateurs</h3>
+                                        <span class="chart-subtitle">Croissance et engagement</span>
+                                    </div>
+                                    <div class="chart-controls">
+                                        <button class="chart-toggle active" data-chart="users">Utilisateurs</button>
+                                        <button class="chart-toggle" data-chart="sessions">Sessions</button>
+                                    </div>
+                                </div>
+                                <div class="chart-wrapper-enhanced">
+                                    <canvas id="usersChart" width="400" height="250"></canvas>
+                                </div>
+                                <div class="chart-legend-enhanced">
+                                    <div class="legend-item">
+                                        <div class="legend-indicator" style="background: linear-gradient(135deg, #4CAF50, #66BB6A);"></div>
+                                        <span class="legend-label">Nouveaux utilisateurs</span>
+                                        <span class="legend-value">+12.5%</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-indicator" style="background: linear-gradient(135deg, #2196F3, #42A5F5);"></div>
+                                        <span class="legend-label">Utilisateurs actifs</span>
+                                        <span class="legend-value">+8.2%</span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="chart-container">
-                                <h3 class="chart-title">Répartition des Services</h3>
-                                <div class="chart-wrapper">
-                                    <canvas id="servicesChart" width="400" height="200"></canvas>
-                                    <div class="chart-stats">
-                                        <div class="chart-stat">
+                            <div class="chart-container-enhanced card-base">
+                                <div class="chart-header-enhanced">
+                                    <div class="chart-title-wrapper">
+                                        <h3 class="chart-title">Performance des Services</h3>
+                                        <span class="chart-subtitle">Répartition et qualité</span>
+                                    </div>
+                                    <div class="chart-status">
+                                        <span class="status-indicator excellent">
+                                            <i class="fas fa-check-circle"></i>
+                                            Excellent
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="chart-wrapper-enhanced">
+                                    <canvas id="servicesChart" width="400" height="250"></canvas>
+                                </div>
+                                <div class="chart-stats-enhanced">
+                                    <div class="chart-stat-card">
+                                        <div class="stat-icon-wrapper success">
+                                            <i class="fas fa-cogs"></i>
+                                        </div>
+                                        <div class="stat-content">
                                             <span class="stat-number">245</span>
                                             <span class="stat-label">Services Actifs</span>
+                                            <span class="stat-trend positive">↑ +15 ce mois</span>
                                         </div>
-                                        <div class="chart-stat">
+                                    </div>
+                                    <div class="chart-stat-card">
+                                        <div class="stat-icon-wrapper warning">
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <div class="stat-content">
                                             <span class="stat-number">89%</span>
-                                            <span class="stat-label">Taux Satisfaction</span>
+                                            <span class="stat-label">Satisfaction</span>
+                                            <span class="stat-trend positive">↑ +2.1%</span>
                                         </div>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -3436,32 +3917,55 @@
                             </div>
                         </div>
                         
-                        <div class="charts-grid">
-                            <div class="chart-container">
-                                <h3 class="chart-title">
-                                    <i class="fas fa-chart-line"></i>
-                                    Tendance des Transactions
-                                </h3>
-                                <div class="chart-wrapper">
-                                    <canvas id="transactionTrendsChart"></canvas>
-                                    <div class="chart-legend">
-                                        <div class="legend-item">
-                                            <span class="legend-color" style="background: #10B981;"></span>
-                                            <span>Transactions réussies</span>
-                                        </div>
-                                        <div class="legend-item">
-                                            <span class="legend-color" style="background: #EF4444;"></span>
-                                            <span>Transactions échouées</span>
-                                        </div>
+                        <div class="charts-grid grid-container grid-2 grid-gap-lg">
+                            <div class="chart-container-enhanced card-base">
+                                <div class="chart-header-enhanced">
+                                    <div class="chart-title-wrapper">
+                                        <h3 class="chart-title">
+                                            <i class="fas fa-chart-line"></i>
+                                            Tendances des Transactions
+                                        </h3>
+                                        <span class="chart-subtitle">Volume et taux de réussite</span>
+                                    </div>
+                                    <div class="chart-controls">
+                                        <button class="chart-toggle active" data-period="7d">7J</button>
+                                        <button class="chart-toggle" data-period="30d">30J</button>
+                                        <button class="chart-toggle" data-period="90d">90J</button>
+                                    </div>
+                                </div>
+                                <div class="chart-wrapper-enhanced">
+                                    <canvas id="transactionTrendsChart" width="400" height="280"></canvas>
+                                </div>
+                                <div class="chart-legend-enhanced">
+                                    <div class="legend-item">
+                                        <div class="legend-indicator" style="background: linear-gradient(135deg, #10B981, #34d399);"></div>
+                                        <span class="legend-label">Transactions réussies</span>
+                                        <span class="legend-value">+15.2%</span>
+                                    </div>
+                                    <div class="legend-item">
+                                        <div class="legend-indicator" style="background: linear-gradient(135deg, #EF4444, #f87171);"></div>
+                                        <span class="legend-label">Transactions échouées</span>
+                                        <span class="legend-value" style="color: var(--error);">-3.1%</span>
                                     </div>
                                 </div>
                             </div>
                             
-                            <div class="chart-container">
-                                <h3 class="chart-title">
-                                    <i class="fas fa-credit-card"></i>
-                                    Répartition Méthodes de Paiement
-                                </h3>
+                            <div class="chart-container-enhanced card-base">
+                                <div class="chart-header-enhanced">
+                                    <div class="chart-title-wrapper">
+                                        <h3 class="chart-title">
+                                            <i class="fas fa-credit-card"></i>
+                                            Méthodes de Paiement
+                                        </h3>
+                                        <span class="chart-subtitle">Répartition et performance</span>
+                                    </div>
+                                    <div class="chart-status">
+                                        <span class="status-indicator excellent">
+                                            <i class="fas fa-check-circle"></i>
+                                            Diversifié
+                                        </span>
+                                    </div>
+                                </div>
                                 <div class="chart-wrapper">
                                     <canvas id="paymentMethodsChart"></canvas>
                                     <div class="chart-stats">
@@ -3756,17 +4260,41 @@
                             </div>
                         </div>
                         
-                        <div class="fraud-detection-grid">
-                            <div class="fraud-alert-card low">
-                                <div class="alert-header">
-                                    <i class="fas fa-info-circle"></i>
-                                    <h4>Alertes Faibles</h4>
-                                    <span class="alert-count">12</span>
+                        <div class="fraud-detection-grid grid-container grid-3 grid-gap-md">
+                            <div class="fraud-alert-card low card-base">
+                                <div class="alert-header card-header-enhanced">
+                                    <div class="alert-icon-wrapper low">
+                                        <i class="fas fa-info-circle"></i>
+                                    </div>
+                                    <div class="alert-info">
+                                        <h4>Alertes Faibles</h4>
+                                        <span class="alert-subtitle">Surveillance légère</span>
+                                    </div>
+                                    <div class="alert-count-badge low">
+                                        <span class="count-number">12</span>
+                                    </div>
                                 </div>
-                                <div class="alert-description">
-                                    Transactions inhabituelles détectées mais dans les limites normales
+                                <div class="alert-content">
+                                    <div class="alert-description">
+                                        Transactions inhabituelles détectées mais dans les limites normales
+                                    </div>
+                                    <div class="alert-metrics">
+                                        <div class="metric-item">
+                                            <span class="metric-label">Dernière alerte</span>
+                                            <span class="metric-value">Il y a 2h</span>
+                                        </div>
+                                        <div class="metric-item">
+                                            <span class="metric-label">Taux</span>
+                                            <span class="metric-value">0.8%</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <button class="btn btn-small" onclick="viewFraudAlerts('low')">Voir Détails</button>
+                                <div class="alert-actions">
+                                    <button class="btn btn-small btn-outline" onclick="viewFraudAlerts('low')">
+                                        <i class="fas fa-eye"></i>
+                                        Voir Détails
+                                    </button>
+                                </div>
                             </div>
                             
                             <div class="fraud-alert-card medium">
@@ -6234,26 +6762,137 @@
                             </div>
                         </div>
                         
-                        <div class="metrics-dashboard">
-                            <div class="metric-chart-container">
-                                <h4>Temps de Réponse API</h4>
-                                <div class="chart-placeholder">
-                                    <div class="chart-info">
-                                        <div class="chart-stat">
-                                            <span class="stat-label">Moyenne</span>
-                                            <span class="stat-value">247ms</span>
-                                        </div>
-                                        <div class="chart-stat">
-                                            <span class="stat-label">95e Percentile</span>
-                                            <span class="stat-value">634ms</span>
-                                        </div>
-                                        <div class="chart-stat">
-                                            <span class="stat-label">Max</span>
-                                            <span class="stat-value">1.2s</span>
-                                        </div>
+                        <div class="metrics-dashboard grid-container grid-auto-350 grid-gap-lg">
+                            <!-- API Response Time Card -->
+                            <div class="metric-card-enhanced card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="metric-icon-wrapper">
+                                        <i class="fas fa-tachometer-alt metric-icon"></i>
                                     </div>
-                                    <canvas id="responseTimeChart" width="400" height="200"></canvas>
+                                    <div class="metric-info">
+                                        <h4>Temps de Réponse API</h4>
+                                        <span class="metric-subtitle">Performance en temps réel</span>
+                                    </div>
+                                    <div class="metric-status excellent">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span>Excellent</span>
+                                    </div>
                                 </div>
+                                
+                                <div class="metric-chart-modern">
+                                    <canvas id="responseTimeChart" width="300" height="150"></canvas>
+                                </div>
+                                
+                                <div class="metric-stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Moyenne</span>
+                                        <span class="stat-value">247ms</span>
+                                        <span class="stat-trend positive">↓ -12ms</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">95e Percentile</span>
+                                        <span class="stat-value">634ms</span>
+                                        <span class="stat-trend neutral">→ stable</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Max</span>
+                                        <span class="stat-value">1.2s</span>
+                                        <span class="stat-trend negative">↑ +0.3s</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Traffic Users Card -->
+                            <div class="metric-card-enhanced card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="metric-icon-wrapper">
+                                        <i class="fas fa-users metric-icon"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <h4>Trafic Utilisateurs</h4>
+                                        <span class="metric-subtitle">Activité système</span>
+                                    </div>
+                                    <div class="metric-status good">
+                                        <i class="fas fa-thumbs-up"></i>
+                                        <span>Optimal</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="metric-chart-modern">
+                                    <canvas id="trafficChart" width="300" height="150"></canvas>
+                                </div>
+                                
+                                <div class="metric-stats-grid">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Pic</span>
+                                        <span class="stat-value">1,842</span>
+                                        <span class="stat-trend positive">↑ +12%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Moyenne</span>
+                                        <span class="stat-value">967</span>
+                                        <span class="stat-trend positive">↑ +8%</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Minimum</span>
+                                        <span class="stat-value">232</span>
+                                        <span class="stat-trend neutral">→ -2%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- System Health Card -->
+                            <div class="metric-card-enhanced card-base">
+                                <div class="card-header-enhanced">
+                                    <div class="metric-icon-wrapper">
+                                        <i class="fas fa-heartbeat metric-icon"></i>
+                                    </div>
+                                    <div class="metric-info">
+                                        <h4>Santé Système</h4>
+                                        <span class="metric-subtitle">Infrastructure globale</span>
+                                    </div>
+                                    <div class="metric-status excellent">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Sécurisé</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-indicators">
+                                    <div class="health-metric">
+                                        <div class="health-circle excellent">
+                                            <span class="health-value">98%</span>
+                                        </div>
+                                        <span class="health-label">CPU</span>
+                                    </div>
+                                    <div class="health-metric">
+                                        <div class="health-circle good">
+                                            <span class="health-value">76%</span>
+                                        </div>
+                                        <span class="health-label">RAM</span>
+                                    </div>
+                                    <div class="health-metric">
+                                        <div class="health-circle warning">
+                                            <span class="health-value">85%</span>
+                                        </div>
+                                        <span class="health-label">Disque</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="system-details">
+                                    <div class="detail-item">
+                                        <i class="fas fa-server"></i>
+                                        <span>Serveurs actifs: 12/12</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-database"></i>
+                                        <span>Connexions DB: 342/500</span>
+                                    </div>
+                                    <div class="detail-item">
+                                        <i class="fas fa-network-wired"></i>
+                                        <span>Latence réseau: 12ms</span>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                             
                             <div class="metric-chart-container">
