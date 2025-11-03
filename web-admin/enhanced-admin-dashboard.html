@@ -4430,6 +4430,16 @@
                         <span>Gestion Financière</span>
                         <span class="badge" id="escrowBadge">-</span>
                     </div>
+                    <div class="nav-item" data-page="provider-verification">
+                        <i class="fas fa-user-check"></i>
+                        <span>Vérification Prestataires</span>
+                        <span class="badge" id="verificationBadge">7</span>
+                    </div>
+                    <div class="nav-item" data-page="service-categories">
+                        <i class="fas fa-tags"></i>
+                        <span>Gestion des Catégories</span>
+                        <span class="badge" id="categoriesBadge">6</span>
+                    </div>
                 </div>
                 
                 <div class="nav-section">
@@ -10265,6 +10275,1827 @@
                                         <i class="fas fa-calculator"></i>
                                         <span>Prédiction mois prochain: 3.2M XAF</span>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Real-time Payment Transaction Monitoring -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-stream"></i>
+                                Surveillance des Transactions en Temps Réel
+                            </h2>
+                            <div class="header-actions">
+                                <div class="realtime-status">
+                                    <div class="status-indicator live"></div>
+                                    <span>En direct</span>
+                                </div>
+                                <button class="btn btn-sm btn-secondary" onclick="pauseRealTimeMonitoring()">
+                                    <i class="fas fa-pause"></i>
+                                    Pause
+                                </button>
+                                <button class="btn btn-sm btn-info" onclick="exportTransactionLog()">
+                                    <i class="fas fa-download"></i>
+                                    Exporter Log
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Live Transaction Stream -->
+                        <div class="realtime-monitoring-container">
+                            <div class="transaction-stream-header">
+                                <div class="stream-stats">
+                                    <div class="stream-stat">
+                                        <span class="stat-label">Transactions/min</span>
+                                        <span class="stat-value live-counter" id="transactionsPerMinute">23</span>
+                                    </div>
+                                    <div class="stream-stat">
+                                        <span class="stat-label">Volume/min</span>
+                                        <span class="stat-value live-counter" id="volumePerMinute">847,500 XAF</span>
+                                    </div>
+                                    <div class="stream-stat">
+                                        <span class="stat-label">Taux de réussite</span>
+                                        <span class="stat-value live-counter success" id="successRate">97.8%</span>
+                                    </div>
+                                    <div class="stream-stat">
+                                        <span class="stat-label">Alertes actives</span>
+                                        <span class="stat-value live-counter warning" id="activeAlerts">2</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="payment-method-filters">
+                                    <button class="filter-btn active" data-method="all" onclick="filterTransactionStream('all')">
+                                        <i class="fas fa-list"></i>
+                                        Toutes
+                                    </button>
+                                    <button class="filter-btn" data-method="mtn" onclick="filterTransactionStream('mtn')">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        MTN MoMo
+                                    </button>
+                                    <button class="filter-btn" data-method="orange" onclick="filterTransactionStream('orange')">
+                                        <i class="fas fa-mobile-alt"></i>
+                                        Orange Money
+                                    </button>
+                                    <button class="filter-btn" data-method="escrow" onclick="filterTransactionStream('escrow')">
+                                        <i class="fas fa-shield-alt"></i>
+                                        Escrow
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Live Transaction Feed -->
+                            <div class="transaction-feed-container">
+                                <div class="transaction-feed" id="liveTransactionFeed">
+                                    <!-- Transaction items will be dynamically added here -->
+                                    <div class="transaction-item success mtn" data-timestamp="2024-11-17T14:32:15Z">
+                                        <div class="transaction-time">
+                                            <span class="time">14:32:15</span>
+                                            <span class="date">17 Nov</span>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <div class="transaction-id">TXN-MTN-2024111715234</div>
+                                            <div class="transaction-info">
+                                                <span class="amount">25,000 XAF</span>
+                                                <span class="method mtn">MTN Mobile Money</span>
+                                                <span class="status success">Succès</span>
+                                            </div>
+                                            <div class="transaction-participants">
+                                                <span class="customer">Marie K. (+237 691 234 567)</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                                <span class="provider">Jean P. (Plombier)</span>
+                                            </div>
+                                        </div>
+                                        <div class="transaction-indicators">
+                                            <div class="processing-time success">1.2s</div>
+                                            <div class="escrow-status">Escrow actif</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="transaction-item pending orange" data-timestamp="2024-11-17T14:31:58Z">
+                                        <div class="transaction-time">
+                                            <span class="time">14:31:58</span>
+                                            <span class="date">17 Nov</span>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <div class="transaction-id">TXN-ORG-2024111715231</div>
+                                            <div class="transaction-info">
+                                                <span class="amount">15,000 XAF</span>
+                                                <span class="method orange">Orange Money</span>
+                                                <span class="status pending">En cours</span>
+                                            </div>
+                                            <div class="transaction-participants">
+                                                <span class="customer">Paul N. (+237 677 456 789)</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                                <span class="provider">Alice M. (Nettoyage)</span>
+                                            </div>
+                                        </div>
+                                        <div class="transaction-indicators">
+                                            <div class="processing-time pending">4.8s</div>
+                                            <div class="retry-count">Tentative 1/3</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="transaction-item failed mtn" data-timestamp="2024-11-17T14:31:23Z">
+                                        <div class="transaction-time">
+                                            <span class="time">14:31:23</span>
+                                            <span class="date">17 Nov</span>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <div class="transaction-id">TXN-MTN-2024111715228</div>
+                                            <div class="transaction-info">
+                                                <span class="amount">50,000 XAF</span>
+                                                <span class="method mtn">MTN Mobile Money</span>
+                                                <span class="status failed">Échec</span>
+                                            </div>
+                                            <div class="transaction-participants">
+                                                <span class="customer">David L. (+237 698 123 456)</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                                <span class="provider">Michel T. (Électricien)</span>
+                                            </div>
+                                        </div>
+                                        <div class="transaction-indicators">
+                                            <div class="error-code">ERR_INSUFFICIENT_FUNDS</div>
+                                            <button class="retry-btn" onclick="retryTransaction('TXN-MTN-2024111715228')">
+                                                <i class="fas fa-redo"></i>
+                                                Réessayer
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="transaction-item success escrow" data-timestamp="2024-11-17T14:30:45Z">
+                                        <div class="transaction-time">
+                                            <span class="time">14:30:45</span>
+                                            <span class="date">17 Nov</span>
+                                        </div>
+                                        <div class="transaction-details">
+                                            <div class="transaction-id">ESC-REL-2024111715225</div>
+                                            <div class="transaction-info">
+                                                <span class="amount">42,500 XAF</span>
+                                                <span class="method escrow">Libération Escrow</span>
+                                                <span class="status success">Libéré</span>
+                                            </div>
+                                            <div class="transaction-participants">
+                                                <span class="customer">Service terminé</span>
+                                                <i class="fas fa-arrow-right"></i>
+                                                <span class="provider">Sophie D. (Coiffure)</span>
+                                            </div>
+                                        </div>
+                                        <div class="transaction-indicators">
+                                            <div class="escrow-duration">Escrow: 3h 24min</div>
+                                            <div class="commission">Commission: 6,375 XAF</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="transaction-feed-footer">
+                                    <div class="auto-refresh-status">
+                                        <i class="fas fa-sync-alt spinning"></i>
+                                        <span>Actualisation automatique active</span>
+                                    </div>
+                                    <div class="feed-controls">
+                                        <button class="btn btn-sm btn-secondary" onclick="clearTransactionFeed()">
+                                            <i class="fas fa-trash"></i>
+                                            Vider
+                                        </button>
+                                        <button class="btn btn-sm btn-info" onclick="scrollToLatest()">
+                                            <i class="fas fa-arrow-down"></i>
+                                            Dernières
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Payment System Health Monitor -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-heartbeat"></i>
+                                État de Santé des Systèmes de Paiement
+                            </h2>
+                            <div class="header-actions">
+                                <div class="last-update">
+                                    <span>Dernière mise à jour: </span>
+                                    <span class="update-time" id="lastHealthUpdate">14:32:47</span>
+                                </div>
+                                <button class="btn btn-sm btn-primary" onclick="refreshHealthStatus()">
+                                    <i class="fas fa-sync"></i>
+                                    Actualiser
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="health-monitoring-grid grid-container grid-3 grid-gap-lg">
+                            <!-- MTN Mobile Money Health -->
+                            <div class="payment-health-card card-base excellent">
+                                <div class="health-header">
+                                    <div class="service-logo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="service-info">
+                                        <h4>MTN Mobile Money</h4>
+                                        <span class="service-status operational">Opérationnel</span>
+                                    </div>
+                                    <div class="health-indicator excellent">
+                                        <div class="indicator-circle"></div>
+                                        <span class="health-score">98%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-metrics">
+                                    <div class="metric-row">
+                                        <span class="metric-label">Disponibilité (24h)</span>
+                                        <div class="metric-value excellent">
+                                            <span>99.2%</span>
+                                            <div class="metric-bar">
+                                                <div class="metric-fill" style="width: 99.2%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Temps de réponse moyen</span>
+                                        <div class="metric-value good">
+                                            <span>1.8s</span>
+                                            <i class="fas fa-arrow-down trend-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Taux d'erreur</span>
+                                        <div class="metric-value excellent">
+                                            <span>1.2%</span>
+                                            <i class="fas fa-arrow-down trend-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Dernière panne</span>
+                                        <div class="metric-value">
+                                            <span>Il y a 6 jours</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-actions">
+                                    <button class="health-btn" onclick="viewMTNStatus()">
+                                        <i class="fas fa-chart-line"></i>
+                                        Détails
+                                    </button>
+                                    <button class="health-btn" onclick="testMTNConnection()">
+                                        <i class="fas fa-vial"></i>
+                                        Test
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Orange Money Health -->
+                            <div class="payment-health-card card-base good">
+                                <div class="health-header">
+                                    <div class="service-logo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <div class="service-info">
+                                        <h4>Orange Money</h4>
+                                        <span class="service-status operational">Opérationnel</span>
+                                    </div>
+                                    <div class="health-indicator good">
+                                        <div class="indicator-circle"></div>
+                                        <span class="health-score">94%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-metrics">
+                                    <div class="metric-row">
+                                        <span class="metric-label">Disponibilité (24h)</span>
+                                        <div class="metric-value good">
+                                            <span>96.8%</span>
+                                            <div class="metric-bar">
+                                                <div class="metric-fill" style="width: 96.8%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Temps de réponse moyen</span>
+                                        <div class="metric-value warning">
+                                            <span>3.2s</span>
+                                            <i class="fas fa-arrow-up trend-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Taux d'erreur</span>
+                                        <div class="metric-value good">
+                                            <span>3.2%</span>
+                                            <i class="fas fa-arrow-up trend-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Dernière panne</span>
+                                        <div class="metric-value">
+                                            <span>Il y a 2 jours</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-actions">
+                                    <button class="health-btn" onclick="viewOrangeStatus()">
+                                        <i class="fas fa-chart-line"></i>
+                                        Détails
+                                    </button>
+                                    <button class="health-btn" onclick="testOrangeConnection()">
+                                        <i class="fas fa-vial"></i>
+                                        Test
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Escrow System Health -->
+                            <div class="payment-health-card card-base excellent">
+                                <div class="health-header">
+                                    <div class="service-logo">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div class="service-info">
+                                        <h4>Système Escrow</h4>
+                                        <span class="service-status operational">Opérationnel</span>
+                                    </div>
+                                    <div class="health-indicator excellent">
+                                        <div class="indicator-circle"></div>
+                                        <span class="health-score">100%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-metrics">
+                                    <div class="metric-row">
+                                        <span class="metric-label">Disponibilité (24h)</span>
+                                        <div class="metric-value excellent">
+                                            <span>100%</span>
+                                            <div class="metric-bar">
+                                                <div class="metric-fill" style="width: 100%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Transactions en escrow</span>
+                                        <div class="metric-value">
+                                            <span>247 actives</span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Libérations automatiques</span>
+                                        <div class="metric-value excellent">
+                                            <span>100%</span>
+                                            <i class="fas fa-check trend-icon"></i>
+                                        </div>
+                                    </div>
+                                    <div class="metric-row">
+                                        <span class="metric-label">Temps moyen de rétention</span>
+                                        <div class="metric-value">
+                                            <span>2h 45min</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="health-actions">
+                                    <button class="health-btn" onclick="viewEscrowStatus()">
+                                        <i class="fas fa-chart-line"></i>
+                                        Détails
+                                    </button>
+                                    <button class="health-btn" onclick="forceEscrowRelease()">
+                                        <i class="fas fa-unlock"></i>
+                                        Libération
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Transaction Analytics Dashboard -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-chart-bar"></i>
+                                Analyses des Transactions en Temps Réel
+                            </h2>
+                            <div class="header-actions">
+                                <select class="form-select" id="analyticsTimeframe" onchange="updateAnalyticsTimeframe(this.value)">
+                                    <option value="1h">Dernière heure</option>
+                                    <option value="6h" selected>6 dernières heures</option>
+                                    <option value="24h">24 dernières heures</option>
+                                    <option value="7d">7 derniers jours</option>
+                                </select>
+                                <button class="btn btn-sm btn-info" onclick="generateRealtimeReport()">
+                                    <i class="fas fa-file-alt"></i>
+                                    Rapport
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="realtime-analytics-grid grid-container grid-2 grid-gap-lg">
+                            <!-- Transaction Volume Chart -->
+                            <div class="analytics-card card-base">
+                                <div class="chart-header">
+                                    <h4>Volume des Transactions</h4>
+                                    <div class="chart-legend">
+                                        <div class="legend-item">
+                                            <div class="legend-color mtn"></div>
+                                            <span>MTN MoMo</span>
+                                        </div>
+                                        <div class="legend-item">
+                                            <div class="legend-color orange"></div>
+                                            <span>Orange Money</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="realtimeVolumeChart" class="analytics-chart"></canvas>
+                                </div>
+                                <div class="chart-summary">
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Pic max (6h)</span>
+                                        <span class="stat-value">1.2M XAF/h</span>
+                                    </div>
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Tendance</span>
+                                        <span class="stat-value upward">+15.3%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Success Rate Chart -->
+                            <div class="analytics-card card-base">
+                                <div class="chart-header">
+                                    <h4>Taux de Réussite</h4>
+                                    <div class="chart-controls">
+                                        <button class="chart-btn active" onclick="toggleChartView('percentage')">%</button>
+                                        <button class="chart-btn" onclick="toggleChartView('absolute')">Abs</button>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="realtimeSuccessChart" class="analytics-chart"></canvas>
+                                </div>
+                                <div class="chart-summary">
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Moyenne (6h)</span>
+                                        <span class="stat-value">97.1%</span>
+                                    </div>
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Cible</span>
+                                        <span class="stat-value">95%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Response Time Distribution -->
+                            <div class="analytics-card card-base">
+                                <div class="chart-header">
+                                    <h4>Distribution des Temps de Réponse</h4>
+                                    <div class="response-time-stats">
+                                        <span class="rt-stat excellent">P50: 1.2s</span>
+                                        <span class="rt-stat good">P95: 3.8s</span>
+                                        <span class="rt-stat warning">P99: 8.2s</span>
+                                    </div>
+                                </div>
+                                <div class="chart-container">
+                                    <canvas id="realtimeResponseChart" class="analytics-chart"></canvas>
+                                </div>
+                                <div class="chart-summary">
+                                    <div class="summary-stat">
+                                        <span class="stat-label">SLA respect</span>
+                                        <span class="stat-value">94.7%</span>
+                                    </div>
+                                    <div class="summary-stat">
+                                        <span class="stat-label">Timeout rate</span>
+                                        <span class="stat-value warning">2.1%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Error Analysis -->
+                            <div class="analytics-card card-base">
+                                <div class="chart-header">
+                                    <h4>Analyse des Erreurs</h4>
+                                    <div class="error-filters">
+                                        <button class="error-filter active" data-filter="all">Toutes</button>
+                                        <button class="error-filter" data-filter="network">Réseau</button>
+                                        <button class="error-filter" data-filter="auth">Auth</button>
+                                        <button class="error-filter" data-filter="funds">Fonds</button>
+                                    </div>
+                                </div>
+                                <div class="error-breakdown">
+                                    <div class="error-item">
+                                        <div class="error-type">
+                                            <i class="fas fa-wifi error-icon"></i>
+                                            <span>Erreurs réseau</span>
+                                        </div>
+                                        <div class="error-stats">
+                                            <span class="error-count">12</span>
+                                            <span class="error-percentage">45.3%</span>
+                                        </div>
+                                    </div>
+                                    <div class="error-item">
+                                        <div class="error-type">
+                                            <i class="fas fa-wallet error-icon"></i>
+                                            <span>Fonds insuffisants</span>
+                                        </div>
+                                        <div class="error-stats">
+                                            <span class="error-count">8</span>
+                                            <span class="error-percentage">30.2%</span>
+                                        </div>
+                                    </div>
+                                    <div class="error-item">
+                                        <div class="error-type">
+                                            <i class="fas fa-key error-icon"></i>
+                                            <span>Authentification</span>
+                                        </div>
+                                        <div class="error-stats">
+                                            <span class="error-count">4</span>
+                                            <span class="error-percentage">15.1%</span>
+                                        </div>
+                                    </div>
+                                    <div class="error-item">
+                                        <div class="error-type">
+                                            <i class="fas fa-times error-icon"></i>
+                                            <span>Autres</span>
+                                        </div>
+                                        <div class="error-stats">
+                                            <span class="error-count">3</span>
+                                            <span class="error-percentage">9.4%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chart-summary">
+                                    <button class="btn btn-sm btn-warning" onclick="investigateErrors()">
+                                        <i class="fas fa-search"></i>
+                                        Enquêter
+                                    </button>
+                                    <button class="btn btn-sm btn-info" onclick="exportErrorLog()">
+                                        <i class="fas fa-download"></i>
+                                        Export
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page: Provider Verification -->
+                <div id="provider-verificationPage" class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Vérification des Prestataires</h1>
+                        <p class="page-subtitle">Processus de vérification CNI et validation des prestataires</p>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportVerificationReport()">
+                                <i class="fas fa-file-export"></i>
+                                Rapport Vérifications
+                            </button>
+                            <button class="btn btn-success" onclick="bulkApproveProviders()">
+                                <i class="fas fa-check-double"></i>
+                                Approuver Sélectionnés
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Verification Overview -->
+                    <div class="verification-overview-grid grid-container grid-4 grid-gap-lg">
+                        <div class="verification-overview-card card-base warning">
+                            <div class="verification-card-header">
+                                <div class="verification-icon-wrapper pending">
+                                    <i class="fas fa-clock verification-icon"></i>
+                                </div>
+                                <div class="verification-info">
+                                    <h4>En Attente</h4>
+                                    <span class="verification-subtitle">Vérification requise</span>
+                                </div>
+                                <div class="verification-count urgent">
+                                    <span class="count-number">7</span>
+                                    <span class="count-label">prestataires</span>
+                                </div>
+                            </div>
+                            <div class="verification-trend">
+                                <i class="fas fa-arrow-up trend-icon"></i>
+                                <span>+3 cette semaine</span>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-overview-card card-base info">
+                            <div class="verification-card-header">
+                                <div class="verification-icon-wrapper review">
+                                    <i class="fas fa-search verification-icon"></i>
+                                </div>
+                                <div class="verification-info">
+                                    <h4>En Révision</h4>
+                                    <span class="verification-subtitle">Documents soumis</span>
+                                </div>
+                                <div class="verification-count processing">
+                                    <span class="count-number">12</span>
+                                    <span class="count-label">dossiers</span>
+                                </div>
+                            </div>
+                            <div class="verification-trend">
+                                <i class="fas fa-minus trend-icon"></i>
+                                <span>Stable</span>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-overview-card card-base success">
+                            <div class="verification-card-header">
+                                <div class="verification-icon-wrapper approved">
+                                    <i class="fas fa-check-circle verification-icon"></i>
+                                </div>
+                                <div class="verification-info">
+                                    <h4>Approuvés</h4>
+                                    <span class="verification-subtitle">Ce mois</span>
+                                </div>
+                                <div class="verification-count approved">
+                                    <span class="count-number">34</span>
+                                    <span class="count-label">prestataires</span>
+                                </div>
+                            </div>
+                            <div class="verification-trend">
+                                <i class="fas fa-arrow-up trend-icon"></i>
+                                <span>+15% vs mois dernier</span>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-overview-card card-base danger">
+                            <div class="verification-card-header">
+                                <div class="verification-icon-wrapper rejected">
+                                    <i class="fas fa-times-circle verification-icon"></i>
+                                </div>
+                                <div class="verification-info">
+                                    <h4>Rejetés</h4>
+                                    <span class="verification-subtitle">Documents invalides</span>
+                                </div>
+                                <div class="verification-count rejected">
+                                    <span class="count-number">5</span>
+                                    <span class="count-label">demandes</span>
+                                </div>
+                            </div>
+                            <div class="verification-trend">
+                                <i class="fas fa-arrow-down trend-icon"></i>
+                                <span>-2 vs semaine dernière</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Verification Queue -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-list-check"></i>
+                                File d'Attente de Vérification
+                            </h2>
+                            <div class="header-actions">
+                                <select class="form-select" id="verificationFilter" onchange="filterVerifications(this.value)">
+                                    <option value="all">Tous les statuts</option>
+                                    <option value="pending" selected>En attente</option>
+                                    <option value="review">En révision</option>
+                                    <option value="approved">Approuvés</option>
+                                    <option value="rejected">Rejetés</option>
+                                </select>
+                                <select class="form-select" id="priorityFilter" onchange="filterByPriority(this.value)">
+                                    <option value="all">Toutes priorités</option>
+                                    <option value="urgent">Urgent</option>
+                                    <option value="high">Élevée</option>
+                                    <option value="normal">Normale</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="verification-queue-container">
+                            <div class="verification-table-container">
+                                <table class="data-table enhanced">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="selectAllVerifications" onchange="toggleSelectAllVerifications()">
+                                            </th>
+                                            <th>Prestataire</th>
+                                            <th>Service</th>
+                                            <th>Documents CNI</th>
+                                            <th>Date Soumission</th>
+                                            <th>Priorité</th>
+                                            <th>Statut</th>
+                                            <th>Assigné à</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="verificationQueueTable">
+                                        <tr class="verification-row urgent pending">
+                                            <td><input type="checkbox" class="verification-checkbox" data-provider-id="PRV001"></td>
+                                            <td>
+                                                <div class="provider-info">
+                                                    <div class="provider-avatar">JD</div>
+                                                    <div class="provider-details">
+                                                        <span class="provider-name">Jean Dupont</span>
+                                                        <small class="provider-email">jean.dupont@email.cm</small>
+                                                        <small class="provider-phone">+237 691 234 567</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="service-info">
+                                                    <span class="service-name">Plomberie</span>
+                                                    <small class="service-description">Réparation et installation</small>
+                                                    <div class="service-badges">
+                                                        <span class="service-badge premium">Premium</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="documents-status">
+                                                    <div class="document-item complete">
+                                                        <i class="fas fa-id-card"></i>
+                                                        <span>CNI Recto</span>
+                                                        <button class="view-btn" onclick="viewDocument('CNI_recto_PRV001')">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="document-item complete">
+                                                        <i class="fas fa-id-card"></i>
+                                                        <span>CNI Verso</span>
+                                                        <button class="view-btn" onclick="viewDocument('CNI_verso_PRV001')">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="document-item complete">
+                                                        <i class="fas fa-file-alt"></i>
+                                                        <span>Certificat Business</span>
+                                                        <button class="view-btn" onclick="viewDocument('business_cert_PRV001')">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="submission-date">15 Nov 2024</span>
+                                                <small class="submission-time">14:30</small>
+                                                <small class="days-waiting">Il y a 2 jours</small>
+                                            </td>
+                                            <td>
+                                                <span class="priority-badge urgent">
+                                                    <i class="fas fa-exclamation-circle"></i>
+                                                    Urgent
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge pending">En attente</span>
+                                                <small class="status-info">Documents complets</small>
+                                            </td>
+                                            <td>
+                                                <div class="assignee-info">
+                                                    <div class="assignee-avatar unassigned">?</div>
+                                                    <span class="assignee-name">Non assigné</span>
+                                                    <button class="assign-btn" onclick="assignVerification('PRV001')">
+                                                        <i class="fas fa-user-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="verification-actions">
+                                                    <button class="action-btn primary" onclick="startVerification('PRV001')" title="Commencer vérification">
+                                                        <i class="fas fa-play"></i>
+                                                    </button>
+                                                    <button class="action-btn info" onclick="viewProviderDetails('PRV001')" title="Voir détails">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="action-btn warning" onclick="requestMoreDocs('PRV001')" title="Demander documents">
+                                                        <i class="fas fa-file-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr class="verification-row high review">
+                                            <td><input type="checkbox" class="verification-checkbox" data-provider-id="PRV002"></td>
+                                            <td>
+                                                <div class="provider-info">
+                                                    <div class="provider-avatar">MK</div>
+                                                    <div class="provider-details">
+                                                        <span class="provider-name">Marie Kamga</span>
+                                                        <small class="provider-email">marie.kamga@email.cm</small>
+                                                        <small class="provider-phone">+237 677 456 789</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="service-info">
+                                                    <span class="service-name">Nettoyage</span>
+                                                    <small class="service-description">Ménage domicile & bureaux</small>
+                                                    <div class="service-badges">
+                                                        <span class="service-badge standard">Standard</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="documents-status">
+                                                    <div class="document-item complete">
+                                                        <i class="fas fa-id-card"></i>
+                                                        <span>CNI Recto</span>
+                                                        <button class="view-btn" onclick="viewDocument('CNI_recto_PRV002')">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="document-item complete">
+                                                        <i class="fas fa-id-card"></i>
+                                                        <span>CNI Verso</span>
+                                                        <button class="view-btn" onclick="viewDocument('CNI_verso_PRV002')">
+                                                            <i class="fas fa-eye"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="document-item missing">
+                                                        <i class="fas fa-file-alt"></i>
+                                                        <span>Certificat Business</span>
+                                                        <span class="missing-label">Manquant</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="submission-date">14 Nov 2024</span>
+                                                <small class="submission-time">09:15</small>
+                                                <small class="days-waiting">Il y a 3 jours</small>
+                                            </td>
+                                            <td>
+                                                <span class="priority-badge high">
+                                                    <i class="fas fa-arrow-up"></i>
+                                                    Élevée
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge review">En révision</span>
+                                                <small class="status-info">Par Admin Martin</small>
+                                            </td>
+                                            <td>
+                                                <div class="assignee-info">
+                                                    <div class="assignee-avatar">MA</div>
+                                                    <span class="assignee-name">Martin Admin</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="verification-actions">
+                                                    <button class="action-btn success" onclick="approveProvider('PRV002')" title="Approuver">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                    <button class="action-btn danger" onclick="rejectProvider('PRV002')" title="Rejeter">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                    <button class="action-btn info" onclick="viewProviderDetails('PRV002')" title="Voir détails">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr class="verification-row normal approved">
+                                            <td><input type="checkbox" class="verification-checkbox" data-provider-id="PRV003"></td>
+                                            <td>
+                                                <div class="provider-info">
+                                                    <div class="provider-avatar">AB</div>
+                                                    <div class="provider-details">
+                                                        <span class="provider-name">Ahmed Bello</span>
+                                                        <small class="provider-email">ahmed.bello@email.cm</small>
+                                                        <small class="provider-phone">+237 698 123 456</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="service-info">
+                                                    <span class="service-name">Électricité</span>
+                                                    <small class="service-description">Installation & réparation</small>
+                                                    <div class="service-badges">
+                                                        <span class="service-badge premium">Premium</span>
+                                                        <span class="service-badge certified">Certifié</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="documents-status">
+                                                    <div class="document-item verified">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        <span>CNI Vérifié</span>
+                                                    </div>
+                                                    <div class="document-item verified">
+                                                        <i class="fas fa-check-circle"></i>
+                                                        <span>Business Vérifié</span>
+                                                    </div>
+                                                    <div class="document-item verified">
+                                                        <i class="fas fa-certificate"></i>
+                                                        <span>Certification Prof.</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="submission-date">12 Nov 2024</span>
+                                                <small class="submission-time">16:45</small>
+                                                <small class="days-waiting">Approuvé</small>
+                                            </td>
+                                            <td>
+                                                <span class="priority-badge normal">
+                                                    <i class="fas fa-minus"></i>
+                                                    Normale
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge approved">Approuvé</span>
+                                                <small class="status-info">Le 13 Nov 2024</small>
+                                            </td>
+                                            <td>
+                                                <div class="assignee-info">
+                                                    <div class="assignee-avatar">SA</div>
+                                                    <span class="assignee-name">Sophie Admin</span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="verification-actions">
+                                                    <button class="action-btn secondary" onclick="viewProviderProfile('PRV003')" title="Voir profil">
+                                                        <i class="fas fa-user"></i>
+                                                    </button>
+                                                    <button class="action-btn info" onclick="viewVerificationHistory('PRV003')" title="Historique">
+                                                        <i class="fas fa-history"></i>
+                                                    </button>
+                                                    <button class="action-btn warning" onclick="suspendProvider('PRV003')" title="Suspendre">
+                                                        <i class="fas fa-pause"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CNI Document Viewer -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-id-card"></i>
+                                Vérificateur de Documents CNI
+                            </h2>
+                            <div class="header-actions">
+                                <button class="btn btn-sm btn-info" onclick="showCNIGuidelines()">
+                                    <i class="fas fa-book"></i>
+                                    Guide de Vérification
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="cni-verification-container grid-container grid-2 grid-gap-lg">
+                            <!-- Document Viewer -->
+                            <div class="document-viewer-card card-base">
+                                <div class="document-viewer-header">
+                                    <h4>Visualiseur de Documents</h4>
+                                    <div class="viewer-controls">
+                                        <button class="viewer-btn" onclick="zoomIn()" title="Zoom avant">
+                                            <i class="fas fa-search-plus"></i>
+                                        </button>
+                                        <button class="viewer-btn" onclick="zoomOut()" title="Zoom arrière">
+                                            <i class="fas fa-search-minus"></i>
+                                        </button>
+                                        <button class="viewer-btn" onclick="resetZoom()" title="Réinitialiser">
+                                            <i class="fas fa-expand-arrows-alt"></i>
+                                        </button>
+                                        <button class="viewer-btn" onclick="downloadDocument()" title="Télécharger">
+                                            <i class="fas fa-download"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="document-viewer-content">
+                                    <div id="documentViewer" class="document-display">
+                                        <div class="no-document-selected">
+                                            <i class="fas fa-file-image"></i>
+                                            <span>Sélectionnez un document à vérifier</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="document-navigation">
+                                    <button class="nav-btn" onclick="previousDocument()" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                        Précédent
+                                    </button>
+                                    <span class="document-counter">- / -</span>
+                                    <button class="nav-btn" onclick="nextDocument()" disabled>
+                                        Suivant
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <!-- Verification Checklist -->
+                            <div class="verification-checklist-card card-base">
+                                <div class="checklist-header">
+                                    <h4>Liste de Vérification CNI</h4>
+                                    <div class="current-provider">
+                                        <span class="provider-label">Prestataire:</span>
+                                        <span class="provider-name" id="currentProviderName">Jean Dupont</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="verification-checklist">
+                                    <div class="checklist-section">
+                                        <h5>Vérifications Obligatoires</h5>
+                                        <div class="checklist-items">
+                                            <label class="checklist-item">
+                                                <input type="checkbox" class="verification-check" id="photoQuality">
+                                                <span class="checkmark"></span>
+                                                <span class="check-label">Photo claire et visible</span>
+                                            </label>
+                                            <label class="checklist-item">
+                                                <input type="checkbox" class="verification-check" id="documentAuthenticity">
+                                                <span class="checkmark"></span>
+                                                <span class="check-label">Document authentique (pas de copie)</span>
+                                            </label>
+                                            <label class="checklist-item">
+                                                <input type="checkbox" class="verification-check" id="nameMatches">
+                                                <span class="checkmark"></span>
+                                                <span class="check-label">Nom correspond au profil</span>
+                                            </label>
+                                            <label class="checklist-item">
+                                                <input type="checkbox" class="verification-check" id="validExpiry">
+                                                <span class="checkmark"></span>
+                                                <span class="check-label">Date d'expiration valide</span>
+                                            </label>
+                                            <label class="checklist-item">
+                                                <input type="checkbox" class="verification-check" id="cameraronianCNI">
+                                                <span class="checkmark"></span>
+                                                <span class="check-label">CNI camerounaise valide</span>
+                                            </label>
+                                            <label class="checklist-item">
+                                                <input type="checkbox" class="verification-check" id="noAlterations">
+                                                <span class="checkmark"></span>
+                                                <span class="check-label">Aucune altération détectée</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="checklist-section">
+                                        <h5>Informations Extraites</h5>
+                                        <div class="extracted-info">
+                                            <div class="info-field">
+                                                <label>Nom complet:</label>
+                                                <input type="text" id="extractedName" placeholder="Nom extrait du CNI">
+                                            </div>
+                                            <div class="info-field">
+                                                <label>Numéro CNI:</label>
+                                                <input type="text" id="extractedCNINumber" placeholder="Numéro CNI">
+                                            </div>
+                                            <div class="info-field">
+                                                <label>Date de naissance:</label>
+                                                <input type="date" id="extractedBirthDate">
+                                            </div>
+                                            <div class="info-field">
+                                                <label>Lieu de naissance:</label>
+                                                <input type="text" id="extractedBirthPlace" placeholder="Lieu de naissance">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="checklist-section">
+                                        <h5>Commentaires de Vérification</h5>
+                                        <div class="verification-comments">
+                                            <textarea id="verificationComments" placeholder="Ajoutez des commentaires sur la vérification..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="verification-actions">
+                                    <button class="verification-action-btn approve" onclick="approveVerification()">
+                                        <i class="fas fa-check-circle"></i>
+                                        Approuver CNI
+                                    </button>
+                                    <button class="verification-action-btn reject" onclick="rejectVerification()">
+                                        <i class="fas fa-times-circle"></i>
+                                        Rejeter CNI
+                                    </button>
+                                    <button class="verification-action-btn request-more" onclick="requestMoreDocuments()">
+                                        <i class="fas fa-file-plus"></i>
+                                        Demander Plus de Documents
+                                    </button>
+                                    <button class="verification-action-btn save-draft" onclick="saveDraft()">
+                                        <i class="fas fa-save"></i>
+                                        Sauvegarder Brouillon
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Page: Service Categories Management -->
+                <div id="service-categoriesPage" class="page-content">
+                    <div class="page-header">
+                        <h1 class="page-title">Gestion des Catégories de Services</h1>
+                        <p class="page-subtitle">Configuration et maintenance des catégories de services avec support multilingue</p>
+                        <div class="header-actions">
+                            <button class="btn btn-info" onclick="exportCategoriesConfig()">
+                                <i class="fas fa-file-export"></i>
+                                Exporter Configuration
+                            </button>
+                            <button class="btn btn-warning" onclick="importCategoriesConfig()">
+                                <i class="fas fa-file-import"></i>
+                                Importer Configuration
+                            </button>
+                            <button class="btn btn-success" onclick="addNewCategory()">
+                                <i class="fas fa-plus"></i>
+                                Nouvelle Catégorie
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Categories Overview -->
+                    <div class="categories-overview-grid grid-container grid-4 grid-gap-lg">
+                        <div class="category-overview-card card-base info">
+                            <div class="category-card-header">
+                                <div class="category-icon-wrapper total">
+                                    <i class="fas fa-layer-group category-icon"></i>
+                                </div>
+                                <div class="category-info">
+                                    <h4>Total Catégories</h4>
+                                    <span class="category-subtitle">Services actifs</span>
+                                </div>
+                                <div class="category-count total">
+                                    <span class="count-number">6</span>
+                                    <span class="count-label">catégories</span>
+                                </div>
+                            </div>
+                            <div class="category-trend">
+                                <i class="fas fa-arrow-up trend-icon"></i>
+                                <span>+1 ce mois</span>
+                            </div>
+                        </div>
+                        
+                        <div class="category-overview-card card-base success">
+                            <div class="category-card-header">
+                                <div class="category-icon-wrapper active">
+                                    <i class="fas fa-check-circle category-icon"></i>
+                                </div>
+                                <div class="category-info">
+                                    <h4>Catégories Actives</h4>
+                                    <span class="category-subtitle">Visibles aux utilisateurs</span>
+                                </div>
+                                <div class="category-count active">
+                                    <span class="count-number">6</span>
+                                    <span class="count-label">actives</span>
+                                </div>
+                            </div>
+                            <div class="category-trend">
+                                <i class="fas fa-check trend-icon"></i>
+                                <span>100% actives</span>
+                            </div>
+                        </div>
+                        
+                        <div class="category-overview-card card-base warning">
+                            <div class="category-card-header">
+                                <div class="category-icon-wrapper providers">
+                                    <i class="fas fa-users category-icon"></i>
+                                </div>
+                                <div class="category-info">
+                                    <h4>Prestataires Inscrits</h4>
+                                    <span class="category-subtitle">Total toutes catégories</span>
+                                </div>
+                                <div class="category-count providers">
+                                    <span class="count-number">847</span>
+                                    <span class="count-label">prestataires</span>
+                                </div>
+                            </div>
+                            <div class="category-trend">
+                                <i class="fas fa-arrow-up trend-icon"></i>
+                                <span>+12% ce mois</span>
+                            </div>
+                        </div>
+                        
+                        <div class="category-overview-card card-base excellent">
+                            <div class="category-card-header">
+                                <div class="category-icon-wrapper languages">
+                                    <i class="fas fa-globe category-icon"></i>
+                                </div>
+                                <div class="category-info">
+                                    <h4>Langues Supportées</h4>
+                                    <span class="category-subtitle">Français & Anglais</span>
+                                </div>
+                                <div class="category-count languages">
+                                    <span class="count-number">2</span>
+                                    <span class="count-label">langues</span>
+                                </div>
+                            </div>
+                            <div class="category-trend">
+                                <i class="fas fa-globe trend-icon"></i>
+                                <span>Support complet</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Categories Management -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-cogs"></i>
+                                Configuration des Catégories
+                            </h2>
+                            <div class="header-actions">
+                                <div class="language-toggle">
+                                    <button class="lang-btn active" data-lang="fr" onclick="switchLanguage('fr')">FR</button>
+                                    <button class="lang-btn" data-lang="en" onclick="switchLanguage('en')">EN</button>
+                                </div>
+                                <select class="form-select" id="categoryFilter" onchange="filterCategoriesBy(this.value)">
+                                    <option value="all">Toutes les catégories</option>
+                                    <option value="active">Actives uniquement</option>
+                                    <option value="inactive">Inactives uniquement</option>
+                                    <option value="high-demand">Forte demande</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="categories-management-container">
+                            <div class="categories-grid">
+                                <!-- Hair & Beauty Category -->
+                                <div class="category-management-card card-base active" data-category="hairBeauty">
+                                    <div class="category-card-header">
+                                        <div class="category-color-indicator" style="background-color: #FF6B6B;"></div>
+                                        <div class="category-basic-info">
+                                            <h4 class="category-name-display" data-fr="Coiffure & Beauté" data-en="Hair & Beauty">Coiffure & Beauté</h4>
+                                            <span class="category-key">hairBeauty</span>
+                                        </div>
+                                        <div class="category-status-toggle">
+                                            <label class="switch">
+                                                <input type="checkbox" checked onchange="toggleCategoryStatus('hairBeauty')">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-stats-row">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Prestataires</span>
+                                            <span class="stat-value">156</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Réservations/Mois</span>
+                                            <span class="stat-value">1,247</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenus</span>
+                                            <span class="stat-value">487k XAF</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-translations">
+                                        <div class="translation-field">
+                                            <label>Nom (Français):</label>
+                                            <input type="text" value="Coiffure & Beauté" onchange="updateCategoryTranslation('hairBeauty', 'fr', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Nom (Anglais):</label>
+                                            <input type="text" value="Hair & Beauty" onchange="updateCategoryTranslation('hairBeauty', 'en', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Français):</label>
+                                            <textarea onchange="updateCategoryTranslation('hairBeauty', 'fr', 'description', this.value)">Services de coiffure, manucure, soins du visage et beauté</textarea>
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Anglais):</label>
+                                            <textarea onchange="updateCategoryTranslation('hairBeauty', 'en', 'description', this.value)">Hair styling, manicure, facial care and beauty services</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-settings">
+                                        <div class="setting-row">
+                                            <label>Couleur de catégorie:</label>
+                                            <input type="color" value="#FF6B6B" onchange="updateCategoryColor('hairBeauty', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Icône FontAwesome:</label>
+                                            <input type="text" value="fas fa-cut" onchange="updateCategoryIcon('hairBeauty', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Ordre d'affichage:</label>
+                                            <input type="number" value="1" min="1" onchange="updateCategoryOrder('hairBeauty', this.value)">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-actions">
+                                        <button class="action-btn primary" onclick="editCategory('hairBeauty')">
+                                            <i class="fas fa-edit"></i>
+                                            Modifier
+                                        </button>
+                                        <button class="action-btn info" onclick="manageCategorySubcategories('hairBeauty')">
+                                            <i class="fas fa-list"></i>
+                                            Sous-catégories
+                                        </button>
+                                        <button class="action-btn warning" onclick="duplicateCategory('hairBeauty')">
+                                            <i class="fas fa-copy"></i>
+                                            Dupliquer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cleaning Category -->
+                                <div class="category-management-card card-base active" data-category="cleaning">
+                                    <div class="category-card-header">
+                                        <div class="category-color-indicator" style="background-color: #4ECDC4;"></div>
+                                        <div class="category-basic-info">
+                                            <h4 class="category-name-display" data-fr="Nettoyage" data-en="Cleaning">Nettoyage</h4>
+                                            <span class="category-key">cleaning</span>
+                                        </div>
+                                        <div class="category-status-toggle">
+                                            <label class="switch">
+                                                <input type="checkbox" checked onchange="toggleCategoryStatus('cleaning')">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-stats-row">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Prestataires</span>
+                                            <span class="stat-value">203</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Réservations/Mois</span>
+                                            <span class="stat-value">1,856</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenus</span>
+                                            <span class="stat-value">623k XAF</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-translations">
+                                        <div class="translation-field">
+                                            <label>Nom (Français):</label>
+                                            <input type="text" value="Nettoyage" onchange="updateCategoryTranslation('cleaning', 'fr', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Nom (Anglais):</label>
+                                            <input type="text" value="Cleaning" onchange="updateCategoryTranslation('cleaning', 'en', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Français):</label>
+                                            <textarea onchange="updateCategoryTranslation('cleaning', 'fr', 'description', this.value)">Services de ménage, nettoyage domicile et bureaux</textarea>
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Anglais):</label>
+                                            <textarea onchange="updateCategoryTranslation('cleaning', 'en', 'description', this.value)">Housekeeping, home and office cleaning services</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-settings">
+                                        <div class="setting-row">
+                                            <label>Couleur de catégorie:</label>
+                                            <input type="color" value="#4ECDC4" onchange="updateCategoryColor('cleaning', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Icône FontAwesome:</label>
+                                            <input type="text" value="fas fa-broom" onchange="updateCategoryIcon('cleaning', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Ordre d'affichage:</label>
+                                            <input type="number" value="2" min="1" onchange="updateCategoryOrder('cleaning', this.value)">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-actions">
+                                        <button class="action-btn primary" onclick="editCategory('cleaning')">
+                                            <i class="fas fa-edit"></i>
+                                            Modifier
+                                        </button>
+                                        <button class="action-btn info" onclick="manageCategorySubcategories('cleaning')">
+                                            <i class="fas fa-list"></i>
+                                            Sous-catégories
+                                        </button>
+                                        <button class="action-btn warning" onclick="duplicateCategory('cleaning')">
+                                            <i class="fas fa-copy"></i>
+                                            Dupliquer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Events Category -->
+                                <div class="category-management-card card-base active" data-category="events">
+                                    <div class="category-card-header">
+                                        <div class="category-color-indicator" style="background-color: #45B7D1;"></div>
+                                        <div class="category-basic-info">
+                                            <h4 class="category-name-display" data-fr="Événements" data-en="Events">Événements</h4>
+                                            <span class="category-key">events</span>
+                                        </div>
+                                        <div class="category-status-toggle">
+                                            <label class="switch">
+                                                <input type="checkbox" checked onchange="toggleCategoryStatus('events')">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-stats-row">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Prestataires</span>
+                                            <span class="stat-value">89</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Réservations/Mois</span>
+                                            <span class="stat-value">445</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenus</span>
+                                            <span class="stat-value">892k XAF</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-translations">
+                                        <div class="translation-field">
+                                            <label>Nom (Français):</label>
+                                            <input type="text" value="Événements" onchange="updateCategoryTranslation('events', 'fr', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Nom (Anglais):</label>
+                                            <input type="text" value="Events" onchange="updateCategoryTranslation('events', 'en', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Français):</label>
+                                            <textarea onchange="updateCategoryTranslation('events', 'fr', 'description', this.value)">Organisation d'événements, mariages, fêtes et cérémonies</textarea>
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Anglais):</label>
+                                            <textarea onchange="updateCategoryTranslation('events', 'en', 'description', this.value)">Event planning, weddings, parties and ceremonies</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-settings">
+                                        <div class="setting-row">
+                                            <label>Couleur de catégorie:</label>
+                                            <input type="color" value="#45B7D1" onchange="updateCategoryColor('events', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Icône FontAwesome:</label>
+                                            <input type="text" value="fas fa-calendar-alt" onchange="updateCategoryIcon('events', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Ordre d'affichage:</label>
+                                            <input type="number" value="3" min="1" onchange="updateCategoryOrder('events', this.value)">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-actions">
+                                        <button class="action-btn primary" onclick="editCategory('events')">
+                                            <i class="fas fa-edit"></i>
+                                            Modifier
+                                        </button>
+                                        <button class="action-btn info" onclick="manageCategorySubcategories('events')">
+                                            <i class="fas fa-list"></i>
+                                            Sous-catégories
+                                        </button>
+                                        <button class="action-btn warning" onclick="duplicateCategory('events')">
+                                            <i class="fas fa-copy"></i>
+                                            Dupliquer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Repairs Category -->
+                                <div class="category-management-card card-base active" data-category="repairs">
+                                    <div class="category-card-header">
+                                        <div class="category-color-indicator" style="background-color: #96CEB4;"></div>
+                                        <div class="category-basic-info">
+                                            <h4 class="category-name-display" data-fr="Réparations" data-en="Repairs">Réparations</h4>
+                                            <span class="category-key">repairs</span>
+                                        </div>
+                                        <div class="category-status-toggle">
+                                            <label class="switch">
+                                                <input type="checkbox" checked onchange="toggleCategoryStatus('repairs')">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-stats-row">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Prestataires</span>
+                                            <span class="stat-value">234</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Réservations/Mois</span>
+                                            <span class="stat-value">1,567</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenus</span>
+                                            <span class="stat-value">734k XAF</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-translations">
+                                        <div class="translation-field">
+                                            <label>Nom (Français):</label>
+                                            <input type="text" value="Réparations" onchange="updateCategoryTranslation('repairs', 'fr', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Nom (Anglais):</label>
+                                            <input type="text" value="Repairs" onchange="updateCategoryTranslation('repairs', 'en', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Français):</label>
+                                            <textarea onchange="updateCategoryTranslation('repairs', 'fr', 'description', this.value)">Réparations électroniques, plomberie, électricité et maintenance</textarea>
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Anglais):</label>
+                                            <textarea onchange="updateCategoryTranslation('repairs', 'en', 'description', this.value)">Electronics repairs, plumbing, electrical and maintenance services</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-settings">
+                                        <div class="setting-row">
+                                            <label>Couleur de catégorie:</label>
+                                            <input type="color" value="#96CEB4" onchange="updateCategoryColor('repairs', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Icône FontAwesome:</label>
+                                            <input type="text" value="fas fa-tools" onchange="updateCategoryIcon('repairs', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Ordre d'affichage:</label>
+                                            <input type="number" value="4" min="1" onchange="updateCategoryOrder('repairs', this.value)">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-actions">
+                                        <button class="action-btn primary" onclick="editCategory('repairs')">
+                                            <i class="fas fa-edit"></i>
+                                            Modifier
+                                        </button>
+                                        <button class="action-btn info" onclick="manageCategorySubcategories('repairs')">
+                                            <i class="fas fa-list"></i>
+                                            Sous-catégories
+                                        </button>
+                                        <button class="action-btn warning" onclick="duplicateCategory('repairs')">
+                                            <i class="fas fa-copy"></i>
+                                            Dupliquer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Tutoring Category -->
+                                <div class="category-management-card card-base active" data-category="tutoring">
+                                    <div class="category-card-header">
+                                        <div class="category-color-indicator" style="background-color: #FECA57;"></div>
+                                        <div class="category-basic-info">
+                                            <h4 class="category-name-display" data-fr="Soutien Scolaire" data-en="Tutoring">Soutien Scolaire</h4>
+                                            <span class="category-key">tutoring</span>
+                                        </div>
+                                        <div class="category-status-toggle">
+                                            <label class="switch">
+                                                <input type="checkbox" checked onchange="toggleCategoryStatus('tutoring')">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-stats-row">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Prestataires</span>
+                                            <span class="stat-value">98</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Réservations/Mois</span>
+                                            <span class="stat-value">765</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenus</span>
+                                            <span class="stat-value">312k XAF</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-translations">
+                                        <div class="translation-field">
+                                            <label>Nom (Français):</label>
+                                            <input type="text" value="Soutien Scolaire" onchange="updateCategoryTranslation('tutoring', 'fr', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Nom (Anglais):</label>
+                                            <input type="text" value="Tutoring" onchange="updateCategoryTranslation('tutoring', 'en', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Français):</label>
+                                            <textarea onchange="updateCategoryTranslation('tutoring', 'fr', 'description', this.value)">Cours particuliers, soutien scolaire et formation académique</textarea>
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Anglais):</label>
+                                            <textarea onchange="updateCategoryTranslation('tutoring', 'en', 'description', this.value)">Private lessons, academic support and educational training</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-settings">
+                                        <div class="setting-row">
+                                            <label>Couleur de catégorie:</label>
+                                            <input type="color" value="#FECA57" onchange="updateCategoryColor('tutoring', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Icône FontAwesome:</label>
+                                            <input type="text" value="fas fa-graduation-cap" onchange="updateCategoryIcon('tutoring', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Ordre d'affichage:</label>
+                                            <input type="number" value="5" min="1" onchange="updateCategoryOrder('tutoring', this.value)">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-actions">
+                                        <button class="action-btn primary" onclick="editCategory('tutoring')">
+                                            <i class="fas fa-edit"></i>
+                                            Modifier
+                                        </button>
+                                        <button class="action-btn info" onclick="manageCategorySubcategories('tutoring')">
+                                            <i class="fas fa-list"></i>
+                                            Sous-catégories
+                                        </button>
+                                        <button class="action-btn warning" onclick="duplicateCategory('tutoring')">
+                                            <i class="fas fa-copy"></i>
+                                            Dupliquer
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Photography Category -->
+                                <div class="category-management-card card-base active" data-category="photography">
+                                    <div class="category-card-header">
+                                        <div class="category-color-indicator" style="background-color: #FF9FF3;"></div>
+                                        <div class="category-basic-info">
+                                            <h4 class="category-name-display" data-fr="Photographie" data-en="Photography">Photographie</h4>
+                                            <span class="category-key">photography</span>
+                                        </div>
+                                        <div class="category-status-toggle">
+                                            <label class="switch">
+                                                <input type="checkbox" checked onchange="toggleCategoryStatus('photography')">
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-stats-row">
+                                        <div class="stat-item">
+                                            <span class="stat-label">Prestataires</span>
+                                            <span class="stat-value">67</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Réservations/Mois</span>
+                                            <span class="stat-value">423</span>
+                                        </div>
+                                        <div class="stat-item">
+                                            <span class="stat-label">Revenus</span>
+                                            <span class="stat-value">567k XAF</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-translations">
+                                        <div class="translation-field">
+                                            <label>Nom (Français):</label>
+                                            <input type="text" value="Photographie" onchange="updateCategoryTranslation('photography', 'fr', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Nom (Anglais):</label>
+                                            <input type="text" value="Photography" onchange="updateCategoryTranslation('photography', 'en', 'name', this.value)">
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Français):</label>
+                                            <textarea onchange="updateCategoryTranslation('photography', 'fr', 'description', this.value)">Services de photographie, vidéographie et retouche d'images</textarea>
+                                        </div>
+                                        <div class="translation-field">
+                                            <label>Description (Anglais):</label>
+                                            <textarea onchange="updateCategoryTranslation('photography', 'en', 'description', this.value)">Photography services, videography and image editing</textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-settings">
+                                        <div class="setting-row">
+                                            <label>Couleur de catégorie:</label>
+                                            <input type="color" value="#FF9FF3" onchange="updateCategoryColor('photography', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Icône FontAwesome:</label>
+                                            <input type="text" value="fas fa-camera" onchange="updateCategoryIcon('photography', this.value)">
+                                        </div>
+                                        <div class="setting-row">
+                                            <label>Ordre d'affichage:</label>
+                                            <input type="number" value="6" min="1" onchange="updateCategoryOrder('photography', this.value)">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-actions">
+                                        <button class="action-btn primary" onclick="editCategory('photography')">
+                                            <i class="fas fa-edit"></i>
+                                            Modifier
+                                        </button>
+                                        <button class="action-btn info" onclick="manageCategorySubcategories('photography')">
+                                            <i class="fas fa-list"></i>
+                                            Sous-catégories
+                                        </button>
+                                        <button class="action-btn warning" onclick="duplicateCategory('photography')">
+                                            <i class="fas fa-copy"></i>
+                                            Dupliquer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Global Category Settings -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">
+                                <i class="fas fa-globe"></i>
+                                Paramètres Globaux des Catégories
+                            </h2>
+                        </div>
+                        
+                        <div class="global-settings-container grid-container grid-2 grid-gap-lg">
+                            <div class="global-settings-card card-base">
+                                <h4>Configuration Multilingue</h4>
+                                
+                                <div class="multilingual-settings">
+                                    <div class="setting-group">
+                                        <label>Langue par défaut:</label>
+                                        <select id="defaultLanguage" onchange="updateDefaultLanguage(this.value)">
+                                            <option value="fr" selected>Français</option>
+                                            <option value="en">Anglais</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="setting-group">
+                                        <label>Langues actives:</label>
+                                        <div class="language-checkboxes">
+                                            <label>
+                                                <input type="checkbox" checked disabled> Français (Obligatoire)
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" checked onchange="toggleLanguageSupport('en')"> Anglais
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="setting-group">
+                                        <label>Mode de détection de langue:</label>
+                                        <select id="languageDetection" onchange="updateLanguageDetection(this.value)">
+                                            <option value="browser">Détection navigateur</option>
+                                            <option value="manual" selected>Sélection manuelle</option>
+                                            <option value="location">Basé sur la localisation</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="sync-actions">
+                                    <button class="btn btn-primary" onclick="syncTranslations()">
+                                        <i class="fas fa-sync"></i>
+                                        Synchroniser Traductions
+                                    </button>
+                                    <button class="btn btn-info" onclick="exportTranslations()">
+                                        <i class="fas fa-download"></i>
+                                        Exporter i18n
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="global-settings-card card-base">
+                                <h4>Configuration d'Affichage</h4>
+                                
+                                <div class="display-settings">
+                                    <div class="setting-group">
+                                        <label>Style d'affichage:</label>
+                                        <select id="displayStyle" onchange="updateDisplayStyle(this.value)">
+                                            <option value="grid" selected>Grille</option>
+                                            <option value="list">Liste</option>
+                                            <option value="carousel">Carrousel</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="setting-group">
+                                        <label>Catégories par ligne (mobile):</label>
+                                        <input type="number" id="categoriesPerRow" value="2" min="1" max="4" onchange="updateCategoriesPerRow(this.value)">
+                                    </div>
+                                    
+                                    <div class="setting-group">
+                                        <label>Affichage des icônes:</label>
+                                        <div class="toggle-options">
+                                            <label>
+                                                <input type="checkbox" checked onchange="toggleCategoryIcons()"> Afficher les icônes
+                                            </label>
+                                            <label>
+                                                <input type="checkbox" checked onchange="toggleCategoryColors()"> Utiliser les couleurs
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="preview-actions">
+                                    <button class="btn btn-secondary" onclick="previewCategoryLayout()">
+                                        <i class="fas fa-eye"></i>
+                                        Aperçu Mobile
+                                    </button>
+                                    <button class="btn btn-warning" onclick="resetToDefaults()">
+                                        <i class="fas fa-undo"></i>
+                                        Réinitialiser
+                                    </button>
                                 </div>
                             </div>
                         </div>
