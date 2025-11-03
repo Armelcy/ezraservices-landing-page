@@ -1835,6 +1835,264 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Enhanced Service Cards Styles */
+        .services-grid-enhanced {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .service-card-enhanced {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card-enhanced:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .service-card-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #3b82f6, #10b981);
+        }
+
+        .service-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .service-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .service-icon {
+            color: #ffffff;
+            font-size: 1.25rem;
+        }
+
+        .service-info-enhanced {
+            flex: 1;
+        }
+
+        .service-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 0 0 0.25rem 0;
+        }
+
+        .service-version-badge {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .service-status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .service-status-indicator.online {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .service-status-indicator.warning {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .service-status-indicator.error {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulse 2s infinite;
+        }
+
+        .status-text {
+            font-weight: 500;
+        }
+
+        .service-metrics-enhanced {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .metric-card:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            background: #ffffff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #3b82f6;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-content {
+            flex: 1;
+        }
+
+        .metric-label {
+            display: block;
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .metric-value small {
+            font-weight: 400;
+            color: #64748b;
+            font-size: 0.75rem;
+        }
+
+        .service-actions-enhanced {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            min-height: 44px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-btn.primary {
+            background: #3b82f6;
+            color: #ffffff;
+        }
+
+        .action-btn.primary:hover {
+            background: #2563eb;
+        }
+
+        .action-btn.secondary {
+            background: #f1f5f9;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .action-btn.secondary:hover {
+            background: #e2e8f0;
+            color: #475569;
+        }
+
+        .action-btn.warning {
+            background: #f59e0b;
+            color: #ffffff;
+        }
+
+        .action-btn.warning:hover {
+            background: #d97706;
+        }
+
+        .action-btn i {
+            font-size: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .services-grid-enhanced {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .service-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .service-metrics-enhanced {
+                grid-template-columns: 1fr;
+            }
+            
+            .service-actions-enhanced {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -5229,135 +5487,195 @@
                             <h2 class="section-title">Services Système</h2>
                         </div>
                         
-                        <div class="services-grid">
-                            <div class="service-card">
-                                <div class="service-header">
-                                    <div class="service-info">
-                                        <h4>API Gateway</h4>
-                                        <span class="service-version">v2.1.4</span>
+                        <div class="services-grid-enhanced">
+                            <div class="service-card-enhanced">
+                                <div class="service-card-header">
+                                    <div class="service-icon-wrapper">
+                                        <i class="fas fa-server service-icon"></i>
                                     </div>
-                                    <div class="service-status online">
-                                        <i class="fas fa-circle"></i>
-                                        En Ligne
+                                    <div class="service-info-enhanced">
+                                        <h4 class="service-name">API Gateway</h4>
+                                        <span class="service-version-badge">v2.1.4</span>
                                     </div>
-                                </div>
-                                <div class="service-metrics">
-                                    <div class="metric">
-                                        <span class="label">Uptime:</span>
-                                        <span class="value">15j 4h 23m</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="label">Requêtes:</span>
-                                        <span class="value">2.4M aujourd'hui</span>
+                                    <div class="service-status-indicator online">
+                                        <div class="status-dot"></div>
+                                        <span class="status-text">En Ligne</span>
                                     </div>
                                 </div>
-                                <div class="service-actions">
-                                    <button class="btn btn-sm btn-secondary" onclick="restartService('api_gateway')">
+                                
+                                <div class="service-metrics-enhanced">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Uptime</span>
+                                            <span class="metric-value">15j 4h 23m</span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Requêtes</span>
+                                            <span class="metric-value">2.4M <small>aujourd'hui</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-actions-enhanced">
+                                    <button class="action-btn secondary" onclick="restartService('api_gateway')" title="Redémarrer le service">
                                         <i class="fas fa-redo"></i>
-                                        Redémarrer
+                                        <span>Redémarrer</span>
                                     </button>
-                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('api_gateway')">
+                                    <button class="action-btn primary" onclick="viewServiceLogs('api_gateway')" title="Voir les logs">
                                         <i class="fas fa-file-alt"></i>
-                                        Logs
+                                        <span>Logs</span>
                                     </button>
                                 </div>
                             </div>
                             
-                            <div class="service-card">
-                                <div class="service-header">
-                                    <div class="service-info">
-                                        <h4>Service Paiements</h4>
-                                        <span class="service-version">v1.8.2</span>
+                            <div class="service-card-enhanced">
+                                <div class="service-card-header">
+                                    <div class="service-icon-wrapper">
+                                        <i class="fas fa-credit-card service-icon"></i>
                                     </div>
-                                    <div class="service-status online">
-                                        <i class="fas fa-circle"></i>
-                                        En Ligne
+                                    <div class="service-info-enhanced">
+                                        <h4 class="service-name">Service Paiements</h4>
+                                        <span class="service-version-badge">v1.8.2</span>
                                     </div>
-                                </div>
-                                <div class="service-metrics">
-                                    <div class="metric">
-                                        <span class="label">Uptime:</span>
-                                        <span class="value">7j 12h 45m</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="label">Transactions:</span>
-                                        <span class="value">342 aujourd'hui</span>
+                                    <div class="service-status-indicator online">
+                                        <div class="status-dot"></div>
+                                        <span class="status-text">En Ligne</span>
                                     </div>
                                 </div>
-                                <div class="service-actions">
-                                    <button class="btn btn-sm btn-secondary" onclick="restartService('payment_service')">
+                                
+                                <div class="service-metrics-enhanced">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Uptime</span>
+                                            <span class="metric-value">7j 12h 45m</span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-exchange-alt"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Transactions</span>
+                                            <span class="metric-value">342 <small>aujourd'hui</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-actions-enhanced">
+                                    <button class="action-btn secondary" onclick="restartService('payment_service')" title="Redémarrer le service">
                                         <i class="fas fa-redo"></i>
-                                        Redémarrer
+                                        <span>Redémarrer</span>
                                     </button>
-                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('payment_service')">
+                                    <button class="action-btn primary" onclick="viewServiceLogs('payment_service')" title="Voir les logs">
                                         <i class="fas fa-file-alt"></i>
-                                        Logs
+                                        <span>Logs</span>
                                     </button>
                                 </div>
                             </div>
                             
-                            <div class="service-card">
-                                <div class="service-header">
-                                    <div class="service-info">
-                                        <h4>Service Notifications</h4>
-                                        <span class="service-version">v1.4.1</span>
+                            <div class="service-card-enhanced">
+                                <div class="service-card-header">
+                                    <div class="service-icon-wrapper">
+                                        <i class="fas fa-bell service-icon"></i>
                                     </div>
-                                    <div class="service-status warning">
-                                        <i class="fas fa-circle"></i>
-                                        Dégradé
+                                    <div class="service-info-enhanced">
+                                        <h4 class="service-name">Service Notifications</h4>
+                                        <span class="service-version-badge">v1.4.1</span>
                                     </div>
-                                </div>
-                                <div class="service-metrics">
-                                    <div class="metric">
-                                        <span class="label">Uptime:</span>
-                                        <span class="value">3j 8h 12m</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="label">Messages:</span>
-                                        <span class="value">1.2K aujourd'hui</span>
+                                    <div class="service-status-indicator warning">
+                                        <div class="status-dot"></div>
+                                        <span class="status-text">Dégradé</span>
                                     </div>
                                 </div>
-                                <div class="service-actions">
-                                    <button class="btn btn-sm btn-warning" onclick="restartService('notification_service')">
+                                
+                                <div class="service-metrics-enhanced">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Uptime</span>
+                                            <span class="metric-value">3j 8h 12m</span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Messages</span>
+                                            <span class="metric-value">1.2K <small>aujourd'hui</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-actions-enhanced">
+                                    <button class="action-btn warning" onclick="restartService('notification_service')" title="Redémarrer le service">
                                         <i class="fas fa-redo"></i>
-                                        Redémarrer
+                                        <span>Redémarrer</span>
                                     </button>
-                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('notification_service')">
+                                    <button class="action-btn primary" onclick="viewServiceLogs('notification_service')" title="Voir les logs">
                                         <i class="fas fa-file-alt"></i>
-                                        Logs
+                                        <span>Logs</span>
                                     </button>
                                 </div>
                             </div>
                             
-                            <div class="service-card">
-                                <div class="service-header">
-                                    <div class="service-info">
-                                        <h4>Service de Géolocalisation</h4>
-                                        <span class="service-version">v1.2.7</span>
+                            <div class="service-card-enhanced">
+                                <div class="service-card-header">
+                                    <div class="service-icon-wrapper">
+                                        <i class="fas fa-map-marker-alt service-icon"></i>
                                     </div>
-                                    <div class="service-status online">
-                                        <i class="fas fa-circle"></i>
-                                        En Ligne
+                                    <div class="service-info-enhanced">
+                                        <h4 class="service-name">Service de Géolocalisation</h4>
+                                        <span class="service-version-badge">v1.2.7</span>
                                     </div>
-                                </div>
-                                <div class="service-metrics">
-                                    <div class="metric">
-                                        <span class="label">Uptime:</span>
-                                        <span class="value">21j 15h 33m</span>
-                                    </div>
-                                    <div class="metric">
-                                        <span class="label">Requêtes:</span>
-                                        <span class="value">5.7K aujourd'hui</span>
+                                    <div class="service-status-indicator online">
+                                        <div class="status-dot"></div>
+                                        <span class="status-text">En Ligne</span>
                                     </div>
                                 </div>
-                                <div class="service-actions">
-                                    <button class="btn btn-sm btn-secondary" onclick="restartService('location_service')">
+                                
+                                <div class="service-metrics-enhanced">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Uptime</span>
+                                            <span class="metric-value">21j 15h 33m</span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Requêtes</span>
+                                            <span class="metric-value">5.7K <small>aujourd'hui</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-actions-enhanced">
+                                    <button class="action-btn secondary" onclick="restartService('location_service')" title="Redémarrer le service">
                                         <i class="fas fa-redo"></i>
-                                        Redémarrer
+                                        <span>Redémarrer</span>
                                     </button>
-                                    <button class="btn btn-sm btn-primary" onclick="viewServiceLogs('location_service')">
+                                    <button class="action-btn primary" onclick="viewServiceLogs('location_service')" title="Voir les logs">
                                         <i class="fas fa-file-alt"></i>
-                                        Logs
+                                        <span>Logs</span>
                                     </button>
                                 </div>
                             </div>
