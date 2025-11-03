@@ -537,6 +537,60 @@
             animation: progressFill 1.5s ease-out;
         }
         
+        /* Enhanced Audience Analytics */
+        .engagement-stats, .conversion-stats {
+            padding: 1rem 0;
+        }
+        
+        .engagement-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .engagement-item:last-child {
+            border-bottom: none;
+        }
+        
+        .engagement-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
+        .engagement-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .conversion-metric {
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .metric-circle {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+        
+        .circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--ezra-navy);
+        }
+        
+        .metric-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+        
         .card-header-enhanced {
             display: flex;
             align-items: center;
@@ -4315,9 +4369,12 @@
                             <h2 class="section-title">Analyse des Audiences</h2>
                         </div>
                         
-                        <div class="audience-analytics">
-                            <div class="audience-card">
-                                <h4>Répartition par Âge</h4>
+                        <div class="audience-analytics grid-container grid-2 grid-gap-lg">
+                            <div class="audience-card card-base">
+                                <div class="card-header-enhanced">
+                                    <h4>Répartition par Âge</h4>
+                                    <i class="fas fa-users"></i>
+                                </div>
                                 <div class="audience-chart">
                                     <div class="age-group">
                                         <span class="age-label">18-25 ans</span>
@@ -4350,8 +4407,11 @@
                                 </div>
                             </div>
                             
-                            <div class="audience-card">
-                                <h4>Top Villes</h4>
+                            <div class="audience-card card-base">
+                                <div class="card-header-enhanced">
+                                    <h4>Top Villes</h4>
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
                                 <div class="cities-list">
                                     <div class="city-item">
                                         <span class="city-name">Douala</span>
@@ -4371,10 +4431,21 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <!-- Additional Audience Insights -->
+                        <div class="content-section">
+                            <div class="section-header">
+                                <h2 class="section-title">Comportement des Utilisateurs</h2>
+                            </div>
                             
-                            <div class="audience-card">
-                                <h4>Appareils Utilisés</h4>
-                                <div class="devices-chart">
+                            <div class="behavior-analytics grid-container grid-3 grid-gap-md">
+                                <div class="audience-card card-base">
+                                    <div class="card-header-enhanced">
+                                        <h4>Appareils Utilisés</h4>
+                                        <i class="fas fa-devices"></i>
+                                    </div>
+                                    <div class="devices-chart">
                                     <div class="device-item">
                                         <i class="fas fa-mobile-alt"></i>
                                         <div class="device-info">
@@ -4398,6 +4469,48 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <div class="audience-card card-base">
+                                <div class="card-header-enhanced">
+                                    <h4>Temps d'Engagement</h4>
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="engagement-stats">
+                                    <div class="engagement-item">
+                                        <span class="engagement-label">Session Moyenne</span>
+                                        <span class="engagement-value">4m 23s</span>
+                                    </div>
+                                    <div class="engagement-item">
+                                        <span class="engagement-label">Pages par Session</span>
+                                        <span class="engagement-value">3.2</span>
+                                    </div>
+                                    <div class="engagement-item">
+                                        <span class="engagement-label">Taux de Rebond</span>
+                                        <span class="engagement-value">32%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="audience-card card-base">
+                                <div class="card-header-enhanced">
+                                    <h4>Conversion</h4>
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div class="conversion-stats">
+                                    <div class="conversion-metric">
+                                        <div class="metric-circle">
+                                            <svg width="60" height="60">
+                                                <circle cx="30" cy="30" r="25" fill="none" stroke="#e2e8f0" stroke-width="4"/>
+                                                <circle cx="30" cy="30" r="25" fill="none" stroke="#10b981" stroke-width="4" 
+                                                        stroke-dasharray="157" stroke-dashoffset="94" stroke-linecap="round"/>
+                                            </svg>
+                                            <span class="circle-text">40%</span>
+                                        </div>
+                                        <span class="metric-label">Taux de Conversion</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -5509,6 +5622,165 @@
                             <div class="stat-value" id="activeAlerts">2</div>
                             <div class="stat-label">Alertes Actives</div>
                             <div class="stat-trend negative">↗ +1 depuis ce matin</div>
+                        </div>
+                    </div>
+                    
+                    <!-- System Services Status -->
+                    <div class="content-section">
+                        <div class="section-header">
+                            <h2 class="section-title">État des Services</h2>
+                            <div class="header-actions">
+                                <button class="btn btn-secondary" onclick="refreshAllServices()">
+                                    <i class="fas fa-sync-alt"></i>
+                                    Actualiser Tout
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="services-grid-enhanced grid-container grid-auto-400 grid-gap-lg">
+                            <div class="service-card-enhanced card-base floating-action">
+                                <div class="service-card-header card-header-enhanced">
+                                    <div class="service-icon-wrapper">
+                                        <i class="fas fa-server service-icon"></i>
+                                    </div>
+                                    <div class="service-info-enhanced">
+                                        <h4 class="service-name">API Gateway</h4>
+                                        <span class="service-version-badge">v2.1.4</span>
+                                    </div>
+                                    <div class="service-status-indicator online">
+                                        <div class="status-dot"></div>
+                                        <span class="status-text">En Ligne</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-metrics-enhanced">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Uptime</span>
+                                            <span class="metric-value">15j 4h 23m</span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-chart-line"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Requêtes</span>
+                                            <span class="metric-value">2.4M <small>aujourd'hui</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-actions-enhanced">
+                                    <button class="action-btn secondary" onclick="restartService('api_gateway')" title="Redémarrer le service">
+                                        <i class="fas fa-redo"></i>
+                                        <span>Redémarrer</span>
+                                    </button>
+                                    <button class="action-btn primary" onclick="viewServiceLogs('api_gateway')" title="Voir les logs">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>Logs</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card-enhanced card-base floating-action">
+                                <div class="service-card-header card-header-enhanced">
+                                    <div class="service-icon-wrapper">
+                                        <i class="fas fa-database service-icon"></i>
+                                    </div>
+                                    <div class="service-info-enhanced">
+                                        <h4 class="service-name">Base de Données</h4>
+                                        <span class="service-version-badge">PostgreSQL 14</span>
+                                    </div>
+                                    <div class="service-status-indicator online">
+                                        <div class="status-dot"></div>
+                                        <span class="status-text">En Ligne</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-metrics-enhanced">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-hdd"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Utilisation</span>
+                                            <span class="metric-value">67%</span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-tachometer-alt"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Transactions</span>
+                                            <span class="metric-value">342 <small>aujourd'hui</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-actions-enhanced">
+                                    <button class="action-btn secondary" onclick="optimizeDatabase()" title="Optimiser la base">
+                                        <i class="fas fa-magic"></i>
+                                        <span>Optimiser</span>
+                                    </button>
+                                    <button class="action-btn primary" onclick="viewDatabaseLogs()" title="Voir les logs">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>Logs</span>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="service-card-enhanced card-base floating-action">
+                                <div class="service-card-header card-header-enhanced">
+                                    <div class="service-icon-wrapper">
+                                        <i class="fas fa-cloud service-icon"></i>
+                                    </div>
+                                    <div class="service-info-enhanced">
+                                        <h4 class="service-name">Stockage Cloud</h4>
+                                        <span class="service-version-badge">S3 Compatible</span>
+                                    </div>
+                                    <div class="service-status-indicator warning">
+                                        <div class="status-dot"></div>
+                                        <span class="status-text">Attention</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-metrics-enhanced">
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-archive"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Espace</span>
+                                            <span class="metric-value">1.2TB <small>utilisé</small></span>
+                                        </div>
+                                    </div>
+                                    <div class="metric-card">
+                                        <div class="metric-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </div>
+                                        <div class="metric-content">
+                                            <span class="metric-label">Uploads</span>
+                                            <span class="metric-value">89 <small>aujourd'hui</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="service-actions-enhanced">
+                                    <button class="action-btn secondary" onclick="cleanupStorage()" title="Nettoyer le stockage">
+                                        <i class="fas fa-broom"></i>
+                                        <span>Nettoyer</span>
+                                    </button>
+                                    <button class="action-btn primary" onclick="viewStorageLogs()" title="Voir les logs">
+                                        <i class="fas fa-file-alt"></i>
+                                        <span>Logs</span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
