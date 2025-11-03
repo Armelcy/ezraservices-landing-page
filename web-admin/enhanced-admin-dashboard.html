@@ -99,6 +99,13 @@
             background: rgba(255, 255, 255, 0.1);
             color: white;
             border-left-color: var(--ezra-gold);
+            transform: translateX(4px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .nav-item:active {
+            transform: translateX(2px);
+            transition: all 0.1s ease;
         }
         
         .nav-item.active {
@@ -246,8 +253,14 @@
         }
         
         .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn:active {
+            transform: translateY(0) scale(0.98);
+            transition: all 0.1s ease;
         }
         
         .btn-secondary {
@@ -364,19 +377,164 @@
             }
         }
         
-        /* Enhanced card consistency */
+        /* ===============================================
+           MICRO-INTERACTIONS & ANIMATIONS
+           =============================================== */
+        
+        /* Enhanced card consistency with micro-interactions */
         .card-base {
             background: var(--surface);
             border-radius: 12px;
             padding: 1.5rem;
             border: 1px solid var(--border);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-base::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: left 0.6s ease;
+            z-index: 1;
         }
         
         .card-base:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            border-color: var(--ezra-gold);
+        }
+        
+        .card-base:hover::before {
+            left: 100%;
+        }
+        
+        .card-base:active {
+            transform: translateY(-2px) scale(1.01);
+            transition: all 0.1s ease;
+        }
+        
+        /* Animated loading states */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .animate-pulse { animation: pulse 2s infinite; }
+        .animate-slide-up { animation: slideInUp 0.6s ease-out; }
+        .animate-fade-scale { animation: fadeInScale 0.4s ease-out; }
+        
+        /* Ripple effect for buttons */
+        .btn-ripple {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-ripple::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-ripple:active::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* Enhanced tab interactions */
+        .tab-button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .tab-button::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--ezra-gold);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .tab-button:hover::before {
+            width: 80%;
+        }
+        
+        .tab-button.active::before {
+            width: 100%;
+        }
+        
+        /* Floating action effects */
+        .floating-action {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .floating-action:hover {
+            transform: translateY(-8px) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Stat value counting animation */
+        .stat-value {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-value:hover {
+            transform: scale(1.1);
+            color: var(--ezra-gold);
+        }
+        
+        /* Progress bar animations */
+        @keyframes progressFill {
+            from { width: 0; }
+            to { width: var(--progress-width, 50%); }
+        }
+        
+        .progress-bar {
+            animation: progressFill 1.5s ease-out;
         }
         
         .card-header-enhanced {
@@ -10472,9 +10630,127 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
             }
         }
         
+        // Enhanced Micro-interactions Manager
+        class MicroInteractionsManager {
+            constructor() {
+                this.initializeAnimations();
+                this.initializeRippleEffects();
+                this.initializeIntersectionObserver();
+            }
+            
+            initializeAnimations() {
+                // Add ripple effect to all buttons
+                document.querySelectorAll('.btn, .action-btn').forEach(btn => {
+                    btn.classList.add('btn-ripple');
+                });
+                
+                // Add floating action effect to specific cards
+                document.querySelectorAll('.quick-action-card, .service-card-enhanced').forEach(card => {
+                    card.classList.add('floating-action');
+                });
+                
+                // Add slide-up animation to cards
+                document.querySelectorAll('.card-base').forEach((card, index) => {
+                    card.style.animationDelay = `${index * 0.1}s`;
+                    card.classList.add('animate-slide-up');
+                });
+            }
+            
+            initializeRippleEffects() {
+                document.querySelectorAll('.btn-ripple').forEach(button => {
+                    button.addEventListener('click', this.createRipple.bind(this));
+                });
+            }
+            
+            createRipple(event) {
+                const button = event.currentTarget;
+                const rect = button.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = event.clientX - rect.left - size / 2;
+                const y = event.clientY - rect.top - size / 2;
+                
+                const ripple = document.createElement('span');
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.4);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                
+                button.style.position = 'relative';
+                button.style.overflow = 'hidden';
+                button.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+            }
+            
+            initializeIntersectionObserver() {
+                const observerOptions = {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                };
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('animate-fade-scale');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, observerOptions);
+                
+                document.querySelectorAll('.stat-card, .chart-container').forEach(el => {
+                    observer.observe(el);
+                });
+            }
+            
+            animateCounters() {
+                document.querySelectorAll('.stat-value').forEach(counter => {
+                    const target = parseInt(counter.textContent.replace(/\D/g, ''));
+                    const duration = 2000;
+                    const increment = target / (duration / 16);
+                    let current = 0;
+                    
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.textContent = Math.floor(current).toLocaleString();
+                            requestAnimationFrame(updateCounter);
+                        } else {
+                            counter.textContent = target.toLocaleString();
+                        }
+                    };
+                    
+                    updateCounter();
+                });
+            }
+        }
+        
+        // Add ripple animation keyframes to CSS
+        const rippleStyles = document.createElement('style');
+        rippleStyles.textContent = `
+            @keyframes ripple {
+                0% { transform: scale(0); opacity: 1; }
+                100% { transform: scale(4); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(rippleStyles);
+
         // Initialize dashboard when page loads
         document.addEventListener('DOMContentLoaded', () => {
             window.enhancedAdmin = new EnhancedAdminDashboard();
+            window.microInteractions = new MicroInteractionsManager();
+            
+            // Start counter animations after a short delay
+            setTimeout(() => {
+                window.microInteractions.animateCounters();
+            }, 500);
         });
     </script>
 </body>
