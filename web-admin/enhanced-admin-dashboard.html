@@ -8040,6 +8040,379 @@
                 });
             }
 
+            createSystemPerformanceChart() {
+                const ctx = document.getElementById('systemPerformanceChart');
+                if (!ctx) return;
+
+                const data = {
+                    labels: ['CPU', 'RAM', 'Stockage', 'Réseau'],
+                    datasets: [{
+                        label: 'Usage (%)',
+                        data: [34, 67, 23, 45],
+                        backgroundColor: [
+                            '#3B82F6',
+                            '#10B981', 
+                            '#F59E0B',
+                            '#8B5CF6'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                };
+
+                window.monitoringCharts.systemPerformance = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 12,
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '65%',
+                        elements: {
+                            arc: {
+                                borderWidth: 2
+                            }
+                        }
+                    }
+                });
+            }
+
+            createDatabasePerformanceChart() {
+                const ctx = document.getElementById('databasePerformanceChart');
+                if (!ctx) return;
+
+                // Generate time-based data for database metrics
+                const labels = [];
+                const connectionData = [];
+                const queryData = [];
+                
+                for (let i = 23; i >= 0; i--) {
+                    const hour = new Date();
+                    hour.setHours(hour.getHours() - i);
+                    labels.push(hour.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                    
+                    connectionData.push(15 + Math.random() * 20);
+                    queryData.push(100 + Math.random() * 100);
+                }
+
+                window.monitoringCharts.databasePerformance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Connexions Actives',
+                            data: connectionData,
+                            borderColor: '#3B82F6',
+                            backgroundColor: '#3B82F620',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Requêtes/sec',
+                            data: queryData,
+                            borderColor: '#10B981',
+                            backgroundColor: '#10B98120',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Connexions'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Requêtes/sec'
+                                },
+                                grid: {
+                                    drawOnChartArea: false,
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createAPIResponseChart() {
+                const ctx = document.getElementById('apiResponseChart');
+                if (!ctx) return;
+
+                // Generate realistic API response time data
+                const labels = [];
+                const responseData = [];
+                const errorData = [];
+                
+                for (let i = 59; i >= 0; i--) {
+                    const time = new Date();
+                    time.setMinutes(time.getMinutes() - i);
+                    labels.push(time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
+                    
+                    responseData.push(200 + Math.random() * 400 + Math.sin(i / 10) * 100);
+                    errorData.push(Math.random() * 5);
+                }
+
+                window.monitoringCharts.apiResponse = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Temps de Réponse (ms)',
+                            data: responseData,
+                            borderColor: '#3B82F6',
+                            backgroundColor: '#3B82F610',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.3,
+                            yAxisID: 'y'
+                        }, {
+                            label: 'Taux d\'Erreur (%)',
+                            data: errorData,
+                            borderColor: '#EF4444',
+                            backgroundColor: '#EF444420',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.3,
+                            yAxisID: 'y1'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                type: 'linear',
+                                display: true,
+                                position: 'left',
+                                title: {
+                                    display: true,
+                                    text: 'Temps (ms)'
+                                }
+                            },
+                            y1: {
+                                type: 'linear',
+                                display: true,
+                                position: 'right',
+                                title: {
+                                    display: true,
+                                    text: 'Erreurs (%)'
+                                },
+                                grid: {
+                                    drawOnChartArea: false,
+                                },
+                                max: 10
+                            }
+                        }
+                    }
+                });
+            }
+
+            createErrorRateChart() {
+                const ctx = document.getElementById('errorRateChart');
+                if (!ctx) return;
+
+                const data = {
+                    labels: ['4xx Erreurs', '5xx Erreurs', 'Succès'],
+                    datasets: [{
+                        data: [1.2, 0.9, 97.9],
+                        backgroundColor: [
+                            '#F59E0B',
+                            '#EF4444',
+                            '#10B981'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                };
+
+                window.monitoringCharts.errorRate = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        },
+                        cutout: '60%'
+                    }
+                });
+            }
+
+            createThroughputChart() {
+                const ctx = document.getElementById('throughputChart');
+                if (!ctx) return;
+
+                // Generate throughput data
+                const labels = [];
+                const throughputData = [];
+                
+                for (let i = 11; i >= 0; i--) {
+                    const time = new Date();
+                    time.setHours(time.getHours() - i);
+                    labels.push(time.toLocaleTimeString('fr-FR', { hour: '2-digit' }) + 'h');
+                    
+                    throughputData.push(800 + Math.random() * 800);
+                }
+
+                window.monitoringCharts.throughput = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Requêtes/min',
+                            data: throughputData,
+                            backgroundColor: '#3B82F6',
+                            borderColor: '#1D4ED8',
+                            borderWidth: 1,
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                grid: {
+                                    display: false
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Requêtes/min'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            setupMonitoringTimeControls() {
+                document.querySelectorAll('.time-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        const range = button.dataset.range;
+                        this.updateMonitoringTimeRange(range);
+                    });
+                });
+            }
+
+            updateMonitoringTimeRange(range) {
+                console.log(`Updating monitoring charts for ${range} range`);
+                // Regenerate chart data based on time range
+                this.createAPIResponseChart();
+                this.createDatabasePerformanceChart();
+                this.createThroughputChart();
+            }
+
+            startRealTimeUpdates() {
+                // Update monitoring charts every 30 seconds
+                if (this.monitoringInterval) {
+                    clearInterval(this.monitoringInterval);
+                }
+                
+                this.monitoringInterval = setInterval(() => {
+                    this.updateRealTimeMetrics();
+                }, 30000);
+            }
+
+            updateRealTimeMetrics() {
+                // Update system metrics in real-time
+                const cpuValue = 30 + Math.random() * 20;
+                const ramValue = 60 + Math.random() * 20;
+                const storageValue = 20 + Math.random() * 10;
+                
+                document.getElementById('cpuValue').textContent = Math.round(cpuValue) + '%';
+                document.getElementById('ramValue').textContent = Math.round(ramValue) + '%';
+                document.getElementById('storageValue').textContent = Math.round(storageValue) + '%';
+                
+                // Update database metrics
+                document.getElementById('dbConnections').textContent = Math.round(20 + Math.random() * 10) + '/100';
+                document.getElementById('dbQueries').textContent = Math.round(140 + Math.random() * 20);
+                
+                // Update API metrics
+                document.getElementById('avgResponse').textContent = Math.round(240 + Math.random() * 20) + 'ms';
+                document.getElementById('requestsPerMin').textContent = (1200 + Math.round(Math.random() * 100)).toLocaleString();
+                
+                console.log('📊 Real-time metrics updated');
+            }
+
             createCampaignPerformanceChart() {
                 const ctx = document.getElementById('campaignPerformanceChart');
                 if (!ctx) return;
@@ -9244,379 +9617,6 @@ Date programmée: ${booking.scheduled_date ? new Date(booking.scheduled_date).to
             window.enhancedAdmin.showToast('Génération de rapport personnalisé...', 'info');
             // TODO: Implement custom report generation
         }
-
-            createSystemPerformanceChart() {
-                const ctx = document.getElementById('systemPerformanceChart');
-                if (!ctx) return;
-
-                const data = {
-                    labels: ['CPU', 'RAM', 'Stockage', 'Réseau'],
-                    datasets: [{
-                        label: 'Usage (%)',
-                        data: [34, 67, 23, 45],
-                        backgroundColor: [
-                            '#3B82F6',
-                            '#10B981', 
-                            '#F59E0B',
-                            '#8B5CF6'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                };
-
-                window.monitoringCharts.systemPerformance = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: data,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 15,
-                                    usePointStyle: true,
-                                    font: {
-                                        size: 12,
-                                        weight: '500'
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.label + ': ' + context.parsed + '%';
-                                    }
-                                }
-                            }
-                        },
-                        cutout: '65%',
-                        elements: {
-                            arc: {
-                                borderWidth: 2
-                            }
-                        }
-                    }
-                });
-            }
-
-            createDatabasePerformanceChart() {
-                const ctx = document.getElementById('databasePerformanceChart');
-                if (!ctx) return;
-
-                // Generate time-based data for database metrics
-                const labels = [];
-                const connectionData = [];
-                const queryData = [];
-                
-                for (let i = 23; i >= 0; i--) {
-                    const hour = new Date();
-                    hour.setHours(hour.getHours() - i);
-                    labels.push(hour.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
-                    
-                    connectionData.push(15 + Math.random() * 20);
-                    queryData.push(100 + Math.random() * 100);
-                }
-
-                window.monitoringCharts.databasePerformance = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Connexions Actives',
-                            data: connectionData,
-                            borderColor: '#3B82F6',
-                            backgroundColor: '#3B82F620',
-                            borderWidth: 2,
-                            tension: 0.4,
-                            yAxisID: 'y'
-                        }, {
-                            label: 'Requêtes/sec',
-                            data: queryData,
-                            borderColor: '#10B981',
-                            backgroundColor: '#10B98120',
-                            borderWidth: 2,
-                            tension: 0.4,
-                            yAxisID: 'y1'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            },
-                            y: {
-                                type: 'linear',
-                                display: true,
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: 'Connexions'
-                                }
-                            },
-                            y1: {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                title: {
-                                    display: true,
-                                    text: 'Requêtes/sec'
-                                },
-                                grid: {
-                                    drawOnChartArea: false,
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            createAPIResponseChart() {
-                const ctx = document.getElementById('apiResponseChart');
-                if (!ctx) return;
-
-                // Generate realistic API response time data
-                const labels = [];
-                const responseData = [];
-                const errorData = [];
-                
-                for (let i = 59; i >= 0; i--) {
-                    const time = new Date();
-                    time.setMinutes(time.getMinutes() - i);
-                    labels.push(time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }));
-                    
-                    responseData.push(200 + Math.random() * 400 + Math.sin(i / 10) * 100);
-                    errorData.push(Math.random() * 5);
-                }
-
-                window.monitoringCharts.apiResponse = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Temps de Réponse (ms)',
-                            data: responseData,
-                            borderColor: '#3B82F6',
-                            backgroundColor: '#3B82F610',
-                            borderWidth: 2,
-                            fill: true,
-                            tension: 0.3,
-                            yAxisID: 'y'
-                        }, {
-                            label: 'Taux d\'Erreur (%)',
-                            data: errorData,
-                            borderColor: '#EF4444',
-                            backgroundColor: '#EF444420',
-                            borderWidth: 2,
-                            fill: false,
-                            tension: 0.3,
-                            yAxisID: 'y1'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            },
-                            y: {
-                                type: 'linear',
-                                display: true,
-                                position: 'left',
-                                title: {
-                                    display: true,
-                                    text: 'Temps (ms)'
-                                }
-                            },
-                            y1: {
-                                type: 'linear',
-                                display: true,
-                                position: 'right',
-                                title: {
-                                    display: true,
-                                    text: 'Erreurs (%)'
-                                },
-                                grid: {
-                                    drawOnChartArea: false,
-                                },
-                                max: 10
-                            }
-                        }
-                    }
-                });
-            }
-
-            createErrorRateChart() {
-                const ctx = document.getElementById('errorRateChart');
-                if (!ctx) return;
-
-                const data = {
-                    labels: ['4xx Erreurs', '5xx Erreurs', 'Succès'],
-                    datasets: [{
-                        data: [1.2, 0.9, 97.9],
-                        backgroundColor: [
-                            '#F59E0B',
-                            '#EF4444',
-                            '#10B981'
-                        ],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                };
-
-                window.monitoringCharts.errorRate = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: data,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'bottom',
-                                labels: {
-                                    padding: 15,
-                                    usePointStyle: true
-                                }
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return context.label + ': ' + context.parsed + '%';
-                                    }
-                                }
-                            }
-                        },
-                        cutout: '60%'
-                    }
-                });
-            }
-
-            createThroughputChart() {
-                const ctx = document.getElementById('throughputChart');
-                if (!ctx) return;
-
-                // Generate throughput data
-                const labels = [];
-                const throughputData = [];
-                
-                for (let i = 11; i >= 0; i--) {
-                    const time = new Date();
-                    time.setHours(time.getHours() - i);
-                    labels.push(time.toLocaleTimeString('fr-FR', { hour: '2-digit' }) + 'h');
-                    
-                    throughputData.push(800 + Math.random() * 800);
-                }
-
-                window.monitoringCharts.throughput = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Requêtes/min',
-                            data: throughputData,
-                            backgroundColor: '#3B82F6',
-                            borderColor: '#1D4ED8',
-                            borderWidth: 1,
-                            borderRadius: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                display: false
-                            }
-                        },
-                        scales: {
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            },
-                            y: {
-                                beginAtZero: true,
-                                title: {
-                                    display: true,
-                                    text: 'Requêtes/min'
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-
-            setupMonitoringTimeControls() {
-                document.querySelectorAll('.time-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        
-                        document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-                        
-                        const range = button.dataset.range;
-                        this.updateMonitoringTimeRange(range);
-                    });
-                });
-            }
-
-            updateMonitoringTimeRange(range) {
-                console.log(`Updating monitoring charts for ${range} range`);
-                // Regenerate chart data based on time range
-                this.createAPIResponseChart();
-                this.createDatabasePerformanceChart();
-                this.createThroughputChart();
-            }
-
-            startRealTimeUpdates() {
-                // Update monitoring charts every 30 seconds
-                if (this.monitoringInterval) {
-                    clearInterval(this.monitoringInterval);
-                }
-                
-                this.monitoringInterval = setInterval(() => {
-                    this.updateRealTimeMetrics();
-                }, 30000);
-            }
-
-            updateRealTimeMetrics() {
-                // Update system metrics in real-time
-                const cpuValue = 30 + Math.random() * 20;
-                const ramValue = 60 + Math.random() * 20;
-                const storageValue = 20 + Math.random() * 10;
-                
-                document.getElementById('cpuValue').textContent = Math.round(cpuValue) + '%';
-                document.getElementById('ramValue').textContent = Math.round(ramValue) + '%';
-                document.getElementById('storageValue').textContent = Math.round(storageValue) + '%';
-                
-                // Update database metrics
-                document.getElementById('dbConnections').textContent = Math.round(20 + Math.random() * 10) + '/100';
-                document.getElementById('dbQueries').textContent = Math.round(140 + Math.random() * 20);
-                
-                // Update API metrics
-                document.getElementById('avgResponse').textContent = Math.round(240 + Math.random() * 20) + 'ms';
-                document.getElementById('requestsPerMin').textContent = (1200 + Math.round(Math.random() * 100)).toLocaleString();
-                
-                console.log('📊 Real-time metrics updated');
-            }
         
         // Transactions Functions
         function exportTransactions() {
