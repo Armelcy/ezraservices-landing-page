@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opérations Groupées - Ezra Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .operation-success { @apply bg-green-100 text-green-800 border-green-200; }
+        .operation-error { @apply bg-red-100 text-red-800 border-red-200; }
+        .operation-pending { @apply bg-yellow-100 text-yellow-800 border-yellow-200; }
+        .tab-active { @apply bg-blue-600 text-white; }
+        .tab-inactive { @apply bg-gray-200 text-gray-700 hover:bg-gray-300; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="hover:text-blue-200">
+                    <i class="fas fa-arrow-left mr-2"></i>Tableau de bord
+                </a>
+            </div>
+            <h1 class="text-xl font-bold">Opérations Groupées</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm bg-green-600 px-3 py-1 rounded-full" id="operationsCount">0 Opérations</span>
+                <button onclick="openQuickActions()" class="px-4 py-2 bg-green-600 rounded-md hover:bg-green-700">
+                    <i class="fas fa-bolt mr-2"></i>Actions Rapides
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <!-- Tab Navigation -->
+        <div class="bg-white rounded-lg shadow-md mb-6">
+            <div class="flex border-b">
+                <button onclick="switchTab('users')" id="usersTab" class="px-6 py-3 font-medium rounded-tl-lg tab-active">
+                    <i class="fas fa-users mr-2"></i>Gestion des Utilisateurs
+                </button>
+                <button onclick="switchTab('bookings')" id="bookingsTab" class="px-6 py-3 font-medium tab-inactive">
+                    <i class="fas fa-calendar mr-2"></i>Gestion des Réservations
+                </button>
+                <button onclick="switchTab('services')" id="servicesTab" class="px-6 py-3 font-medium tab-inactive">
+                    <i class="fas fa-cog mr-2"></i>Gestion des Services
+                </button>
+                <button onclick="switchTab('operations')" id="operationsTab" class="px-6 py-3 font-medium rounded-tr-lg tab-inactive">
+                    <i class="fas fa-history mr-2"></i>Historique des Opérations
+                </button>
+            </div>
+        </div>
+
+        <!-- Users Management Tab -->
+        <div id="usersContent" class="tab-content">
+            <!-- User Selection -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Sélection des Utilisateurs</h3>
+                
+                <!-- Selection Criteria -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Rôle</label>
+                        <select id="userRoleFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Tous les rôles</option>
+                            <option value="customer">Clients</option>
+                            <option value="provider">Prestataires</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+                        <select id="userStatusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Tous les statuts</option>
+                            <option value="active">Actif</option>
+                            <option value="inactive">Inactif</option>
+                            <option value="suspended">Suspendu</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Inscription</label>
+                        <select id="userDateFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Toutes les dates</option>
+                            <option value="today">Aujourd'hui</option>
+                            <option value="week">Cette semaine</option>
+                            <option value="month">Ce mois</option>
+                            <option value="quarter">Ce trimestre</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Ville</label>
+                        <select id="userCityFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Toutes les villes</option>
+                            <option value="douala">Douala</option>
+                            <option value="yaounde">Yaoundé</option>
+                            <option value="bafoussam">Bafoussam</option>
+                            <option value="bamenda">Bamenda</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Activité</label>
+                        <select id="userActivityFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Toute activité</option>
+                            <option value="never_logged">Jamais connecté</option>
+                            <option value="inactive_30">Inactif 30+ jours</option>
+                            <option value="no_bookings">Aucune réservation</option>
+                            <option value="high_activity">Haute activité</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button onclick="previewUserSelection()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <i class="fas fa-search mr-2"></i>Prévisualiser la Sélection
+                    </button>
+                    <span id="userSelectionCount" class="text-sm text-gray-600">0 utilisateurs sélectionnés</span>
+                </div>
+            </div>
+
+            <!-- User Actions -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Actions sur les Utilisateurs</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button onclick="openUserAction('status_update')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-toggle-on text-green-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Mise à Jour du Statut</div>
+                                <div class="text-sm text-gray-500">Activer/Désactiver/Suspendre</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openUserAction('send_message')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-blue-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Envoi de Messages</div>
+                                <div class="text-sm text-gray-500">Email ou notification push</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openUserAction('profile_update')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-edit text-purple-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Mise à Jour Profil</div>
+                                <div class="text-sm text-gray-500">Informations en lot</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="openUserAction('export_data')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-download text-green-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Export de Données</div>
+                                <div class="text-sm text-gray-500">CSV, Excel, JSON</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openUserAction('delete_accounts')" class="p-4 border border-red-300 rounded-lg hover:bg-red-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-trash text-red-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium text-red-600">Suppression</div>
+                                <div class="text-sm text-red-500">Suppression définitive</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openUserAction('gdpr_request')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-shield-alt text-orange-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Conformité RGPD</div>
+                                <div class="text-sm text-gray-500">Export/Suppression</div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bookings Management Tab -->
+        <div id="bookingsContent" class="tab-content hidden">
+            <!-- Booking Selection -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Sélection des Réservations</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Statut</label>
+                        <select id="bookingStatusFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Tous les statuts</option>
+                            <option value="pending">En attente</option>
+                            <option value="confirmed">Confirmée</option>
+                            <option value="in_progress">En cours</option>
+                            <option value="completed">Terminée</option>
+                            <option value="cancelled">Annulée</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Période</label>
+                        <select id="bookingDateFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Toutes les périodes</option>
+                            <option value="today">Aujourd'hui</option>
+                            <option value="tomorrow">Demain</option>
+                            <option value="week">Cette semaine</option>
+                            <option value="month">Ce mois</option>
+                            <option value="overdue">En retard</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+                        <select id="bookingCategoryFilter" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            <option value="">Toutes les catégories</option>
+                            <option value="cleaning">Nettoyage</option>
+                            <option value="repairs">Réparations</option>
+                            <option value="beauty">Beauté</option>
+                            <option value="tech">Technologie</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <button onclick="previewBookingSelection()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <i class="fas fa-search mr-2"></i>Prévisualiser la Sélection
+                    </button>
+                    <span id="bookingSelectionCount" class="text-sm text-gray-600">0 réservations sélectionnées</span>
+                </div>
+            </div>
+
+            <!-- Booking Actions -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Actions sur les Réservations</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button onclick="openBookingAction('status_change')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-exchange-alt text-blue-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Changement de Statut</div>
+                                <div class="text-sm text-gray-500">Confirmer/Annuler en lot</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openBookingAction('reschedule')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar-alt text-green-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Reprogrammation</div>
+                                <div class="text-sm text-gray-500">Nouvelle date/heure</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openBookingAction('assign_provider')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-user-plus text-purple-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Assignation</div>
+                                <div class="text-sm text-gray-500">Assigner des prestataires</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openBookingAction('send_reminders')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-bell text-yellow-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Rappels</div>
+                                <div class="text-sm text-gray-500">Notifications automatiques</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openBookingAction('payment_follow')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-money-bill-wave text-green-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Suivi Paiements</div>
+                                <div class="text-sm text-gray-500">Relances et rappels</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openBookingAction('export_report')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-chart-bar text-blue-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Rapport</div>
+                                <div class="text-sm text-gray-500">Génération de rapports</div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Services Management Tab -->
+        <div id="servicesContent" class="tab-content hidden">
+            <!-- Service Management Content -->
+            <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold mb-4">Gestion des Services</h3>
+                <p class="text-gray-600 mb-4">Opérations groupées sur les services et prestataires</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button onclick="openServiceAction('bulk_approve')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Approbation en Lot</div>
+                                <div class="text-sm text-gray-500">Approuver plusieurs services</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openServiceAction('price_update')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-tag text-blue-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Mise à Jour Prix</div>
+                                <div class="text-sm text-gray-500">Ajustement des tarifs</div>
+                            </div>
+                        </div>
+                    </button>
+
+                    <button onclick="openServiceAction('category_change')" class="p-4 border border-gray-300 rounded-lg hover:bg-gray-50 text-left">
+                        <div class="flex items-center">
+                            <i class="fas fa-folder text-purple-600 text-xl mr-3"></i>
+                            <div>
+                                <div class="font-medium">Changement Catégorie</div>
+                                <div class="text-sm text-gray-500">Recatégorisation</div>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Operations History Tab -->
+        <div id="operationsContent" class="tab-content hidden">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Historique des Opérations</h3>
+                    <button onclick="clearOperationHistory()" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                        <i class="fas fa-trash mr-2"></i>Nettoyer l'Historique
+                    </button>
+                </div>
+                
+                <div id="operationHistory" class="space-y-4">
+                    <!-- Operation history will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Modal -->
+    <div id="actionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium" id="actionModalTitle">Action</h3>
+                        <button onclick="closeActionModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="actionModalContent">
+                        <!-- Action specific content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Modal -->
+    <div id="progressModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-md w-full">
+                <div class="p-6">
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                        <h3 class="text-lg font-medium mb-2">Opération en Cours</h3>
+                        <p class="text-gray-600 mb-4" id="progressMessage">Traitement en cours...</p>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="progressBar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2" id="progressDetails">0 / 0 éléments traités</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script>
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let currentTab = 'users';
+        let selectedUsers = [];
+        let selectedBookings = [];
+        let operationHistory = [];
+
+        // Load page data
+        window.addEventListener('load', async function() {
+            await checkAdminAuth();
+            loadOperationHistory();
+            updateOperationsCount();
+        });
+
+        async function checkAdminAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role, permissions')
+                .eq('id', user.id)
+                .single();
+
+            if (!profile || profile.role !== 'admin' || 
+                !profile.permissions?.includes('bulk_operations')) {
+                alert('Accès non autorisé');
+                window.location.href = 'index.html';
+            }
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-active, .tab-inactive').forEach(tab => {
+                tab.className = tab.className.replace('tab-active', 'tab-inactive');
+            });
+            document.getElementById(tabName + 'Tab').className = 
+                document.getElementById(tabName + 'Tab').className.replace('tab-inactive', 'tab-active');
+
+            // Show/hide tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.add('hidden');
+            });
+            document.getElementById(tabName + 'Content').classList.remove('hidden');
+
+            currentTab = tabName;
+        }
+
+        async function previewUserSelection() {
+            try {
+                // Build query based on filters
+                let query = supabase.from('profiles').select('id, full_name, email, role, status, city, created_at');
+
+                // Apply filters
+                const role = document.getElementById('userRoleFilter').value;
+                const status = document.getElementById('userStatusFilter').value;
+                const city = document.getElementById('userCityFilter').value;
+
+                if (role) query = query.eq('role', role);
+                if (status) query = query.eq('status', status);
+                if (city) query = query.eq('city', city);
+
+                // Date filter
+                const dateFilter = document.getElementById('userDateFilter').value;
+                if (dateFilter) {
+                    const now = new Date();
+                    let startDate;
+                    
+                    switch (dateFilter) {
+                        case 'today':
+                            startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                            break;
+                        case 'week':
+                            startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                            break;
+                        case 'month':
+                            startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                            break;
+                        case 'quarter':
+                            startDate = new Date(now.getFullYear(), Math.floor(now.getMonth() / 3) * 3, 1);
+                            break;
+                    }
+                    
+                    if (startDate) {
+                        query = query.gte('created_at', startDate.toISOString());
+                    }
+                }
+
+                const { data: users, error } = await query;
+                if (error) throw error;
+
+                selectedUsers = users || [];
+                document.getElementById('userSelectionCount').textContent = 
+                    `${selectedUsers.length} utilisateurs sélectionnés`;
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la prévisualisation');
+            }
+        }
+
+        async function previewBookingSelection() {
+            try {
+                let query = supabase.from('bookings').select(`
+                    id, status, scheduled_date, created_at,
+                    service:services(title, category),
+                    customer:profiles!bookings_customer_id_fkey(full_name)
+                `);
+
+                // Apply filters
+                const status = document.getElementById('bookingStatusFilter').value;
+                const category = document.getElementById('bookingCategoryFilter').value;
+
+                if (status) query = query.eq('status', status);
+
+                const { data: bookings, error } = await query;
+                if (error) throw error;
+
+                selectedBookings = bookings || [];
+                document.getElementById('bookingSelectionCount').textContent = 
+                    `${selectedBookings.length} réservations sélectionnées`;
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la prévisualisation');
+            }
+        }
+
+        function openUserAction(actionType) {
+            if (selectedUsers.length === 0) {
+                alert('Veuillez d\'abord sélectionner des utilisateurs');
+                return;
+            }
+
+            const actionContent = getUserActionContent(actionType);
+            document.getElementById('actionModalTitle').textContent = actionContent.title;
+            document.getElementById('actionModalContent').innerHTML = actionContent.content;
+            document.getElementById('actionModal').classList.remove('hidden');
+        }
+
+        function getUserActionContent(actionType) {
+            switch (actionType) {
+                case 'status_update':
+                    return {
+                        title: 'Mise à Jour du Statut',
+                        content: `
+                            <div class="space-y-4">
+                                <p class="text-gray-600">${selectedUsers.length} utilisateurs sélectionnés</p>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nouveau Statut</label>
+                                    <select id="newStatus" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                        <option value="active">Actif</option>
+                                        <option value="inactive">Inactif</option>
+                                        <option value="suspended">Suspendu</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Raison (optionnel)</label>
+                                    <textarea id="statusReason" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Raison du changement de statut..."></textarea>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="notifyUsers" class="mr-2">
+                                    <label for="notifyUsers" class="text-sm">Notifier les utilisateurs</label>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeActionModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Annuler</button>
+                                    <button onclick="executeUserStatusUpdate()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Appliquer</button>
+                                </div>
+                            </div>
+                        `
+                    };
+
+                case 'send_message':
+                    return {
+                        title: 'Envoi de Messages',
+                        content: `
+                            <div class="space-y-4">
+                                <p class="text-gray-600">${selectedUsers.length} utilisateurs sélectionnés</p>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Type de Message</label>
+                                    <select id="messageType" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                        <option value="email">Email</option>
+                                        <option value="push">Notification Push</option>
+                                        <option value="both">Email + Push</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Sujet</label>
+                                    <input type="text" id="messageSubject" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Sujet du message">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                                    <textarea id="messageContent" rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="Contenu du message..."></textarea>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="scheduleMessage" class="mr-2">
+                                    <label for="scheduleMessage" class="text-sm">Programmer l'envoi</label>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeActionModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Annuler</button>
+                                    <button onclick="executeSendMessage()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Envoyer</button>
+                                </div>
+                            </div>
+                        `
+                    };
+
+                case 'export_data':
+                    return {
+                        title: 'Export de Données',
+                        content: `
+                            <div class="space-y-4">
+                                <p class="text-gray-600">${selectedUsers.length} utilisateurs sélectionnés</p>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Format d'Export</label>
+                                    <select id="exportFormat" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                        <option value="csv">CSV</option>
+                                        <option value="excel">Excel</option>
+                                        <option value="json">JSON</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Données à Inclure</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" checked class="mr-2">
+                                            <span class="text-sm">Informations de base</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-2">
+                                            <span class="text-sm">Historique des réservations</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-2">
+                                            <span class="text-sm">Données de paiement</span>
+                                        </label>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-2">
+                                            <span class="text-sm">Logs d'activité</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="flex justify-end space-x-3">
+                                    <button onclick="closeActionModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Annuler</button>
+                                    <button onclick="executeDataExport()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Exporter</button>
+                                </div>
+                            </div>
+                        `
+                    };
+
+                default:
+                    return {
+                        title: 'Action',
+                        content: '<p>Action en cours de développement</p>'
+                    };
+            }
+        }
+
+        function closeActionModal() {
+            document.getElementById('actionModal').classList.add('hidden');
+        }
+
+        async function executeUserStatusUpdate() {
+            const newStatus = document.getElementById('newStatus').value;
+            const reason = document.getElementById('statusReason').value;
+            const notify = document.getElementById('notifyUsers').checked;
+
+            showProgressModal('Mise à jour du statut utilisateurs', selectedUsers.length);
+
+            try {
+                for (let i = 0; i < selectedUsers.length; i++) {
+                    const user = selectedUsers[i];
+                    
+                    // Update user status
+                    const { error } = await supabase
+                        .from('profiles')
+                        .update({ 
+                            status: newStatus,
+                            status_reason: reason 
+                        })
+                        .eq('id', user.id);
+
+                    if (error) throw error;
+
+                    // Log the action
+                    await logBulkOperation('user_status_update', user.id, 
+                        `Statut changé vers ${newStatus}${reason ? ': ' + reason : ''}`);
+
+                    updateProgress(i + 1, selectedUsers.length);
+                }
+
+                hideProgressModal();
+                closeActionModal();
+                alert('Statut mis à jour avec succès pour tous les utilisateurs');
+                
+                // Add to operation history
+                addToOperationHistory('Mise à jour statut utilisateurs', selectedUsers.length, 'success');
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                hideProgressModal();
+                alert('Erreur lors de la mise à jour: ' + error.message);
+                addToOperationHistory('Mise à jour statut utilisateurs', selectedUsers.length, 'error');
+            }
+        }
+
+        async function executeSendMessage() {
+            const messageType = document.getElementById('messageType').value;
+            const subject = document.getElementById('messageSubject').value;
+            const content = document.getElementById('messageContent').value;
+
+            if (!subject || !content) {
+                alert('Veuillez remplir le sujet et le contenu du message');
+                return;
+            }
+
+            showProgressModal('Envoi des messages', selectedUsers.length);
+
+            try {
+                for (let i = 0; i < selectedUsers.length; i++) {
+                    const user = selectedUsers[i];
+                    
+                    // Send message (implementation would depend on your messaging system)
+                    if (messageType === 'email' || messageType === 'both') {
+                        // Send email
+                        await sendEmail(user.email, subject, content);
+                    }
+                    
+                    if (messageType === 'push' || messageType === 'both') {
+                        // Send push notification
+                        await sendPushNotification(user.id, subject, content);
+                    }
+
+                    await logBulkOperation('send_message', user.id, 
+                        `Message envoyé: ${subject}`);
+
+                    updateProgress(i + 1, selectedUsers.length);
+                }
+
+                hideProgressModal();
+                closeActionModal();
+                alert('Messages envoyés avec succès');
+                addToOperationHistory('Envoi de messages', selectedUsers.length, 'success');
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                hideProgressModal();
+                alert('Erreur lors de l\'envoi: ' + error.message);
+                addToOperationHistory('Envoi de messages', selectedUsers.length, 'error');
+            }
+        }
+
+        function showProgressModal(operation, total) {
+            document.getElementById('progressMessage').textContent = operation;
+            document.getElementById('progressDetails').textContent = `0 / ${total} éléments traités`;
+            document.getElementById('progressBar').style.width = '0%';
+            document.getElementById('progressModal').classList.remove('hidden');
+        }
+
+        function updateProgress(current, total) {
+            const percentage = Math.round((current / total) * 100);
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressDetails').textContent = `${current} / ${total} éléments traités`;
+        }
+
+        function hideProgressModal() {
+            document.getElementById('progressModal').classList.add('hidden');
+        }
+
+        function addToOperationHistory(operation, count, status) {
+            const historyItem = {
+                id: Date.now(),
+                operation: operation,
+                count: count,
+                status: status,
+                timestamp: new Date(),
+                user: 'Admin'
+            };
+
+            operationHistory.unshift(historyItem);
+            updateOperationHistoryDisplay();
+            updateOperationsCount();
+        }
+
+        function updateOperationHistoryDisplay() {
+            const container = document.getElementById('operationHistory');
+            container.innerHTML = operationHistory.map(item => `
+                <div class="operation-${item.status} border p-4 rounded-lg">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <div class="font-medium">${item.operation}</div>
+                            <div class="text-sm">${item.count} éléments • ${item.user} • ${item.timestamp.toLocaleString('fr-FR')}</div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="px-2 py-1 text-xs rounded-full ${item.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                ${item.status === 'success' ? 'Réussi' : 'Erreur'}
+                            </span>
+                            <button onclick="removeFromHistory(${item.id})" class="text-gray-600 hover:text-gray-800">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateOperationsCount() {
+            document.getElementById('operationsCount').textContent = 
+                `${operationHistory.length} Opérations`;
+        }
+
+        function loadOperationHistory() {
+            // Load from localStorage or initialize empty
+            const stored = localStorage.getItem('ezra_bulk_operations_history');
+            if (stored) {
+                operationHistory = JSON.parse(stored).map(item => ({
+                    ...item,
+                    timestamp: new Date(item.timestamp)
+                }));
+            }
+            updateOperationHistoryDisplay();
+        }
+
+        function saveOperationHistory() {
+            localStorage.setItem('ezra_bulk_operations_history', JSON.stringify(operationHistory));
+        }
+
+        function clearOperationHistory() {
+            if (confirm('Êtes-vous sûr de vouloir effacer tout l\'historique?')) {
+                operationHistory = [];
+                updateOperationHistoryDisplay();
+                updateOperationsCount();
+                saveOperationHistory();
+            }
+        }
+
+        async function logBulkOperation(actionType, targetId, description) {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                await supabase.from('admin_actions').insert({
+                    admin_id: user.id,
+                    action_type: 'bulk_' + actionType,
+                    target_user_id: targetId,
+                    description: description
+                });
+            } catch (error) {
+                console.error('Erreur log:', error);
+            }
+        }
+
+        // Mock functions for messaging
+        async function sendEmail(email, subject, content) {
+            // Implementation would integrate with your email service
+            return new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        async function sendPushNotification(userId, title, content) {
+            // Implementation would integrate with OneSignal or similar
+            return new Promise(resolve => setTimeout(resolve, 100));
+        }
+
+        // Save history before page unload
+        window.addEventListener('beforeunload', saveOperationHistory);
+    </script>
+</body>
+</html>

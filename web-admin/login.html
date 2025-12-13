@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin - Connexion</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script src="enhanced-security.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--ezra-navy) 0%, var(--ezra-orange) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { 
+                transform: translateY(30px); 
+                opacity: 0; 
+            }
+            to { 
+                transform: translateY(0); 
+                opacity: 1; 
+            }
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+            margin-bottom: 8px;
+        }
+
+        .logo-subtitle {
+            color: var(--gray-600);
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: var(--gray-50);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--ezra-orange);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .password-input-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-400);
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .password-toggle:hover {
+            color: var(--gray-600);
+        }
+
+        .login-btn {
+            width: 100%;
+            background: var(--ezra-orange);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn:hover:not(:disabled) {
+            background: var(--ezra-orange-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .login-btn:disabled {
+            background: var(--gray-300);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-loading {
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .btn-text {
+            transition: opacity 0.2s;
+        }
+
+        .loading .btn-text {
+            opacity: 0;
+        }
+
+        .loading .btn-loading {
+            display: block;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #FEE2E2;
+            color: #DC2626;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.875rem;
+            border-left: 4px solid #DC2626;
+            display: none;
+        }
+
+        .security-notice {
+            background: #EFF6FF;
+            color: #1E40AF;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.875rem;
+            border-left: 4px solid #3B82F6;
+        }
+
+        .security-notice i {
+            margin-right: 8px;
+        }
+
+        .version-info {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--gray-500);
+            font-size: 0.75rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 24px;
+                margin: 16px;
+            }
+            
+            .logo {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <div class="logo">
+                <i class="fas fa-crown" style="color: var(--ezra-orange);"></i>
+                Ezra Admin
+            </div>
+            <div class="logo-subtitle">Panneau d'administration</div>
+        </div>
+
+        <div class="error-message" id="error-message"></div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email" class="form-label">Adresse e-mail</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    class="form-input" 
+                    placeholder="admin@ezra.cm"
+                    required
+                    autocomplete="email"
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Mot de passe</label>
+                <div class="password-input-container">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input" 
+                        placeholder="••••••••"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <button type="button" class="password-toggle" onclick="togglePassword()">
+                        <i class="fas fa-eye" id="password-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn" id="login-btn">
+                <span class="btn-text">Se connecter</span>
+                <div class="btn-loading">
+                    <div class="spinner"></div>
+                </div>
+            </button>
+        </form>
+        
+        <div style="text-align: center; margin: 20px 0;">
+            <a href="#" id="forgot-password-link" style="color: var(--ezra-orange); text-decoration: none; font-size: 14px; font-weight: 500;">
+                Mot de passe oublié ?
+            </a>
+        </div>
+
+        <div class="security-notice">
+            <i class="fas fa-shield-alt"></i>
+            Votre session sera automatiquement fermée après 30 minutes d'inactivité pour votre sécurité.
+        </div>
+
+        <div class="version-info">
+            Ezra Admin v1.0.0 • Sécurisé par Supabase
+        </div>
+    </div>
+
+    <script>
+        let loginAttempts = 0;
+        const maxAttempts = 5;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if already logged in
+            checkExistingSession();
+            
+            // Setup form submission
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            
+            // Setup forgot password
+            document.getElementById('forgot-password-link').addEventListener('click', handleForgotPassword);
+            
+            // Focus on email input
+            document.getElementById('email').focus();
+        });
+
+        async function checkExistingSession() {
+            try {
+                if (!window.supabase || !window.EZRA_CONFIG) return;
+                
+                const supabase = window.supabase.createClient(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
+                
+                const { data: { session } } = await supabase.auth.getSession();
+                if (session) {
+                    // Verify admin role
+                    const { data: profile } = await supabase
+                        .from('profiles')
+                        .select('role')
+                        .eq('id', session.user.id)
+                        .single();
+                    
+                    if (profile?.role === 'admin') {
+                        window.location.href = 'index.html';
+                    }
+                }
+            } catch (error) {
+                console.log('No existing session found');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('login-btn');
+            const errorDiv = document.getElementById('error-message');
+            
+            // Check for too many attempts
+            if (loginAttempts >= maxAttempts) {
+                showError('Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.');
+                return;
+            }
+            
+            // Basic validation
+            if (!email || !password) {
+                showError('Veuillez remplir tous les champs');
+                return;
+            }
+            
+            // Show loading state
+            loginBtn.classList.add('loading');
+            loginBtn.disabled = true;
+            hideError();
+            
+            try {
+                if (!window.supabase || !window.EZRA_CONFIG) {
+                    throw new Error('Configuration manquante');
+                }
+                
+                const supabase = window.supabase.createClient(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
+                
+                // Attempt login
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+                
+                if (error) {
+                    throw new Error(error.message);
+                }
+                
+                // Verify admin role
+                const { data: profile, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('role, full_name')
+                    .eq('id', data.user.id)
+                    .single();
+                
+                if (profileError) {
+                    throw new Error('Erreur de vérification du profil');
+                }
+                
+                if (profile?.role !== 'admin') {
+                    await supabase.auth.signOut();
+                    throw new Error('Accès refusé: privilèges administrateur requis');
+                }
+                
+                // Log security event
+                if (window.EzraSecurityManager) {
+                    window.EzraSecurityManager.logSecurityEvent('admin_login_success', {
+                        email,
+                        name: profile.full_name
+                    });
+                }
+                
+                // Success - redirect to dashboard
+                window.location.href = 'index.html';
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                loginAttempts++;
+                
+                // Log security event
+                if (window.EzraSecurityManager) {
+                    window.EzraSecurityManager.recordFailedLoginAttempt(email);
+                }
+                
+                let errorMessage = 'Erreur de connexion';
+                if (error.message.includes('Invalid login credentials')) {
+                    errorMessage = 'Email ou mot de passe incorrect';
+                } else if (error.message.includes('Email not confirmed')) {
+                    errorMessage = 'Veuillez confirmer votre email';
+                } else if (error.message.includes('Accès refusé')) {
+                    errorMessage = error.message;
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                showError(errorMessage);
+                
+                // Show attempt counter
+                if (loginAttempts >= 3) {
+                    showError(`${errorMessage} (Tentative ${loginAttempts}/${maxAttempts})`);
+                }
+                
+            } finally {
+                // Hide loading state
+                loginBtn.classList.remove('loading');
+                loginBtn.disabled = false;
+            }
+        }
+
+        async function handleForgotPassword(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            
+            if (!email) {
+                showError('Veuillez entrer votre adresse e-mail d\'abord');
+                return;
+            }
+            
+            if (!email.includes('@')) {
+                showError('Veuillez entrer une adresse e-mail valide');
+                return;
+            }
+            
+            // Show loading state (reuse login button styling)
+            const forgotLink = document.getElementById('forgot-password-link');
+            const originalText = forgotLink.textContent;
+            forgotLink.textContent = 'Envoi en cours...';
+            forgotLink.style.pointerEvents = 'none';
+            
+            try {
+                if (!window.supabase || !window.EZRA_CONFIG) {
+                    throw new Error('Configuration non disponible');
+                }
+                
+                const supabase = window.supabase.createClient(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
+                
+                const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                    redirectTo: window.location.origin + window.location.pathname.replace('login.html', 'reset-password.html')
+                });
+                
+                if (error) {
+                    throw new Error(error.message);
+                }
+                
+                showSuccess('E-mail de réinitialisation envoyé ! Vérifiez votre boîte de réception.');
+                
+            } catch (error) {
+                console.error('Erreur de réinitialisation:', error);
+                showError('Échec de l\'envoi de l\'e-mail. Veuillez réessayer ou contacter le support.');
+            } finally {
+                // Restore link
+                setTimeout(() => {
+                    forgotLink.textContent = originalText;
+                    forgotLink.style.pointerEvents = 'auto';
+                }, 2000);
+            }
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('password-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.className = 'fas fa-eye-slash';
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.className = 'fas fa-eye';
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+
+        function showSuccess(message) {
+            // Create or get success message div
+            let successDiv = document.getElementById('success-message');
+            if (!successDiv) {
+                successDiv = document.createElement('div');
+                successDiv.id = 'success-message';
+                successDiv.style.cssText = `
+                    background: #D1FAE5;
+                    color: #065F46;
+                    padding: 12px 16px;
+                    border-radius: 8px;
+                    margin-bottom: 20px;
+                    font-size: 0.875rem;
+                    border-left: 4px solid #10B981;
+                    display: block;
+                `;
+                document.getElementById('error-message').parentNode.insertBefore(successDiv, document.getElementById('error-message').nextSibling);
+            }
+            
+            // Hide error message
+            hideError();
+            
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function hideError() {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.style.display = 'none';
+        }
+
+        // Auto-clear error on input
+        document.getElementById('email').addEventListener('input', hideError);
+        document.getElementById('password').addEventListener('input', hideError);
+    </script>
+</body>
+</html>

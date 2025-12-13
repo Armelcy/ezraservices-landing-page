@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Réclamations - Ezra Admin</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="config-local.js"></script>
+    <script src="admin-auth-simple.js"></script>
+    <script src="enhanced-security.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+            --info: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--gray-900);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--ezra-navy) 0%, #2C4B73 100%);
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 8px 32px rgba(27, 54, 93, 0.15);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white;
+            background: rgba(255, 107, 53, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        .page-subtitle {
+            color: var(--gray-600);
+            margin-top: 0.5rem;
+        }
+
+        /* Date Range Selector */
+        .date-selector {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .date-selector-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .date-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .date-label {
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .date-input, .date-select {
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: white;
+            transition: border-color 0.2s;
+        }
+
+        .date-input:focus, .date-select:focus {
+            outline: none;
+            border-color: var(--ezra-orange);
+        }
+
+        .btn-refresh {
+            background: var(--ezra-orange);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-refresh:hover {
+            background: var(--ezra-orange-dark);
+        }
+
+        .btn-export {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-export:hover {
+            background: #059669;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, white 0%, #fafbff 100%);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ezra-orange), var(--ezra-navy));
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+        }
+
+        .stat-change.neutral {
+            color: var(--gray-500);
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ezra-orange), var(--ezra-navy));
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .chart-subtitle {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            width: 100%;
+        }
+
+        /* Tables */
+        .table-section {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            background: linear-gradient(135deg, #fafbff 0%, white 100%);
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .analytics-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .analytics-table th,
+        .analytics-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .analytics-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .analytics-table td {
+            font-size: 0.875rem;
+            color: var(--gray-900);
+        }
+
+        .analytics-table tr:hover {
+            background: var(--gray-50);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .date-selector-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--gray-200);
+            border-radius: 50%;
+            border-top-color: var(--ezra-orange);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gray-300);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <i class="fas fa-crown" style="color: var(--ezra-orange);"></i>
+                Ezra Admin
+            </a>
+            <nav class="nav-links">
+                <a href="index.html" class="nav-link">Dashboard</a>
+                <a href="user-management.html" class="nav-link">Utilisateurs</a>
+                <a href="dispute-management.html" class="nav-link">Réclamations</a>
+                <a href="dispute-analytics.html" class="nav-link active">Analytics</a>
+                <a href="reports.html" class="nav-link">Rapports</a>
+            </nav>
+            <div class="user-info">
+                <div id="user-name">Admin</div>
+                <button class="btn-refresh" onclick="logout()" style="background: var(--error);">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Analytics des Réclamations</h1>
+                <p class="page-subtitle">Tableaux de bord et métriques de performance</p>
+            </div>
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn-export" onclick="exportAnalytics()">
+                    <i class="fas fa-download"></i> Exporter
+                </button>
+                <button class="btn-refresh" onclick="refreshAnalytics()">
+                    <i class="fas fa-sync-alt"></i> Actualiser
+                </button>
+            </div>
+        </div>
+
+        <!-- Date Range Selector -->
+        <div class="date-selector">
+            <div class="date-selector-grid">
+                <div class="date-group">
+                    <label class="date-label">Période</label>
+                    <select id="period-select" class="date-select" onchange="updateDateRange()">
+                        <option value="7">7 derniers jours</option>
+                        <option value="30" selected>30 derniers jours</option>
+                        <option value="90">90 derniers jours</option>
+                        <option value="365">1 an</option>
+                        <option value="custom">Personnalisé</option>
+                    </select>
+                </div>
+                <div class="date-group" id="custom-start-group" style="display: none;">
+                    <label class="date-label">Date de début</label>
+                    <input type="date" id="start-date" class="date-input">
+                </div>
+                <div class="date-group" id="custom-end-group" style="display: none;">
+                    <label class="date-label">Date de fin</label>
+                    <input type="date" id="end-date" class="date-input">
+                </div>
+                <div class="date-group">
+                    <button class="btn-refresh" onclick="loadAnalytics()">
+                        <i class="fas fa-filter"></i> Appliquer
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--info);">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="total-disputes-metric">-</div>
+                <div class="stat-label">Total Réclamations</div>
+                <div class="stat-change" id="total-disputes-change">+0% vs période précédente</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--success);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="resolution-rate-metric">-%</div>
+                <div class="stat-label">Taux de Résolution</div>
+                <div class="stat-change" id="resolution-rate-change">+0% vs période précédente</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--warning);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="avg-resolution-time-metric">-h</div>
+                <div class="stat-label">Temps Moyen de Résolution</div>
+                <div class="stat-change" id="avg-resolution-time-change">+0% vs période précédente</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--error);">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="sla-breach-rate-metric">-%</div>
+                <div class="stat-label">Taux de Dépassement SLA</div>
+                <div class="stat-change" id="sla-breach-rate-change">+0% vs période précédente</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--ezra-orange);">
+                        <i class="fas fa-star"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="satisfaction-score-metric">-</div>
+                <div class="stat-label">Score de Satisfaction</div>
+                <div class="stat-change" id="satisfaction-score-change">+0% vs période précédente</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon" style="background: var(--gray-600);">
+                        <i class="fas fa-level-up-alt"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="escalation-rate-metric">-%</div>
+                <div class="stat-label">Taux d'Escalade</div>
+                <div class="stat-change" id="escalation-rate-change">+0% vs période précédente</div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div>
+                        <div class="chart-title">Évolution des Réclamations</div>
+                        <div class="chart-subtitle">Tendance au fil du temps</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="disputeTrendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div>
+                        <div class="chart-title">Répartition par Catégorie</div>
+                        <div class="chart-subtitle">Types de problèmes</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="categoryDistributionChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div>
+                        <div class="chart-title">Statuts des Réclamations</div>
+                        <div class="chart-subtitle">État actuel du pipeline</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <div>
+                        <div class="chart-title">Performance SLA</div>
+                        <div class="chart-subtitle">Respect des délais</div>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="slaChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Categories Table -->
+        <div class="table-section">
+            <div class="table-header">
+                <h2 class="table-title">Top 10 Catégories de Réclamations</h2>
+            </div>
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Catégorie</th>
+                        <th>Nombre</th>
+                        <th>% du Total</th>
+                        <th>Temps Moyen (h)</th>
+                        <th>Taux de Résolution</th>
+                        <th>Tendance</th>
+                    </tr>
+                </thead>
+                <tbody id="categories-table-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem;">
+                            <div class="loading"></div>
+                            <p style="margin-top: 1rem; color: var(--gray-600);">Chargement des données...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="table-section">
+            <div class="table-header">
+                <h2 class="table-title">Activités Récentes</h2>
+            </div>
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Réclamation</th>
+                        <th>Action</th>
+                        <th>Utilisateur</th>
+                        <th>Temps de Résolution</th>
+                    </tr>
+                </thead>
+                <tbody id="activity-table-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 2rem;">
+                            <div class="loading"></div>
+                            <p style="margin-top: 1rem; color: var(--gray-600);">Chargement des activités...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        let supabase;
+        let currentDateRange = {
+            start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+            end: new Date()
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Check authentication
+                if (!window.supabase || !window.EZRA_CONFIG) {
+                    throw new Error('Configuration manquante');
+                }
+
+                supabase = window.supabase.createClient(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
+
+                // Check if user is logged in
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Initialize date inputs
+                updateDateRange();
+                
+                // Load analytics
+                await loadAnalytics();
+                
+                console.log('✅ Analytics dashboard loaded successfully');
+                
+            } catch (error) {
+                console.error('❌ Analytics initialization error:', error);
+                alert('Erreur de chargement: ' + error.message);
+            }
+        });
+
+        function updateDateRange() {
+            const periodSelect = document.getElementById('period-select');
+            const customStart = document.getElementById('custom-start-group');
+            const customEnd = document.getElementById('custom-end-group');
+            const startDateInput = document.getElementById('start-date');
+            const endDateInput = document.getElementById('end-date');
+
+            if (periodSelect.value === 'custom') {
+                customStart.style.display = 'block';
+                customEnd.style.display = 'block';
+                
+                // Set default dates
+                const end = new Date();
+                const start = new Date(end);
+                start.setDate(start.getDate() - 30);
+                
+                startDateInput.value = start.toISOString().split('T')[0];
+                endDateInput.value = end.toISOString().split('T')[0];
+            } else {
+                customStart.style.display = 'none';
+                customEnd.style.display = 'none';
+                
+                const days = parseInt(periodSelect.value);
+                const end = new Date();
+                const start = new Date(end);
+                start.setDate(start.getDate() - days);
+                
+                currentDateRange = { start, end };
+            }
+        }
+
+        async function loadAnalytics() {
+            try {
+                console.log('📊 Loading analytics data...');
+
+                // Update date range if custom
+                const periodSelect = document.getElementById('period-select');
+                if (periodSelect.value === 'custom') {
+                    const startDate = document.getElementById('start-date').value;
+                    const endDate = document.getElementById('end-date').value;
+                    
+                    if (startDate && endDate) {
+                        currentDateRange = {
+                            start: new Date(startDate),
+                            end: new Date(endDate)
+                        };
+                    }
+                }
+
+                // Load all analytics data
+                await Promise.all([
+                    loadKeyMetrics(),
+                    loadChartData(),
+                    loadCategoriesTable(),
+                    loadRecentActivity()
+                ]);
+
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+                alert('Erreur lors du chargement des analytics');
+            }
+        }
+
+        async function loadKeyMetrics() {
+            try {
+                // Get disputes in date range
+                const { data: disputes, error } = await supabase
+                    .from('disputes')
+                    .select('*')
+                    .gte('created_at', currentDateRange.start.toISOString())
+                    .lte('created_at', currentDateRange.end.toISOString());
+
+                if (error) throw error;
+
+                const totalDisputes = disputes?.length || 0;
+                const resolvedDisputes = disputes?.filter(d => ['resolved', 'closed'].includes(d.status)).length || 0;
+                const escalatedDisputes = disputes?.filter(d => d.status === 'escalated').length || 0;
+                const slaBreaches = disputes?.filter(d => d.sla_breached).length || 0;
+
+                // Calculate metrics
+                const resolutionRate = totalDisputes > 0 ? (resolvedDisputes / totalDisputes) * 100 : 0;
+                const escalationRate = totalDisputes > 0 ? (escalatedDisputes / totalDisputes) * 100 : 0;
+                const slaBreachRate = totalDisputes > 0 ? (slaBreaches / totalDisputes) * 100 : 0;
+
+                // Calculate average resolution time
+                const resolvedWithTime = disputes?.filter(d => d.resolved_at && d.created_at) || [];
+                let avgResolutionTime = 0;
+                if (resolvedWithTime.length > 0) {
+                    const totalHours = resolvedWithTime.reduce((sum, dispute) => {
+                        const created = new Date(dispute.created_at);
+                        const resolved = new Date(dispute.resolved_at);
+                        return sum + (resolved - created) / (1000 * 60 * 60);
+                    }, 0);
+                    avgResolutionTime = totalHours / resolvedWithTime.length;
+                }
+
+                // Calculate satisfaction score
+                const disputesWithSatisfaction = disputes?.filter(d => d.complainant_satisfaction || d.respondent_satisfaction) || [];
+                let satisfactionScore = 0;
+                if (disputesWithSatisfaction.length > 0) {
+                    const totalSatisfaction = disputesWithSatisfaction.reduce((sum, dispute) => {
+                        const complainantScore = dispute.complainant_satisfaction || 0;
+                        const respondentScore = dispute.respondent_satisfaction || 0;
+                        return sum + (complainantScore + respondentScore) / 2;
+                    }, 0);
+                    satisfactionScore = totalSatisfaction / disputesWithSatisfaction.length;
+                }
+
+                // Update UI
+                document.getElementById('total-disputes-metric').textContent = totalDisputes.toLocaleString();
+                document.getElementById('resolution-rate-metric').textContent = Math.round(resolutionRate) + '%';
+                document.getElementById('avg-resolution-time-metric').textContent = Math.round(avgResolutionTime * 10) / 10 + 'h';
+                document.getElementById('sla-breach-rate-metric').textContent = Math.round(slaBreachRate) + '%';
+                document.getElementById('satisfaction-score-metric').textContent = Math.round(satisfactionScore * 10) / 10;
+                document.getElementById('escalation-rate-metric').textContent = Math.round(escalationRate) + '%';
+
+                // TODO: Calculate period-over-period changes
+                updateChangeIndicators(disputes);
+
+            } catch (error) {
+                console.error('Error loading key metrics:', error);
+            }
+        }
+
+        function updateChangeIndicators(currentDisputes) {
+            // For now, show neutral changes
+            // In a real implementation, you would compare with previous period
+            const changeElements = [
+                'total-disputes-change',
+                'resolution-rate-change',
+                'avg-resolution-time-change',
+                'sla-breach-rate-change',
+                'satisfaction-score-change',
+                'escalation-rate-change'
+            ];
+
+            changeElements.forEach(id => {
+                const element = document.getElementById(id);
+                element.textContent = 'Stable vs période précédente';
+                element.className = 'stat-change neutral';
+            });
+        }
+
+        async function loadChartData() {
+            try {
+                // Get disputes for charts
+                const { data: disputes, error } = await supabase
+                    .from('disputes')
+                    .select('*')
+                    .gte('created_at', currentDateRange.start.toISOString())
+                    .lte('created_at', currentDateRange.end.toISOString())
+                    .order('created_at', { ascending: true });
+
+                if (error) throw error;
+
+                // Create trend chart
+                createTrendChart(disputes || []);
+                
+                // Create category distribution chart
+                createCategoryChart(disputes || []);
+                
+                // Create status chart
+                createStatusChart(disputes || []);
+                
+                // Create SLA chart
+                createSLAChart(disputes || []);
+
+            } catch (error) {
+                console.error('Error loading chart data:', error);
+            }
+        }
+
+        function createTrendChart(disputes) {
+            const ctx = document.getElementById('disputeTrendChart').getContext('2d');
+            
+            // Group disputes by day
+            const dailyData = {};
+            disputes.forEach(dispute => {
+                const date = new Date(dispute.created_at).toISOString().split('T')[0];
+                dailyData[date] = (dailyData[date] || 0) + 1;
+            });
+
+            // Create date range for chart
+            const dates = [];
+            const current = new Date(currentDateRange.start);
+            while (current <= currentDateRange.end) {
+                dates.push(current.toISOString().split('T')[0]);
+                current.setDate(current.getDate() + 1);
+            }
+
+            const chartData = dates.map(date => dailyData[date] || 0);
+            const labels = dates.map(date => new Date(date).toLocaleDateString('fr-FR', { month: 'short', day: 'numeric' }));
+
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+            gradient.addColorStop(0, 'rgba(255, 107, 53, 0.2)');
+            gradient.addColorStop(1, 'rgba(255, 107, 53, 0.02)');
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Réclamations',
+                        data: chartData,
+                        borderColor: '#FF6B35',
+                        backgroundColor: gradient,
+                        borderWidth: 3,
+                        pointBackgroundColor: '#FF6B35',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(27, 54, 93, 0.9)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#FF6B35',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#6B7280' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(107, 114, 128, 0.1)' },
+                            ticks: { color: '#6B7280' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createCategoryChart(disputes) {
+            const ctx = document.getElementById('categoryDistributionChart').getContext('2d');
+            
+            // Count disputes by category
+            const categoryData = {};
+            disputes.forEach(dispute => {
+                categoryData[dispute.category] = (categoryData[dispute.category] || 0) + 1;
+            });
+
+            const categories = Object.keys(categoryData);
+            const data = Object.values(categoryData);
+            const colors = [
+                '#FF6B35', '#1B365D', '#10B981', '#F59E0B', '#EF4444',
+                '#3B82F6', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'
+            ];
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: categories.map(cat => getCategoryLabel(cat)),
+                    datasets: [{
+                        data: data,
+                        backgroundColor: colors.slice(0, categories.length),
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#6B7280', padding: 15 }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(27, 54, 93, 0.9)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#FF6B35',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+        }
+
+        function createStatusChart(disputes) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            
+            // Count disputes by status
+            const statusData = {};
+            disputes.forEach(dispute => {
+                statusData[dispute.status] = (statusData[dispute.status] || 0) + 1;
+            });
+
+            const statuses = Object.keys(statusData);
+            const data = Object.values(statusData);
+
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: statuses.map(status => getStatusLabel(status)),
+                    datasets: [{
+                        label: 'Nombre',
+                        data: data,
+                        backgroundColor: '#FF6B35',
+                        borderColor: '#E55A2B',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(27, 54, 93, 0.9)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#FF6B35',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#6B7280' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(107, 114, 128, 0.1)' },
+                            ticks: { color: '#6B7280' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSLAChart(disputes) {
+            const ctx = document.getElementById('slaChart').getContext('2d');
+            
+            const onTime = disputes.filter(d => !d.sla_breached).length;
+            const breached = disputes.filter(d => d.sla_breached).length;
+
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Dans les temps', 'Dépassé'],
+                    datasets: [{
+                        data: [onTime, breached],
+                        backgroundColor: ['#10B981', '#EF4444'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#6B7280', padding: 15 }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(27, 54, 93, 0.9)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: '#FF6B35',
+                            borderWidth: 1,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+        }
+
+        async function loadCategoriesTable() {
+            try {
+                const { data: disputes, error } = await supabase
+                    .from('disputes')
+                    .select('*')
+                    .gte('created_at', currentDateRange.start.toISOString())
+                    .lte('created_at', currentDateRange.end.toISOString());
+
+                if (error) throw error;
+
+                // Group by category and calculate metrics
+                const categoryStats = {};
+                disputes?.forEach(dispute => {
+                    if (!categoryStats[dispute.category]) {
+                        categoryStats[dispute.category] = {
+                            count: 0,
+                            resolved: 0,
+                            totalResolutionTime: 0,
+                            resolvedCount: 0
+                        };
+                    }
+
+                    const stats = categoryStats[dispute.category];
+                    stats.count++;
+
+                    if (['resolved', 'closed'].includes(dispute.status)) {
+                        stats.resolved++;
+                        
+                        if (dispute.resolved_at && dispute.created_at) {
+                            const resolutionTime = (new Date(dispute.resolved_at) - new Date(dispute.created_at)) / (1000 * 60 * 60);
+                            stats.totalResolutionTime += resolutionTime;
+                            stats.resolvedCount++;
+                        }
+                    }
+                });
+
+                // Sort by count
+                const sortedCategories = Object.entries(categoryStats)
+                    .sort(([,a], [,b]) => b.count - a.count)
+                    .slice(0, 10);
+
+                const totalDisputes = disputes?.length || 1;
+
+                const tbody = document.getElementById('categories-table-body');
+                tbody.innerHTML = sortedCategories.map(([category, stats]) => {
+                    const percentage = (stats.count / totalDisputes * 100).toFixed(1);
+                    const resolutionRate = stats.count > 0 ? (stats.resolved / stats.count * 100).toFixed(1) : '0';
+                    const avgTime = stats.resolvedCount > 0 ? (stats.totalResolutionTime / stats.resolvedCount).toFixed(1) : '-';
+
+                    return `
+                        <tr>
+                            <td><strong>${getCategoryLabel(category)}</strong></td>
+                            <td>${stats.count}</td>
+                            <td>${percentage}%</td>
+                            <td>${avgTime}h</td>
+                            <td>${resolutionRate}%</td>
+                            <td><span style="color: var(--gray-500);">-</span></td>
+                        </tr>
+                    `;
+                }).join('');
+
+                if (sortedCategories.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--gray-500); padding: 2rem;">Aucune donnée pour cette période</td></tr>';
+                }
+
+            } catch (error) {
+                console.error('Error loading categories table:', error);
+                document.getElementById('categories-table-body').innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--error); padding: 2rem;">Erreur de chargement</td></tr>';
+            }
+        }
+
+        async function loadRecentActivity() {
+            try {
+                const { data: actions, error } = await supabase
+                    .from('dispute_actions')
+                    .select(`
+                        *,
+                        disputes!inner(dispute_number, title, created_at, resolved_at)
+                    `)
+                    .gte('created_at', currentDateRange.start.toISOString())
+                    .lte('created_at', currentDateRange.end.toISOString())
+                    .order('created_at', { ascending: false })
+                    .limit(10);
+
+                if (error) throw error;
+
+                const tbody = document.getElementById('activity-table-body');
+                
+                if (!actions || actions.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--gray-500); padding: 2rem;">Aucune activité récente</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = actions.map(action => {
+                    const date = new Date(action.created_at).toLocaleDateString('fr-FR');
+                    const dispute = action.disputes;
+                    
+                    let resolutionTime = '-';
+                    if (dispute.resolved_at && dispute.created_at) {
+                        const hours = (new Date(dispute.resolved_at) - new Date(dispute.created_at)) / (1000 * 60 * 60);
+                        resolutionTime = Math.round(hours * 10) / 10 + 'h';
+                    }
+
+                    return `
+                        <tr>
+                            <td>${date}</td>
+                            <td>
+                                <div><strong>${dispute.dispute_number || 'N/A'}</strong></div>
+                                <div style="font-size: 0.75rem; color: var(--gray-500);">${dispute.title?.substring(0, 50)}...</div>
+                            </td>
+                            <td>${action.action_description}</td>
+                            <td>${action.performed_by_email}</td>
+                            <td>${resolutionTime}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+                document.getElementById('activity-table-body').innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--error); padding: 2rem;">Erreur de chargement</td></tr>';
+            }
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                'service_quality': 'Qualité du service',
+                'payment_issue': 'Problème de paiement',
+                'cancellation': 'Annulation',
+                'no_show': 'Absence',
+                'communication': 'Communication',
+                'safety_concern': 'Sécurité',
+                'billing_dispute': 'Facturation',
+                'refund_request': 'Remboursement',
+                'property_damage': 'Dommage matériel',
+                'contract_violation': 'Violation du contrat',
+                'other': 'Autre'
+            };
+            return labels[category] || category;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                'submitted': 'Soumise',
+                'acknowledged': 'Accusée',
+                'investigating': 'Investigation',
+                'awaiting_response': 'En Attente',
+                'under_mediation': 'Médiation',
+                'pending_resolution': 'En Résolution',
+                'resolved': 'Résolue',
+                'closed': 'Fermée',
+                'escalated': 'Escaladée'
+            };
+            return labels[status] || status;
+        }
+
+        async function refreshAnalytics() {
+            await loadAnalytics();
+        }
+
+        function exportAnalytics() {
+            // Create CSV export
+            const dateRange = `${currentDateRange.start.toLocaleDateString('fr-FR')} - ${currentDateRange.end.toLocaleDateString('fr-FR')}`;
+            alert(`Export des analytics pour la période ${dateRange} (fonctionnalité à venir)`);
+        }
+
+        async function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter?')) {
+                try {
+                    await supabase.auth.signOut();
+                    window.location.href = 'login.html';
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    alert('Erreur lors de la déconnexion');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

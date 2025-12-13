@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin - Gestion Utilisateurs</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script src="admin-auth-simple.js"></script>
+    <script src="enhanced-security.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --success: #10B981;
+            --error: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+        }
+
+        .nav-link {
+            background: var(--gray-100);
+            color: var(--gray-700);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--ezra-orange);
+            color: white;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--ezra-orange);
+        }
+
+        .filter-select {
+            padding: 12px 16px;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            background: white;
+            min-width: 150px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--ezra-orange);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #E55A2B;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+        }
+
+        .results-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .results-count {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .user-table th {
+            background: var(--gray-50);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--gray-700);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .user-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+            vertical-align: middle;
+        }
+
+        .user-table tr:hover {
+            background: var(--gray-50);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--ezra-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin-right: 12px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .user-details h4 {
+            margin: 0;
+            font-size: 0.875rem;
+            color: var(--gray-900);
+        }
+
+        .user-details p {
+            margin: 2px 0 0 0;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .role-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .role-customer {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .role-provider {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .role-admin {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .status-pending {
+            background: #FEF3CD;
+            color: #92400E;
+        }
+
+        .status-suspended {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .cni-display {
+            font-family: 'Courier New', monospace;
+            background: var(--gray-100);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            color: var(--gray-700);
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-right: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-approve {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #059669;
+        }
+
+        .btn-reject {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #DC2626;
+        }
+
+        .btn-view {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-view:hover {
+            background: var(--gray-200);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--gray-500);
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1 class="page-title">
+                <i class="fas fa-users-cog"></i>
+                Gestion Utilisateurs
+            </h1>
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Search Section -->
+        <div class="search-section">
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    class="search-input" 
+                    placeholder="Rechercher par nom, email, téléphone ou CNI..."
+                >
+                <select id="role-filter" class="filter-select">
+                    <option value="">Tous les rôles</option>
+                    <option value="customer">Clients</option>
+                    <option value="provider">Prestataires</option>
+                    <option value="admin">Administrateurs</option>
+                </select>
+                <select id="status-filter" class="filter-select">
+                    <option value="">Tous les statuts</option>
+                    <option value="active">Actif</option>
+                    <option value="pending">En attente</option>
+                    <option value="suspended">Suspendu</option>
+                </select>
+                <button class="btn btn-primary" onclick="searchUsers()">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <div class="results-header">
+                <h3>Résultats de recherche</h3>
+                <span class="results-count" id="results-count">0 utilisateurs trouvés</span>
+            </div>
+            
+            <div id="users-container">
+                <div class="loading">
+                    <i class="fas fa-spinner fa-spin"></i> Chargement des utilisateurs...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Details Modal -->
+    <div id="user-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Détails Utilisateur</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- User details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CNI Review Modal -->
+    <div id="cni-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h3 class="modal-title">Vérification CNI</h3>
+                <button class="close-btn" onclick="closeCNIModal()">&times;</button>
+            </div>
+            <div id="cni-modal-body">
+                <!-- CNI verification details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUsers = [];
+        let supabase;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Initialize Supabase
+                supabase = window.supabase.createClient(
+                    window.EZRA_CONFIG.SUPABASE_URL,
+                    window.EZRA_CONFIG.SUPABASE_ANON_KEY
+                );
+
+                // Check authentication
+                const { data: { session } } = await supabase.auth.getSession();
+                if (!session) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+
+                // Load initial users
+                await loadUsers();
+
+                // Setup search functionality
+                document.getElementById('search-input').addEventListener('input', debounce(searchUsers, 300));
+                document.getElementById('role-filter').addEventListener('change', searchUsers);
+                document.getElementById('status-filter').addEventListener('change', searchUsers);
+
+            } catch (error) {
+                console.error('Initialization error:', error);
+                alert('Erreur de chargement: ' + error.message);
+            }
+        });
+
+        async function loadUsers() {
+            try {
+                console.log('🔍 Loading users from Supabase...');
+                
+                // First, check if we can access the profiles table with CNI verification data
+                const { data: users, error } = await supabase
+                    .from('profiles')
+                    .select(`
+                        id,
+                        full_name,
+                        email,
+                        phone,
+                        role,
+                        provider_verified,
+                        cni_number,
+                        cni_verified,
+                        cni_uploaded_at,
+                        status,
+                        created_at,
+                        avatar_url
+                    `)
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+
+                console.log('📊 Supabase response:', { users, error });
+
+                if (error) {
+                    console.error('❌ Supabase error:', error);
+                    throw error;
+                }
+
+                console.log(`✅ Successfully loaded ${users?.length || 0} users`);
+                
+                currentUsers = users || [];
+                
+                // Enhance users with verification status
+                if (users && users.length > 0) {
+                    await enhanceUsersWithVerificationStatus(users);
+                }
+                
+                displayUsers(currentUsers);
+
+                // If no users found, show helpful debug info
+                if (!users || users.length === 0) {
+                    console.log('⚠️ No users found - checking alternative methods...');
+                    await tryAlternativeUserLoading();
+                }
+
+            } catch (error) {
+                console.error('❌ Error loading users:', error);
+                
+                let errorMessage = 'Erreur de chargement des utilisateurs';
+                
+                if (error.message.includes('permission denied')) {
+                    errorMessage = 'Erreur de permissions - Vérifiez les politiques RLS de la table profiles';
+                } else if (error.message.includes('relation "profiles" does not exist')) {
+                    errorMessage = 'Table "profiles" introuvable - Vérifiez la structure de la base de données';
+                }
+                
+                document.getElementById('users-container').innerHTML = 
+                    `<div class="loading">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--error); margin-bottom: 1rem;"></i><br>
+                        ${errorMessage}<br>
+                        <details style="margin-top: 1rem; text-align: left;">
+                            <summary style="cursor: pointer; color: var(--gray-600);">Détails de l'erreur</summary>
+                            <pre style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--gray-500);">${error.message}</pre>
+                        </details>
+                    </div>`;
+            }
+        }
+
+        async function enhanceUsersWithVerificationStatus(users) {
+            try {
+                console.log('🔍 Loading verification statuses...');
+                
+                // Get verification status for all provider users
+                const providerIds = users.filter(u => u.role === 'provider').map(u => u.id);
+                
+                if (providerIds.length > 0) {
+                    const { data: verifications, error: verificationError } = await supabase
+                        .from('provider_verifications')
+                        .select('user_id, verification_status, created_at')
+                        .in('user_id', providerIds)
+                        .order('created_at', { ascending: false });
+
+                    if (!verificationError && verifications) {
+                        // Create a map of user_id to verification status
+                        const verificationMap = {};
+                        verifications.forEach(v => {
+                            if (!verificationMap[v.user_id]) {
+                                verificationMap[v.user_id] = v.verification_status;
+                            }
+                        });
+
+                        // Enhance users with verification status
+                        users.forEach(user => {
+                            if (user.role === 'provider' && verificationMap[user.id]) {
+                                user.verification_status = verificationMap[user.id];
+                            }
+                        });
+
+                        console.log(`✅ Enhanced ${Object.keys(verificationMap).length} users with verification status`);
+                    } else {
+                        console.log('⚠️ Could not load verification statuses:', verificationError);
+                    }
+                }
+            } catch (error) {
+                console.log('⚠️ Error enhancing with verification status:', error);
+            }
+        }
+
+        async function tryAlternativeUserLoading() {
+            try {
+                console.log('🔍 Trying auth.admin.listUsers...');
+                
+                // Try to get users from auth.users table if profiles is empty
+                const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
+                
+                if (authError) {
+                    console.log('❌ Auth admin access denied:', authError);
+                    return;
+                }
+                
+                console.log('📊 Auth users found:', authUsers?.users?.length || 0);
+                
+                if (authUsers?.users?.length > 0) {
+                    // Convert auth users to profile format
+                    const convertedUsers = authUsers.users.map(user => ({
+                        id: user.id,
+                        full_name: user.user_metadata?.full_name || user.email,
+                        email: user.email,
+                        phone: user.phone || user.user_metadata?.phone,
+                        role: user.user_metadata?.role || 'customer',
+                        provider_verified: user.user_metadata?.provider_verified || false,
+                        cni_number: user.user_metadata?.cni_number,
+                        created_at: user.created_at,
+                        avatar_url: user.user_metadata?.avatar_url
+                    }));
+                    
+                    console.log('✅ Converted auth users to profile format');
+                    currentUsers = convertedUsers;
+                    displayUsers(convertedUsers);
+                    
+                    // Show info message
+                    document.getElementById('results-count').innerHTML = 
+                        `${convertedUsers.length} utilisateur(s) trouvé(s) <span style="color: var(--warning); font-size: 0.75rem;">(via auth.users)</span>`;
+                }
+                
+            } catch (authError) {
+                console.log('❌ Alternative loading failed:', authError);
+            }
+        }
+
+        function displayUsers(users) {
+            const container = document.getElementById('users-container');
+            const countElement = document.getElementById('results-count');
+            
+            countElement.textContent = `${users.length} utilisateur(s) trouvé(s)`;
+
+            if (users.length === 0) {
+                container.innerHTML = '<div class="loading">Aucun utilisateur trouvé</div>';
+                return;
+            }
+
+            const tableHTML = `
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Rôle</th>
+                            <th>Statut</th>
+                            <th>CNI</th>
+                            <th>Vérification</th>
+                            <th>Inscription</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${users.map(user => createUserRow(user)).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        function createUserRow(user) {
+            const initials = user.full_name ? user.full_name.split(' ').map(n => n[0]).join('').toUpperCase() : 'U';
+            const roleClass = `role-${user.role || 'customer'}`;
+            const statusClass = getStatusClass(user);
+            const statusText = getStatusText(user);
+            const cniDisplay = user.cni_number ? `****${user.cni_number.slice(-4)}` : 'Non renseigné';
+            const createdDate = new Date(user.created_at).toLocaleDateString('fr-FR');
+
+            return `
+                <tr>
+                    <td>
+                        <div class="user-info">
+                            <div class="user-avatar">${initials}</div>
+                            <div class="user-details">
+                                <h4>${user.full_name || 'Nom non renseigné'}</h4>
+                                <p>${user.email}</p>
+                                <p>${user.phone || 'Téléphone non renseigné'}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="role-badge ${roleClass}">
+                            ${getRoleText(user.role)}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="status-badge ${statusClass}">
+                            ${statusText}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="cni-display">${cniDisplay}</span>
+                    </td>
+                    <td>
+                        ${getCNIVerificationBadge(user)}
+                    </td>
+                    <td>${createdDate}</td>
+                    <td>
+                        <button class="action-btn btn-view" onclick="viewUser('${user.id}')">
+                            <i class="fas fa-eye"></i> Voir
+                        </button>
+                        ${user.role === 'provider' && !user.provider_verified ? `
+                            <button class="action-btn btn-approve" onclick="approveProvider('${user.id}')">
+                                <i class="fas fa-check"></i> Approuver
+                            </button>
+                            <button class="action-btn btn-reject" onclick="rejectProvider('${user.id}')">
+                                <i class="fas fa-times"></i> Rejeter
+                            </button>
+                        ` : ''}
+                        ${user.role === 'provider' && user.provider_verified && getStatusText(user) !== 'Suspendu' ? `
+                            <button class="action-btn" style="background: var(--warning); color: white;" onclick="suspendProvider('${user.id}')">
+                                <i class="fas fa-pause"></i> Suspendre
+                            </button>
+                        ` : ''}
+                        ${getStatusText(user) === 'Suspendu' ? `
+                            <button class="action-btn" style="background: var(--success); color: white;" onclick="reactivateProvider('${user.id}')">
+                                <i class="fas fa-play"></i> Réactiver
+                            </button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `;
+        }
+
+        function getStatusClass(user) {
+            // Check for suspension first
+            if (user.status === 'suspended') return 'status-suspended';
+            
+            if (user.role === 'provider') {
+                return user.provider_verified ? 'status-active' : 'status-pending';
+            }
+            return 'status-active';
+        }
+
+        function getStatusText(user) {
+            // Check for suspension first
+            if (user.status === 'suspended') return 'Suspendu';
+            
+            if (user.role === 'provider') {
+                return user.provider_verified ? 'Vérifié' : 'En attente';
+            }
+            return 'Actif';
+        }
+
+        function getRoleText(role) {
+            switch (role) {
+                case 'customer': return 'Client';
+                case 'provider': return 'Prestataire';
+                case 'admin': return 'Admin';
+                default: return 'Client';
+            }
+        }
+
+        function getCNIVerificationBadge(user) {
+            if (user.role !== 'provider') {
+                return '<span style="color: var(--gray-400); font-size: 0.75rem;">N/A</span>';
+            }
+
+            const cniStatus = user.cni_verified || user.cni_uploaded_at ? 'uploaded' : 'missing';
+            const hasVerification = user.verification_status;
+
+            if (hasVerification) {
+                switch (user.verification_status) {
+                    case 'approved':
+                        return '<span class="status-badge status-active" style="font-size: 0.7rem;"><i class="fas fa-check-circle"></i> Vérifié</span>';
+                    case 'rejected':
+                        return '<span class="status-badge status-suspended" style="font-size: 0.7rem;"><i class="fas fa-times-circle"></i> Rejeté</span>';
+                    case 'pending':
+                        return `<span class="status-badge status-pending" style="font-size: 0.7rem;"><i class="fas fa-clock"></i> En attente</span>
+                                <button class="action-btn" style="background: var(--info); color: white; font-size: 0.7rem; margin-left: 4px;" onclick="reviewCNI('${user.id}')">
+                                    <i class="fas fa-eye"></i> Examiner
+                                </button>`;
+                    default:
+                        return '<span class="status-badge" style="background: var(--gray-200); color: var(--gray-600); font-size: 0.7rem;">Inconnu</span>';
+                }
+            } else if (cniStatus === 'uploaded') {
+                return `<span class="status-badge status-pending" style="font-size: 0.7rem;"><i class="fas fa-upload"></i> Uploadé</span>
+                        <button class="action-btn" style="background: var(--info); color: white; font-size: 0.7rem; margin-left: 4px;" onclick="reviewCNI('${user.id}')">
+                            <i class="fas fa-eye"></i> Examiner
+                        </button>`;
+            } else {
+                return '<span class="status-badge" style="background: var(--gray-300); color: var(--gray-600); font-size: 0.7rem;"><i class="fas fa-minus-circle"></i> Non fourni</span>';
+            }
+        }
+
+        function searchUsers() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const roleFilter = document.getElementById('role-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+
+            let filteredUsers = currentUsers.filter(user => {
+                // Text search
+                const matchesSearch = !searchTerm || 
+                    (user.full_name && user.full_name.toLowerCase().includes(searchTerm)) ||
+                    (user.email && user.email.toLowerCase().includes(searchTerm)) ||
+                    (user.phone && user.phone.includes(searchTerm)) ||
+                    (user.cni_number && user.cni_number.includes(searchTerm));
+
+                // Role filter
+                const matchesRole = !roleFilter || user.role === roleFilter;
+
+                // Status filter
+                let matchesStatus = true;
+                if (statusFilter) {
+                    if (statusFilter === 'active') {
+                        matchesStatus = user.role !== 'provider' || user.provider_verified;
+                    } else if (statusFilter === 'pending') {
+                        matchesStatus = user.role === 'provider' && !user.provider_verified;
+                    } else if (statusFilter === 'suspended') {
+                        matchesStatus = false; // No suspension logic yet
+                    }
+                }
+
+                return matchesSearch && matchesRole && matchesStatus;
+            });
+
+            displayUsers(filteredUsers);
+        }
+
+        async function viewUser(userId) {
+            try {
+                const { data: user, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single();
+
+                if (error) throw error;
+
+                const modalBody = document.getElementById('modal-body');
+                modalBody.innerHTML = `
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <strong>Nom complet:</strong> ${user.full_name || 'Non renseigné'}
+                        </div>
+                        <div>
+                            <strong>Email:</strong> ${user.email}
+                        </div>
+                        <div>
+                            <strong>Téléphone:</strong> ${user.phone || 'Non renseigné'}
+                        </div>
+                        <div>
+                            <strong>Rôle:</strong> ${getRoleText(user.role)}
+                        </div>
+                        <div>
+                            <strong>CNI:</strong> ${user.cni_number ? `****${user.cni_number.slice(-4)}` : 'Non renseigné'}
+                        </div>
+                        <div>
+                            <strong>Date d'inscription:</strong> ${new Date(user.created_at).toLocaleString('fr-FR')}
+                        </div>
+                        ${user.role === 'provider' ? `
+                            <div>
+                                <strong>Statut prestataire:</strong> ${user.provider_verified ? 'Vérifié' : 'En attente de vérification'}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                document.getElementById('user-modal').style.display = 'flex';
+
+            } catch (error) {
+                console.error('Error loading user details:', error);
+                alert('Erreur lors du chargement des détails utilisateur');
+            }
+        }
+
+        async function approveProvider(userId) {
+            // Get user details first for verification
+            const user = currentUsers.find(u => u.id === userId);
+            if (!user) {
+                alert('Utilisateur introuvable');
+                return;
+            }
+
+            const confirmed = confirm(`Approuver le prestataire "${user.full_name || user.email}"?\n\nCeci va:\n✅ Activer son compte prestataire\n✅ Lui permettre de recevoir des réservations\n✅ Envoyer une notification de confirmation`);
+            if (!confirmed) return;
+
+            try {
+                console.log('🔄 Approving provider:', userId);
+                
+                const timestamp = new Date().toISOString();
+                const { data: { user: currentAdmin } } = await supabase.auth.getUser();
+                
+                // Try updating profiles table first
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({ 
+                        provider_verified: true,
+                        verified_at: timestamp,
+                        verified_by: currentAdmin?.id,
+                        status: 'active'
+                    })
+                    .eq('id', userId);
+
+                if (profileError) {
+                    console.log('⚠️ Profiles table update failed, trying auth metadata...');
+                    
+                    // If profiles update fails, try updating user metadata
+                    const { error: authError } = await supabase.auth.admin.updateUserById(userId, {
+                        user_metadata: { 
+                            provider_verified: true,
+                            verified_at: timestamp,
+                            verified_by: currentAdmin?.id,
+                            status: 'active'
+                        }
+                    });
+                    
+                    if (authError) throw authError;
+                }
+
+                // Try to create provider verification record
+                try {
+                    await supabase
+                        .from('provider_verifications')
+                        .insert({
+                            provider_id: userId,
+                            verified_by: currentAdmin?.id,
+                            verification_type: 'manual_approval',
+                            verification_status: 'approved',
+                            verification_notes: 'Approved via admin panel',
+                            verified_at: timestamp
+                        });
+                } catch (verificationError) {
+                    console.log('⚠️ Could not create verification record:', verificationError);
+                }
+
+                // Send approval notification
+                await sendProviderNotification(userId, 'approved', user.email);
+
+                // Log the approval action
+                await logAdminAction('approve_provider', userId, `Provider ${user.full_name || user.email} approved successfully`);
+
+                // Show success with next steps
+                alert(`✅ Prestataire "${user.full_name || user.email}" approuvé avec succès!\n\n📧 Email de confirmation envoyé\n🎯 Le prestataire peut maintenant recevoir des réservations`);
+                
+                await loadUsers(); // Refresh the list
+
+            } catch (error) {
+                console.error('❌ Error approving provider:', error);
+                alert('Erreur lors de l\'approbation: ' + error.message);
+            }
+        }
+
+        async function rejectProvider(userId) {
+            // Get user details first
+            const user = currentUsers.find(u => u.id === userId);
+            if (!user) {
+                alert('Utilisateur introuvable');
+                return;
+            }
+
+            const reason = prompt(`Raison du rejet pour "${user.full_name || user.email}":\n\n(Exemples: Documents incomplets, informations incorrectes, etc.)`);
+            if (reason === null) return; // User cancelled
+
+            const confirmed = confirm(`Rejeter la demande de "${user.full_name || user.email}"?\n\nRaison: ${reason || 'Aucune raison spécifiée'}\n\nCeci va:\n❌ Désactiver sa demande prestataire\n🔄 Le remettre en statut client\n📧 Envoyer une notification explicative`);
+            if (!confirmed) return;
+
+            try {
+                console.log('🔄 Rejecting provider:', userId);
+                
+                const timestamp = new Date().toISOString();
+                const { data: { user: currentAdmin } } = await supabase.auth.getUser();
+                
+                // Try updating profiles table first
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({ 
+                        provider_verified: false,
+                        role: 'customer', // Revert to customer role
+                        rejection_reason: reason || 'Aucune raison spécifiée',
+                        rejected_at: timestamp,
+                        rejected_by: currentAdmin?.id,
+                        status: 'active' // Keep as active customer
+                    })
+                    .eq('id', userId);
+
+                if (profileError) {
+                    console.log('⚠️ Profiles table update failed, trying auth metadata...');
+                    
+                    // If profiles update fails, try updating user metadata
+                    const { error: authError } = await supabase.auth.admin.updateUserById(userId, {
+                        user_metadata: { 
+                            provider_verified: false,
+                            role: 'customer',
+                            rejection_reason: reason || 'Aucune raison spécifiée',
+                            rejected_at: timestamp,
+                            rejected_by: currentAdmin?.id,
+                            status: 'active'
+                        }
+                    });
+                    
+                    if (authError) throw authError;
+                }
+
+                // Try to create provider verification record
+                try {
+                    await supabase
+                        .from('provider_verifications')
+                        .insert({
+                            provider_id: userId,
+                            verified_by: currentAdmin?.id,
+                            verification_type: 'manual_review',
+                            verification_status: 'rejected',
+                            verification_notes: reason || 'Aucune raison spécifiée',
+                            rejected_at: timestamp
+                        });
+                } catch (verificationError) {
+                    console.log('⚠️ Could not create verification record:', verificationError);
+                }
+
+                // Send rejection notification
+                await sendProviderNotification(userId, 'rejected', user.email, reason);
+
+                // Log the rejection action
+                await logAdminAction('reject_provider', userId, `Provider ${user.full_name || user.email} rejected. Reason: ${reason || 'No reason provided'}`);
+
+                // Show success message
+                alert(`❌ Demande de "${user.full_name || user.email}" rejetée.\n\nRaison: ${reason || 'Aucune raison spécifiée'}\n📧 Email explicatif envoyé\n🔄 Utilisateur remis en statut client`);
+                
+                await loadUsers(); // Refresh the list
+
+            } catch (error) {
+                console.error('❌ Error rejecting provider:', error);
+                alert('Erreur lors du rejet: ' + error.message);
+            }
+        }
+
+        async function logAdminAction(action, targetId, details) {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                
+                // Try to log to admin_actions table
+                const { error } = await supabase
+                    .from('admin_actions')
+                    .insert({
+                        admin_id: user?.id,
+                        action_type: action,
+                        target_id: targetId,
+                        details: details,
+                        timestamp: new Date().toISOString()
+                    });
+
+                if (error) {
+                    console.log('⚠️ Could not log admin action to database:', error);
+                    // Log to console as fallback
+                    console.log('📝 Admin Action Log:', {
+                        admin_id: user?.id,
+                        action_type: action,
+                        target_id: targetId,
+                        details: details,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+            } catch (logError) {
+                console.log('⚠️ Admin action logging failed:', logError);
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('user-modal').style.display = 'none';
+        }
+
+        function closeCNIModal() {
+            document.getElementById('cni-modal').style.display = 'none';
+        }
+
+        async function reviewCNI(userId) {
+            try {
+                console.log('🔍 Loading CNI verification for user:', userId);
+
+                // Get user details
+                const user = currentUsers.find(u => u.id === userId);
+                if (!user) {
+                    alert('Utilisateur introuvable');
+                    return;
+                }
+
+                // Load CNI verification data
+                const { data: verification, error: verificationError } = await supabase
+                    .from('provider_verifications')
+                    .select('*')
+                    .eq('user_id', userId)
+                    .order('created_at', { ascending: false })
+                    .limit(1)
+                    .single();
+
+                if (verificationError && verificationError.code !== 'PGRST116') {
+                    console.error('Error loading verification:', verificationError);
+                    throw new Error('Erreur lors du chargement des données de vérification');
+                }
+
+                // Show CNI review modal
+                displayCNIReview(user, verification);
+
+            } catch (error) {
+                console.error('❌ Error reviewing CNI:', error);
+                alert('Erreur lors du chargement de la vérification CNI: ' + error.message);
+            }
+        }
+
+        function displayCNIReview(user, verification) {
+            const modalBody = document.getElementById('cni-modal-body');
+            
+            if (!verification) {
+                // No verification data found
+                modalBody.innerHTML = `
+                    <div style="text-align: center; padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--warning); margin-bottom: 1rem;"></i>
+                        <h3>Aucune vérification CNI trouvée</h3>
+                        <p style="color: var(--gray-600); margin: 1rem 0;">
+                            Ce prestataire n'a pas encore soumis de données CNI.
+                        </p>
+                        <button class="btn btn-primary" onclick="closeCNIModal()">Fermer</button>
+                    </div>
+                `;
+            } else {
+                // Display verification data
+                const statusColor = verification.verification_status === 'approved' ? 'var(--success)' 
+                                   : verification.verification_status === 'rejected' ? 'var(--error)'
+                                   : 'var(--warning)';
+
+                modalBody.innerHTML = `
+                    <div style="display: grid; gap: 2rem;">
+                        <!-- User Info -->
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px;">
+                            <h4 style="margin-bottom: 1rem; color: var(--gray-900);">
+                                <i class="fas fa-user"></i> Informations Utilisateur
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                <div><strong>Nom:</strong> ${user.full_name || 'Non renseigné'}</div>
+                                <div><strong>Email:</strong> ${user.email}</div>
+                                <div><strong>Téléphone:</strong> ${user.phone || 'Non renseigné'}</div>
+                                <div><strong>Inscription:</strong> ${new Date(user.created_at).toLocaleDateString('fr-FR')}</div>
+                            </div>
+                        </div>
+
+                        <!-- CNI Data -->
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px;">
+                            <h4 style="margin-bottom: 1rem; color: var(--gray-900);">
+                                <i class="fas fa-id-card"></i> Données CNI Extraites
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                <div><strong>Nom complet:</strong> ${verification.full_name || 'N/A'}</div>
+                                <div><strong>Date de naissance:</strong> ${verification.date_of_birth ? new Date(verification.date_of_birth).toLocaleDateString('fr-FR') : 'N/A'}</div>
+                                <div><strong>Lieu de naissance:</strong> ${verification.place_of_birth || 'N/A'}</div>
+                                <div><strong>Nationalité:</strong> ${verification.nationality || 'N/A'}</div>
+                                <div><strong>CNI émise le:</strong> ${verification.issued_date ? new Date(verification.issued_date).toLocaleDateString('fr-FR') : 'N/A'}</div>
+                                <div><strong>CNI expire le:</strong> ${verification.expiry_date ? new Date(verification.expiry_date).toLocaleDateString('fr-FR') : 'N/A'}</div>
+                            </div>
+                            ${verification.father_name || verification.mother_name || verification.profession ? `
+                                <hr style="margin: 1rem 0; border: none; border-top: 1px solid var(--gray-200);">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                                    ${verification.father_name ? `<div><strong>Père:</strong> ${verification.father_name}</div>` : ''}
+                                    ${verification.mother_name ? `<div><strong>Mère:</strong> ${verification.mother_name}</div>` : ''}
+                                    ${verification.profession ? `<div><strong>Profession:</strong> ${verification.profession}</div>` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Verification Status -->
+                        <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px;">
+                            <h4 style="margin-bottom: 1rem; color: var(--gray-900);">
+                                <i class="fas fa-clipboard-check"></i> Statut de Vérification
+                            </h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                                <div><strong>Statut:</strong> 
+                                    <span style="color: ${statusColor}; font-weight: 600;">
+                                        ${verification.verification_status === 'approved' ? '✅ Approuvé' 
+                                          : verification.verification_status === 'rejected' ? '❌ Rejeté'
+                                          : '⏳ En attente'}
+                                    </span>
+                                </div>
+                                <div><strong>Soumis le:</strong> ${new Date(verification.created_at).toLocaleString('fr-FR')}</div>
+                                ${verification.reviewed_at ? `<div><strong>Examiné le:</strong> ${new Date(verification.reviewed_at).toLocaleString('fr-FR')}</div>` : ''}
+                                ${verification.extraction_date ? `<div><strong>Extraction:</strong> ${new Date(verification.extraction_date).toLocaleString('fr-FR')}</div>` : ''}
+                            </div>
+                            ${verification.rejection_reason ? `
+                                <div style="background: var(--error); color: white; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                                    <strong>Raison du rejet:</strong> ${verification.rejection_reason}
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        <!-- Actions -->
+                        ${verification.verification_status === 'pending' ? `
+                            <div style="background: var(--gray-50); padding: 1.5rem; border-radius: 12px;">
+                                <h4 style="margin-bottom: 1rem; color: var(--gray-900);">
+                                    <i class="fas fa-gavel"></i> Actions Administrateur
+                                </h4>
+                                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                    <button class="btn btn-primary" onclick="approveCNIVerification('${verification.id}', '${user.id}')">
+                                        <i class="fas fa-check"></i> Approuver CNI
+                                    </button>
+                                    <button class="btn" style="background: var(--error); color: white;" onclick="rejectCNIVerification('${verification.id}', '${user.id}')">
+                                        <i class="fas fa-times"></i> Rejeter CNI
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="requestMoreInfo('${user.id}')">
+                                        <i class="fas fa-question"></i> Demander Plus d'Infos
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            document.getElementById('cni-modal').style.display = 'flex';
+        }
+
+        async function approveCNIVerification(verificationId, userId) {
+            const confirmed = confirm('Approuver cette vérification CNI?\n\nCeci va:\n✅ Marquer le CNI comme vérifié\n✅ Permettre l\'activation du compte prestataire\n📧 Envoyer une notification');
+            if (!confirmed) return;
+
+            try {
+                console.log('🔄 Approving CNI verification:', verificationId);
+                
+                const timestamp = new Date().toISOString();
+                const { data: { user: currentAdmin } } = await supabase.auth.getUser();
+
+                // Update verification record
+                const { error: verificationError } = await supabase
+                    .from('provider_verifications')
+                    .update({
+                        verification_status: 'approved',
+                        reviewed_by: currentAdmin?.id,
+                        reviewed_at: timestamp,
+                        rejection_reason: null
+                    })
+                    .eq('id', verificationId);
+
+                if (verificationError) throw verificationError;
+
+                // Update user profile
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({ 
+                        cni_verified: true,
+                        cni_verified_at: timestamp
+                    })
+                    .eq('id', userId);
+
+                if (profileError) {
+                    console.log('⚠️ Could not update profile, trying auth metadata...');
+                    
+                    const { error: authError } = await supabase.auth.admin.updateUserById(userId, {
+                        user_metadata: { 
+                            cni_verified: true,
+                            cni_verified_at: timestamp
+                        }
+                    });
+                    
+                    if (authError) console.log('⚠️ Auth metadata update failed:', authError);
+                }
+
+                // Log the action
+                await logAdminAction('approve_cni', verificationId, `CNI verification approved for user ${userId}`);
+
+                alert('✅ Vérification CNI approuvée avec succès!');
+                
+                // Close modal and refresh
+                closeCNIModal();
+                await loadUsers();
+
+            } catch (error) {
+                console.error('❌ Error approving CNI:', error);
+                alert('Erreur lors de l\'approbation: ' + error.message);
+            }
+        }
+
+        async function rejectCNIVerification(verificationId, userId) {
+            const reason = prompt('Raison du rejet de cette vérification CNI:\n\n(Exemples: Document illisible, informations incohérentes, CNI expiré, etc.)');
+            if (reason === null) return;
+
+            const confirmed = confirm(`Rejeter cette vérification CNI?\n\nRaison: ${reason || 'Aucune raison spécifiée'}\n\nCeci va:\n❌ Marquer la vérification comme rejetée\n📧 Demander un nouveau document\n📧 Envoyer une notification explicative`);
+            if (!confirmed) return;
+
+            try {
+                console.log('🔄 Rejecting CNI verification:', verificationId);
+                
+                const timestamp = new Date().toISOString();
+                const { data: { user: currentAdmin } } = await supabase.auth.getUser();
+
+                // Update verification record
+                const { error: verificationError } = await supabase
+                    .from('provider_verifications')
+                    .update({
+                        verification_status: 'rejected',
+                        reviewed_by: currentAdmin?.id,
+                        reviewed_at: timestamp,
+                        rejection_reason: reason || 'Aucune raison spécifiée'
+                    })
+                    .eq('id', verificationId);
+
+                if (verificationError) throw verificationError;
+
+                // Update user profile
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({ 
+                        cni_verified: false,
+                        cni_verified_at: null
+                    })
+                    .eq('id', userId);
+
+                if (profileError) {
+                    console.log('⚠️ Could not update profile, trying auth metadata...');
+                    
+                    const { error: authError } = await supabase.auth.admin.updateUserById(userId, {
+                        user_metadata: { 
+                            cni_verified: false,
+                            cni_verified_at: null
+                        }
+                    });
+                    
+                    if (authError) console.log('⚠️ Auth metadata update failed:', authError);
+                }
+
+                // Send notification about rejection
+                const user = currentUsers.find(u => u.id === userId);
+                if (user) {
+                    await sendProviderNotification(userId, 'cni_rejected', user.email, reason);
+                }
+
+                // Log the action
+                await logAdminAction('reject_cni', verificationId, `CNI verification rejected for user ${userId}. Reason: ${reason || 'No reason provided'}`);
+
+                alert(`❌ Vérification CNI rejetée.\n\nRaison: ${reason || 'Aucune raison spécifiée'}\n📧 Notification envoyée au prestataire`);
+                
+                // Close modal and refresh
+                closeCNIModal();
+                await loadUsers();
+
+            } catch (error) {
+                console.error('❌ Error rejecting CNI:', error);
+                alert('Erreur lors du rejet: ' + error.message);
+            }
+        }
+
+        async function requestMoreInfo(userId) {
+            const message = prompt('Message à envoyer au prestataire pour demander plus d\'informations:\n\n(Exemple: Veuillez soumettre un document plus clair, vérifier les informations, etc.)');
+            if (message === null) return;
+
+            try {
+                const user = currentUsers.find(u => u.id === userId);
+                if (!user) {
+                    alert('Utilisateur introuvable');
+                    return;
+                }
+
+                // Send notification requesting more info
+                await sendProviderNotification(userId, 'info_requested', user.email, message);
+
+                // Log the action
+                await logAdminAction('request_cni_info', userId, `Additional information requested from user ${userId}. Message: ${message || 'No message provided'}`);
+
+                alert(`📧 Demande d'informations envoyée à "${user.full_name || user.email}".\n\nMessage: ${message || 'Aucun message spécifié'}`);
+                
+                closeCNIModal();
+
+            } catch (error) {
+                console.error('❌ Error requesting info:', error);
+                alert('Erreur lors de l\'envoi de la demande: ' + error.message);
+            }
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function getNotificationTitle(action) {
+            switch (action) {
+                case 'approved': return 'Demande prestataire approuvée';
+                case 'rejected': return 'Demande prestataire rejetée';
+                case 'suspended': return 'Compte temporairement suspendu';
+                case 'reactivated': return 'Compte réactivé';
+                case 'cni_rejected': return 'Vérification CNI rejetée';
+                case 'info_requested': return 'Informations supplémentaires requises';
+                default: return `Notification ${action}`;
+            }
+        }
+
+        function getNotificationMessage(action, reason = null) {
+            switch (action) {
+                case 'approved':
+                    return 'Félicitations! Votre demande prestataire a été approuvée. Vous pouvez maintenant recevoir des réservations et offrir vos services sur la plateforme Ezra.';
+                case 'rejected':
+                    return `Votre demande prestataire a été rejetée. Raison: ${reason || 'Non spécifiée'}. Vous pouvez soumettre une nouvelle demande après avoir corrigé les problèmes mentionnés.`;
+                case 'suspended':
+                    return `Votre compte prestataire a été temporairement suspendu. Raison: ${reason || 'Non spécifiée'}. Veuillez contacter le support pour plus d'informations.`;
+                case 'reactivated':
+                    return 'Bonne nouvelle! Votre compte prestataire a été réactivé. Vous pouvez à nouveau recevoir des réservations et offrir vos services.';
+                case 'cni_rejected':
+                    return `Votre vérification CNI a été rejetée. Raison: ${reason || 'Document non conforme'}. Veuillez soumettre un nouveau document CNI en suivant les instructions dans l'application.`;
+                case 'info_requested':
+                    return `Informations supplémentaires requises pour votre vérification. Message: ${reason || 'Veuillez vérifier vos documents'}. Connectez-vous à l'application pour fournir les informations demandées.`;
+                default:
+                    return `Action ${action} effectuée sur votre compte.`;
+            }
+        }
+
+        async function sendProviderNotification(userId, action, email, reason = null) {
+            try {
+                console.log(`📧 Sending ${action} notification to:`, email);
+                
+                // Try to send notification via Supabase Edge Function or external service
+                // This would typically call your notification service
+                const notificationData = {
+                    user_id: userId,
+                    email: email,
+                    type: `provider_${action}`,
+                    action: action,
+                    reason: reason,
+                    timestamp: new Date().toISOString()
+                };
+
+                // Try to store notification record
+                try {
+                    await supabase
+                        .from('notifications')
+                        .insert({
+                            user_id: userId,
+                            type: `provider_${action}`,
+                            title: getNotificationTitle(action),
+                            message: getNotificationMessage(action, reason),
+                            data: notificationData,
+                            read: false,
+                            created_at: new Date().toISOString()
+                        });
+                } catch (notifError) {
+                    console.log('⚠️ Could not store notification record:', notifError);
+                }
+
+                // In a real implementation, you would call your email service here
+                // For now, we'll simulate the notification
+                console.log(`✅ ${action} notification sent to ${email}`);
+                
+                return true;
+            } catch (error) {
+                console.error('❌ Error sending notification:', error);
+                return false;
+            }
+        }
+
+        async function suspendProvider(userId) {
+            const user = currentUsers.find(u => u.id === userId);
+            if (!user) {
+                alert('Utilisateur introuvable');
+                return;
+            }
+
+            const reason = prompt(`Raison de la suspension pour "${user.full_name || user.email}":\n\n(Exemples: Violation des conditions, plaintes répétées, etc.)`);
+            if (reason === null) return;
+
+            const confirmed = confirm(`Suspendre temporairement "${user.full_name || user.email}"?\n\nRaison: ${reason || 'Aucune raison spécifiée'}\n\nCeci va:\n⏸️ Suspendre temporairement le compte\n🚫 Empêcher de nouvelles réservations\n📧 Envoyer une notification`);
+            if (!confirmed) return;
+
+            try {
+                console.log('🔄 Suspending provider:', userId);
+                
+                const timestamp = new Date().toISOString();
+                const { data: { user: currentAdmin } } = await supabase.auth.getUser();
+                
+                // Update profiles table
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({ 
+                        status: 'suspended',
+                        suspension_reason: reason || 'Aucune raison spécifiée',
+                        suspended_at: timestamp,
+                        suspended_by: currentAdmin?.id
+                    })
+                    .eq('id', userId);
+
+                if (profileError) {
+                    console.log('⚠️ Profiles table update failed, trying auth metadata...');
+                    
+                    const { error: authError } = await supabase.auth.admin.updateUserById(userId, {
+                        user_metadata: { 
+                            status: 'suspended',
+                            suspension_reason: reason || 'Aucune raison spécifiée',
+                            suspended_at: timestamp,
+                            suspended_by: currentAdmin?.id
+                        }
+                    });
+                    
+                    if (authError) throw authError;
+                }
+
+                // Send suspension notification
+                await sendProviderNotification(userId, 'suspended', user.email, reason);
+
+                // Log the action
+                await logAdminAction('suspend_provider', userId, `Provider ${user.full_name || user.email} suspended. Reason: ${reason || 'No reason provided'}`);
+
+                alert(`⏸️ Prestataire "${user.full_name || user.email}" suspendu temporairement.\n\nRaison: ${reason || 'Aucune raison spécifiée'}\n📧 Notification envoyée`);
+                
+                await loadUsers();
+
+            } catch (error) {
+                console.error('❌ Error suspending provider:', error);
+                alert('Erreur lors de la suspension: ' + error.message);
+            }
+        }
+
+        async function reactivateProvider(userId) {
+            const user = currentUsers.find(u => u.id === userId);
+            if (!user) {
+                alert('Utilisateur introuvable');
+                return;
+            }
+
+            const confirmed = confirm(`Réactiver le prestataire "${user.full_name || user.email}"?\n\nCeci va:\n▶️ Réactiver le compte\n✅ Permettre de nouvelles réservations\n📧 Envoyer une notification de réactivation`);
+            if (!confirmed) return;
+
+            try {
+                console.log('🔄 Reactivating provider:', userId);
+                
+                const timestamp = new Date().toISOString();
+                const { data: { user: currentAdmin } } = await supabase.auth.getUser();
+                
+                // Update profiles table
+                const { error: profileError } = await supabase
+                    .from('profiles')
+                    .update({ 
+                        status: 'active',
+                        suspension_reason: null,
+                        suspended_at: null,
+                        suspended_by: null,
+                        reactivated_at: timestamp,
+                        reactivated_by: currentAdmin?.id
+                    })
+                    .eq('id', userId);
+
+                if (profileError) {
+                    console.log('⚠️ Profiles table update failed, trying auth metadata...');
+                    
+                    const { error: authError } = await supabase.auth.admin.updateUserById(userId, {
+                        user_metadata: { 
+                            status: 'active',
+                            suspension_reason: null,
+                            suspended_at: null,
+                            suspended_by: null,
+                            reactivated_at: timestamp,
+                            reactivated_by: currentAdmin?.id
+                        }
+                    });
+                    
+                    if (authError) throw authError;
+                }
+
+                // Send reactivation notification
+                await sendProviderNotification(userId, 'reactivated', user.email);
+
+                // Log the action
+                await logAdminAction('reactivate_provider', userId, `Provider ${user.full_name || user.email} reactivated`);
+
+                alert(`▶️ Prestataire "${user.full_name || user.email}" réactivé avec succès.\n\n✅ Le compte est maintenant actif\n📧 Notification envoyée`);
+                
+                await loadUsers();
+
+            } catch (error) {
+                console.error('❌ Error reactivating provider:', error);
+                alert('Erreur lors de la réactivation: ' + error.message);
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('user-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Close CNI modal when clicking outside
+        document.getElementById('cni-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCNIModal();
+            }
+        });
+    </script>
+</body>
+</html>

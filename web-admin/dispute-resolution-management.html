@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résolution des Litiges - Ezra Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .status-open { @apply bg-red-100 text-red-800; }
+        .status-investigating { @apply bg-yellow-100 text-yellow-800; }
+        .status-pending_resolution { @apply bg-blue-100 text-blue-800; }
+        .status-resolved { @apply bg-green-100 text-green-800; }
+        .status-closed { @apply bg-gray-100 text-gray-800; }
+        .priority-low { @apply bg-gray-100 text-gray-800; }
+        .priority-medium { @apply bg-yellow-100 text-yellow-800; }
+        .priority-high { @apply bg-orange-100 text-orange-800; }
+        .priority-urgent { @apply bg-red-100 text-red-800; }
+        .chat-message { @apply mb-4 p-3 rounded-lg; }
+        .chat-user { @apply bg-blue-50 ml-8; }
+        .chat-provider { @apply bg-purple-50 mr-8; }
+        .chat-admin { @apply bg-green-50; }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="hover:text-blue-200">
+                    <i class="fas fa-arrow-left mr-2"></i>Tableau de bord
+                </a>
+            </div>
+            <h1 class="text-xl font-bold">Résolution des Litiges</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm bg-red-600 px-3 py-1 rounded-full" id="openDisputesCount">0 Ouverts</span>
+                <button onclick="openDisputeFilters()" class="px-4 py-2 bg-green-600 rounded-md hover:bg-green-700">
+                    <i class="fas fa-filter mr-2"></i>Filtres
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <!-- Dispute Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-red-100 text-red-600">
+                        <i class="fas fa-exclamation-circle text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Litiges Ouverts</p>
+                        <p class="text-2xl font-semibold" id="openDisputes">-</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">En Investigation</p>
+                        <p class="text-2xl font-semibold" id="investigatingDisputes">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-hourglass-half text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">En Attente</p>
+                        <p class="text-2xl font-semibold" id="pendingDisputes">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <i class="fas fa-check-circle text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Résolus</p>
+                        <p class="text-2xl font-semibold" id="resolvedDisputes">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <i class="fas fa-chart-line text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm text-gray-600">Temps Moyen</p>
+                        <p class="text-2xl font-semibold" id="avgResolutionTime">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters and Actions -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-4">
+                    <div class="relative">
+                        <input type="text" id="searchFilter" placeholder="Rechercher par ID, utilisateur, type..." 
+                               class="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-80">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <select id="statusFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Tous les statuts</option>
+                        <option value="open">Ouvert</option>
+                        <option value="investigating">En investigation</option>
+                        <option value="pending_resolution">En attente de résolution</option>
+                        <option value="resolved">Résolu</option>
+                        <option value="closed">Fermé</option>
+                    </select>
+                    
+                    <select id="priorityFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Toutes les priorités</option>
+                        <option value="urgent">Urgent</option>
+                        <option value="high">Élevée</option>
+                        <option value="medium">Moyenne</option>
+                        <option value="low">Faible</option>
+                    </select>
+                    
+                    <select id="typeFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">Tous les types</option>
+                        <option value="payment">Paiement</option>
+                        <option value="service_quality">Qualité du service</option>
+                        <option value="communication">Communication</option>
+                        <option value="cancellation">Annulation</option>
+                        <option value="fraud">Fraude</option>
+                        <option value="other">Autre</option>
+                    </select>
+                    
+                    <button onclick="applyFilters()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                        <i class="fas fa-filter mr-2"></i>Filtrer
+                    </button>
+                </div>
+                
+                <div class="flex gap-2">
+                    <button onclick="exportDisputes()" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                        <i class="fas fa-download mr-2"></i>Exporter
+                    </button>
+                    <button onclick="openBulkActions()" class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                        <i class="fas fa-tasks mr-2"></i>Actions groupées
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Disputes Table -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                <input type="checkbox" id="selectAll" onchange="toggleSelectAll()">
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Litige
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Parties
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Type & Priorité
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Statut
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Assigné à
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Date & Durée
+                            </th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="disputesTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Disputes will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-6">
+            <div class="text-sm text-gray-700">
+                Affichage de <span id="startRecord">1</span> à <span id="endRecord">10</span> sur <span id="totalRecords">0</span> résultats
+            </div>
+            <div class="flex space-x-2">
+                <button onclick="previousPage()" class="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Précédent</button>
+                <span id="currentPage" class="px-3 py-2">1</span>
+                <button onclick="nextPage()" class="px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">Suivant</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dispute Details Modal -->
+    <div id="disputeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-6xl w-full max-h-screen overflow-y-auto">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-medium">Détails du Litige</h3>
+                        <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Dispute Information -->
+                        <div class="lg:col-span-2">
+                            <div id="disputeInfo" class="space-y-6">
+                                <!-- Dispute info will be loaded here -->
+                            </div>
+                            
+                            <!-- Communication History -->
+                            <div class="mt-8">
+                                <h4 class="text-lg font-semibold mb-4">Historique des Communications</h4>
+                                <div id="communicationHistory" class="space-y-4 max-h-96 overflow-y-auto">
+                                    <!-- Messages will be loaded here -->
+                                </div>
+                                
+                                <!-- Add Message -->
+                                <div class="mt-4 p-4 border-t">
+                                    <form id="messageForm" class="space-y-3">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Type de message</label>
+                                            <select id="messageType" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                                <option value="internal">Note interne</option>
+                                                <option value="customer">Message au client</option>
+                                                <option value="provider">Message au prestataire</option>
+                                                <option value="both">Message aux deux parties</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <textarea id="messageContent" rows="3" placeholder="Votre message..." 
+                                                      class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                        </div>
+                                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                            <i class="fas fa-paper-plane mr-2"></i>Envoyer
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions Panel -->
+                        <div class="space-y-6">
+                            <!-- Status & Priority -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold mb-3">Statut & Priorité</h4>
+                                <div class="space-y-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Statut</label>
+                                        <select id="disputeStatus" onchange="updateDisputeStatus()" 
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                            <option value="open">Ouvert</option>
+                                            <option value="investigating">En investigation</option>
+                                            <option value="pending_resolution">En attente de résolution</option>
+                                            <option value="resolved">Résolu</option>
+                                            <option value="closed">Fermé</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Priorité</label>
+                                        <select id="disputePriority" onchange="updateDisputePriority()" 
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                            <option value="low">Faible</option>
+                                            <option value="medium">Moyenne</option>
+                                            <option value="high">Élevée</option>
+                                            <option value="urgent">Urgent</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Assigné à</label>
+                                        <select id="assignedTo" onchange="assignDispute()" 
+                                                class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                            <option value="">Non assigné</option>
+                                            <option value="admin1">Admin Principal</option>
+                                            <option value="admin2">Admin Support</option>
+                                            <option value="admin3">Admin Senior</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Actions -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold mb-3">Actions Rapides</h4>
+                                <div class="space-y-2">
+                                    <button onclick="initiateRefund()" class="w-full px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                        <i class="fas fa-money-bill-wave mr-2"></i>Initier un Remboursement
+                                    </button>
+                                    <button onclick="suspendService()" class="w-full px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700">
+                                        <i class="fas fa-pause mr-2"></i>Suspendre le Service
+                                    </button>
+                                    <button onclick="mediateDispute()" class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                        <i class="fas fa-handshake mr-2"></i>Organiser une Médiation
+                                    </button>
+                                    <button onclick="escalateDispute()" class="w-full px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">
+                                        <i class="fas fa-arrow-up mr-2"></i>Escalader
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Related Information -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold mb-3">Informations Liées</h4>
+                                <div id="relatedInfo" class="space-y-2 text-sm">
+                                    <!-- Related info will be loaded here -->
+                                </div>
+                            </div>
+
+                            <!-- Evidence & Attachments -->
+                            <div class="bg-gray-50 p-4 rounded-lg">
+                                <h4 class="font-semibold mb-3">Preuves & Pièces Jointes</h4>
+                                <div id="evidenceList" class="space-y-2">
+                                    <!-- Evidence will be loaded here -->
+                                </div>
+                                <div class="mt-3">
+                                    <input type="file" id="evidenceUpload" multiple class="hidden">
+                                    <button onclick="document.getElementById('evidenceUpload').click()" 
+                                            class="w-full px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100">
+                                        <i class="fas fa-upload mr-2"></i>Ajouter des Preuves
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resolution Modal -->
+    <div id="resolutionModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-2xl w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium">Résoudre le Litige</h3>
+                        <button onclick="closeResolutionModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <form id="resolutionForm" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Type de Résolution</label>
+                            <select id="resolutionType" required class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="">Sélectionner un type</option>
+                                <option value="refund">Remboursement complet</option>
+                                <option value="partial_refund">Remboursement partiel</option>
+                                <option value="service_redo">Refaire le service</option>
+                                <option value="compensation">Compensation</option>
+                                <option value="warning">Avertissement au prestataire</option>
+                                <option value="no_action">Aucune action requise</option>
+                            </select>
+                        </div>
+
+                        <div id="compensationAmount" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Montant de la Compensation</label>
+                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md" placeholder="0 FCFA">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Résumé de la Résolution *</label>
+                            <textarea id="resolutionSummary" required rows="4" 
+                                      class="w-full px-3 py-2 border border-gray-300 rounded-md"
+                                      placeholder="Décrivez la décision prise et les raisons..."></textarea>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Actions à Notifier</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" checked>
+                                    <span class="text-sm">Notifier le client</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2" checked>
+                                    <span class="text-sm">Notifier le prestataire</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="mr-2">
+                                    <span class="text-sm">Créer un rapport d'incident</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end space-x-3">
+                            <button type="button" onclick="closeResolutionModal()" 
+                                    class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                                Annuler
+                            </button>
+                            <button type="submit" 
+                                    class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">
+                                <i class="fas fa-check mr-2"></i>Résoudre le Litige
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script>
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let currentDisputes = [];
+        let selectedDisputeId = null;
+
+        // Load disputes on page load
+        window.addEventListener('load', async function() {
+            await checkAdminAuth();
+            await loadDisputes();
+            await loadStats();
+        });
+
+        async function checkAdminAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role, permissions')
+                .eq('id', user.id)
+                .single();
+
+            if (!profile || profile.role !== 'admin' || 
+                !profile.permissions?.includes('disputes')) {
+                alert('Accès non autorisé');
+                window.location.href = 'index.html';
+            }
+        }
+
+        async function loadDisputes() {
+            try {
+                const { data: disputes, error } = await supabase
+                    .from('disputes')
+                    .select(`
+                        *,
+                        booking:bookings(*),
+                        customer:profiles!disputes_customer_id_fkey(full_name, email, phone),
+                        provider:profiles!disputes_provider_id_fkey(full_name, email, phone),
+                        assigned_admin:profiles!disputes_assigned_to_fkey(full_name)
+                    `)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                currentDisputes = disputes || [];
+                renderDisputesTable();
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors du chargement des litiges');
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const { data: disputes } = await supabase
+                    .from('disputes')
+                    .select('status, created_at, resolved_at');
+
+                if (!disputes) return;
+
+                const open = disputes.filter(d => d.status === 'open').length;
+                const investigating = disputes.filter(d => d.status === 'investigating').length;
+                const pending = disputes.filter(d => d.status === 'pending_resolution').length;
+                const resolved = disputes.filter(d => d.status === 'resolved').length;
+
+                // Calculate average resolution time
+                const resolvedDisputes = disputes.filter(d => d.resolved_at);
+                let avgTime = 0;
+                if (resolvedDisputes.length > 0) {
+                    const totalTime = resolvedDisputes.reduce((sum, d) => {
+                        const created = new Date(d.created_at);
+                        const resolved = new Date(d.resolved_at);
+                        return sum + (resolved - created);
+                    }, 0);
+                    avgTime = Math.round(totalTime / resolvedDisputes.length / (1000 * 60 * 60)); // hours
+                }
+
+                document.getElementById('openDisputes').textContent = open;
+                document.getElementById('investigatingDisputes').textContent = investigating;
+                document.getElementById('pendingDisputes').textContent = pending;
+                document.getElementById('resolvedDisputes').textContent = resolved;
+                document.getElementById('avgResolutionTime').textContent = avgTime + 'h';
+                document.getElementById('openDisputesCount').textContent = open + ' Ouverts';
+            } catch (error) {
+                console.error('Erreur stats:', error);
+            }
+        }
+
+        function renderDisputesTable() {
+            const tbody = document.getElementById('disputesTableBody');
+            
+            if (currentDisputes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="px-6 py-4 text-center text-gray-500">
+                            <i class="fas fa-handshake text-3xl mb-2"></i>
+                            <p>Aucun litige trouvé</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageDisputes = currentDisputes.slice(start, end);
+
+            tbody.innerHTML = pageDisputes.map(dispute => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <input type="checkbox" class="dispute-checkbox" value="${dispute.id}">
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm font-medium text-gray-900">#${dispute.id.slice(0, 8)}</div>
+                        <div class="text-sm text-gray-500">${dispute.title || 'Litige sans titre'}</div>
+                        ${dispute.description ? `<div class="text-xs text-gray-400 mt-1">${dispute.description.substring(0, 50)}...</div>` : ''}
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="text-sm">
+                            <div><strong>Client:</strong> ${dispute.customer?.full_name || 'N/A'}</div>
+                            <div><strong>Prestataire:</strong> ${dispute.provider?.full_name || 'N/A'}</div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium">${getDisputeTypeText(dispute.type)}</div>
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full priority-${dispute.priority}">
+                            ${getPriorityText(dispute.priority)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full status-${dispute.status}">
+                            ${getStatusText(dispute.status)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        ${dispute.assigned_admin?.full_name || 'Non assigné'}
+                    </td>
+                    <td class="px-6 py-4 text-sm text-gray-900">
+                        <div>${new Date(dispute.created_at).toLocaleDateString('fr-FR')}</div>
+                        <div class="text-xs text-gray-500">${calculateDuration(dispute.created_at, dispute.resolved_at)}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onclick="viewDispute('${dispute.id}')" class="text-blue-600 hover:text-blue-900 mr-2">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button onclick="quickAssign('${dispute.id}')" class="text-green-600 hover:text-green-900 mr-2">
+                            <i class="fas fa-user-plus"></i>
+                        </button>
+                        <button onclick="quickResolve('${dispute.id}')" class="text-purple-600 hover:text-purple-900 mr-2">
+                            <i class="fas fa-check-circle"></i>
+                        </button>
+                        <button onclick="escalateDispute('${dispute.id}')" class="text-red-600 hover:text-red-900">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            updatePaginationInfo();
+        }
+
+        function getDisputeTypeText(type) {
+            const typeMap = {
+                'payment': 'Paiement',
+                'service_quality': 'Qualité du service',
+                'communication': 'Communication',
+                'cancellation': 'Annulation',
+                'fraud': 'Fraude',
+                'other': 'Autre'
+            };
+            return typeMap[type] || type;
+        }
+
+        function getPriorityText(priority) {
+            const priorityMap = {
+                'low': 'Faible',
+                'medium': 'Moyenne',
+                'high': 'Élevée',
+                'urgent': 'Urgent'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'open': 'Ouvert',
+                'investigating': 'En investigation',
+                'pending_resolution': 'En attente',
+                'resolved': 'Résolu',
+                'closed': 'Fermé'
+            };
+            return statusMap[status] || status;
+        }
+
+        function calculateDuration(startDate, endDate) {
+            const start = new Date(startDate);
+            const end = endDate ? new Date(endDate) : new Date();
+            const diffHours = Math.floor((end - start) / (1000 * 60 * 60));
+            
+            if (diffHours < 24) return diffHours + 'h';
+            const diffDays = Math.floor(diffHours / 24);
+            return diffDays + 'j';
+        }
+
+        async function viewDispute(disputeId) {
+            const dispute = currentDisputes.find(d => d.id === disputeId);
+            if (!dispute) return;
+
+            selectedDisputeId = disputeId;
+            
+            // Load dispute details
+            document.getElementById('disputeInfo').innerHTML = `
+                <div class="bg-white border rounded-lg p-4">
+                    <h4 class="text-lg font-semibold mb-3">Informations du Litige</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div><strong>ID:</strong> #${dispute.id}</div>
+                        <div><strong>Type:</strong> ${getDisputeTypeText(dispute.type)}</div>
+                        <div><strong>Priorité:</strong> ${getPriorityText(dispute.priority)}</div>
+                        <div><strong>Statut:</strong> ${getStatusText(dispute.status)}</div>
+                        <div><strong>Créé le:</strong> ${new Date(dispute.created_at).toLocaleString('fr-FR')}</div>
+                        <div><strong>Durée:</strong> ${calculateDuration(dispute.created_at, dispute.resolved_at)}</div>
+                    </div>
+                    <div class="mt-4">
+                        <strong>Description:</strong>
+                        <p class="mt-2 p-3 bg-gray-50 rounded">${dispute.description || 'Aucune description'}</p>
+                    </div>
+                </div>
+
+                <div class="bg-white border rounded-lg p-4">
+                    <h4 class="text-lg font-semibold mb-3">Parties Impliquées</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3 bg-blue-50 rounded">
+                            <h5 class="font-medium text-blue-800">Client</h5>
+                            <div class="text-sm">
+                                <div><strong>Nom:</strong> ${dispute.customer?.full_name || 'N/A'}</div>
+                                <div><strong>Email:</strong> ${dispute.customer?.email || 'N/A'}</div>
+                                <div><strong>Téléphone:</strong> ${dispute.customer?.phone || 'N/A'}</div>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-purple-50 rounded">
+                            <h5 class="font-medium text-purple-800">Prestataire</h5>
+                            <div class="text-sm">
+                                <div><strong>Nom:</strong> ${dispute.provider?.full_name || 'N/A'}</div>
+                                <div><strong>Email:</strong> ${dispute.provider?.email || 'N/A'}</div>
+                                <div><strong>Téléphone:</strong> ${dispute.provider?.phone || 'N/A'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Load communication history
+            loadCommunicationHistory(disputeId);
+            
+            // Load related information
+            loadRelatedInfo(dispute);
+
+            // Set current values
+            document.getElementById('disputeStatus').value = dispute.status;
+            document.getElementById('disputePriority').value = dispute.priority;
+            document.getElementById('assignedTo').value = dispute.assigned_to || '';
+
+            document.getElementById('disputeModal').classList.remove('hidden');
+        }
+
+        function loadCommunicationHistory(disputeId) {
+            // Mock communication history
+            const messages = [
+                {
+                    type: 'customer',
+                    author: 'Client',
+                    content: 'Le prestataire n\'est pas venu au rendez-vous convenu.',
+                    timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
+                },
+                {
+                    type: 'provider',
+                    author: 'Prestataire',
+                    content: 'J\'ai eu un problème de transport. J\'ai essayé de prévenir mais le client ne répondait pas.',
+                    timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000)
+                },
+                {
+                    type: 'admin',
+                    author: 'Admin Support',
+                    content: 'Investigation en cours. Vérification des logs de communication.',
+                    timestamp: new Date(Date.now() - 1 * 60 * 60 * 1000)
+                }
+            ];
+
+            const container = document.getElementById('communicationHistory');
+            container.innerHTML = messages.map(msg => `
+                <div class="chat-message chat-${msg.type}">
+                    <div class="flex items-start space-x-3">
+                        <div class="flex-shrink-0">
+                            <i class="fas ${msg.type === 'admin' ? 'fa-user-shield' : msg.type === 'customer' ? 'fa-user' : 'fa-hard-hat'} text-lg"></i>
+                        </div>
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-2">
+                                <span class="font-medium">${msg.author}</span>
+                                <span class="text-xs text-gray-500">${msg.timestamp.toLocaleString('fr-FR')}</span>
+                            </div>
+                            <p class="mt-1 text-sm">${msg.content}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadRelatedInfo(dispute) {
+            document.getElementById('relatedInfo').innerHTML = `
+                <div><strong>Réservation:</strong> #${dispute.booking_id?.slice(0, 8) || 'N/A'}</div>
+                <div><strong>Montant:</strong> ${dispute.amount || 'N/A'} FCFA</div>
+                <div><strong>Service:</strong> ${dispute.booking?.service?.title || 'N/A'}</div>
+                <div><strong>Date du service:</strong> ${dispute.booking?.scheduled_date ? new Date(dispute.booking.scheduled_date).toLocaleDateString('fr-FR') : 'N/A'}</div>
+            `;
+
+            // Load evidence
+            document.getElementById('evidenceList').innerHTML = `
+                <div class="flex items-center space-x-2 p-2 border rounded">
+                    <i class="fas fa-file-image text-blue-600"></i>
+                    <span class="text-sm">screenshot_service.jpg</span>
+                    <button class="ml-auto text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+                <div class="flex items-center space-x-2 p-2 border rounded">
+                    <i class="fas fa-file-alt text-green-600"></i>
+                    <span class="text-sm">conversation_log.txt</span>
+                    <button class="ml-auto text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            `;
+        }
+
+        function closeModal() {
+            document.getElementById('disputeModal').classList.add('hidden');
+            selectedDisputeId = null;
+        }
+
+        // Message form submission
+        document.getElementById('messageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const messageType = document.getElementById('messageType').value;
+            const content = document.getElementById('messageContent').value;
+            
+            if (!content.trim()) return;
+
+            try {
+                // Add message to dispute
+                const { error } = await supabase
+                    .from('dispute_messages')
+                    .insert({
+                        dispute_id: selectedDisputeId,
+                        message_type: messageType,
+                        content: content,
+                        sender_id: (await supabase.auth.getUser()).data.user.id
+                    });
+
+                if (error) throw error;
+
+                // Reload communication history
+                loadCommunicationHistory(selectedDisputeId);
+                
+                // Clear form
+                document.getElementById('messageContent').value = '';
+                
+                alert('Message envoyé avec succès');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de l\'envoi du message');
+            }
+        });
+
+        // Quick actions
+        function quickResolve(disputeId) {
+            selectedDisputeId = disputeId;
+            document.getElementById('resolutionModal').classList.remove('hidden');
+        }
+
+        function closeResolutionModal() {
+            document.getElementById('resolutionModal').classList.add('hidden');
+            selectedDisputeId = null;
+        }
+
+        // Resolution form submission
+        document.getElementById('resolutionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const resolutionData = {
+                    status: 'resolved',
+                    resolution_type: document.getElementById('resolutionType').value,
+                    resolution_summary: document.getElementById('resolutionSummary').value,
+                    resolved_at: new Date().toISOString(),
+                    resolved_by: (await supabase.auth.getUser()).data.user.id
+                };
+
+                const { error } = await supabase
+                    .from('disputes')
+                    .update(resolutionData)
+                    .eq('id', selectedDisputeId);
+
+                if (error) throw error;
+
+                closeResolutionModal();
+                await loadDisputes();
+                await loadStats();
+                
+                alert('Litige résolu avec succès');
+            } catch (error) {
+                console.error('Erreur:', error);
+                alert('Erreur lors de la résolution du litige');
+            }
+        });
+
+        // Utility functions
+        function applyFilters() {
+            loadDisputes();
+        }
+
+        function exportDisputes() {
+            alert('Export en cours de développement');
+        }
+
+        function openBulkActions() {
+            alert('Actions groupées en cours de développement');
+        }
+
+        function toggleSelectAll() {
+            const checkboxes = document.querySelectorAll('.dispute-checkbox');
+            const selectAll = document.getElementById('selectAll');
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+
+        function updatePaginationInfo() {
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, currentDisputes.length);
+            
+            document.getElementById('startRecord').textContent = start;
+            document.getElementById('endRecord').textContent = end;
+            document.getElementById('totalRecords').textContent = currentDisputes.length;
+            document.getElementById('currentPage').textContent = currentPage;
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderDisputesTable();
+            }
+        }
+
+        function nextPage() {
+            const maxPage = Math.ceil(currentDisputes.length / itemsPerPage);
+            if (currentPage < maxPage) {
+                currentPage++;
+                renderDisputesTable();
+            }
+        }
+
+        // Show compensation amount field when needed
+        document.getElementById('resolutionType').addEventListener('change', function() {
+            const compensationField = document.getElementById('compensationAmount');
+            if (this.value === 'compensation' || this.value === 'partial_refund') {
+                compensationField.classList.remove('hidden');
+            } else {
+                compensationField.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

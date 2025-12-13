@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ezra Admin - Promotional Codes</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F8FAFC;
+            --gray-100: #F1F5F9;
+            --gray-200: #E2E8F0;
+            --gray-300: #CBD5E1;
+            --gray-400: #94A3B8;
+            --gray-500: #64748B;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1E293B;
+            --gray-900: #0F172A;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --info: #3B82F6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gray-50);
+            color: var(--gray-900);
+            line-height: 1.5;
+        }
+
+        .admin-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-content h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            color: var(--gray-600);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-200);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--ezra-orange);
+            color: var(--ezra-orange);
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .analytics-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .analytics-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .analytics-content h3 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .analytics-content p {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .filters-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--ezra-orange);
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group select {
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            min-width: 150px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .codes-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .codes-table th,
+        .codes-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .codes-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background: #D1FAE5;
+            color: #059669;
+        }
+
+        .status-expired {
+            background: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .status-limit-reached {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .loading-container {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--gray-200);
+            border-top: 4px solid var(--ezra-orange);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--gray-600);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-400);
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--ezra-orange);
+        }
+
+        .input-with-suffix {
+            position: relative;
+        }
+
+        .input-with-suffix input {
+            padding-right: 3rem;
+        }
+
+        .input-with-suffix span {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+            font-weight: 600;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        .quick-campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .campaign-template {
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .campaign-template:hover {
+            border-color: var(--ezra-orange);
+            transform: translateY(-2px);
+        }
+
+        .template-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-template h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-template p {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-bottom: 0.5rem;
+        }
+
+        .template-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .filters-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <div class="header-content">
+                <h1><i class="fas fa-ticket-alt"></i> Promotional Codes</h1>
+                <p>Manage marketing campaigns and promotional codes</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="window.location.href='admin.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+                <button class="btn btn-primary" onclick="showCreateModal()">
+                    <i class="fas fa-plus"></i> New Code
+                </button>
+                <button class="btn btn-outline" onclick="refreshCodes()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </header>
+
+        <!-- Analytics Summary -->
+        <div class="analytics-grid">
+            <div class="analytics-card">
+                <div class="analytics-icon">
+                    <i class="fas fa-tags"></i>
+                </div>
+                <div class="analytics-content">
+                    <h3 id="total-codes">0</h3>
+                    <p>Active Codes</p>
+                </div>
+            </div>
+            <div class="analytics-card">
+                <div class="analytics-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="analytics-content">
+                    <h3 id="total-usage">0</h3>
+                    <p>Uses This Month</p>
+                </div>
+            </div>
+            <div class="analytics-card">
+                <div class="analytics-icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="analytics-content">
+                    <h3 id="total-savings">0 XAF</h3>
+                    <p>Total Savings</p>
+                </div>
+            </div>
+            <div class="analytics-card">
+                <div class="analytics-icon">
+                    <i class="fas fa-percentage"></i>
+                </div>
+                <div class="analytics-content">
+                    <h3 id="conversion-rate">0%</h3>
+                    <p>Conversion Rate</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-container">
+            <div class="search-container">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search codes or campaigns...">
+            </div>
+            <div class="filter-group">
+                <select id="status-filter">
+                    <option value="">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="expired">Expired</option>
+                    <option value="limit-reached">Limit Reached</option>
+                </select>
+                <select id="type-filter">
+                    <option value="">All Types</option>
+                    <option value="percentage">Percentage</option>
+                    <option value="fixed_amount">Fixed Amount</option>
+                    <option value="referral_bonus">Referral Bonus</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Codes Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Active Promotional Codes</h2>
+                <div class="table-actions">
+                    <button class="btn btn-outline" onclick="exportCodes()">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-wrapper">
+                <table class="codes-table">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Campaign</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Uses</th>
+                            <th>Validity</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="codes-table-body">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="loading-container" style="display: none;">
+            <div class="spinner"></div>
+            <p>Loading promotional codes...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div id="empty-state" class="empty-state" style="display: none;">
+            <i class="fas fa-ticket-alt"></i>
+            <h3>No promotional codes</h3>
+            <p>Create your first campaign to get started!</p>
+            <button class="btn btn-primary" onclick="showCreateModal()">
+                <i class="fas fa-plus"></i> Create Code
+            </button>
+        </div>
+    </div>
+
+    <!-- Create/Edit Modal -->
+    <div id="create-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">🎯 New Campaign</h2>
+                <button class="modal-close" onclick="hideCreateModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <form id="promo-form" class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="campaign-name">Campaign Name *</label>
+                        <input type="text" id="campaign-name" required placeholder="e.g. Easter Special 2025">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="description">Description *</label>
+                        <textarea id="description" required placeholder="Campaign description..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discount-type">Discount Type</label>
+                        <select id="discount-type" onchange="updateDiscountInput()">
+                            <option value="percentage">Percentage (%)</option>
+                            <option value="fixed_amount">Fixed Amount (XAF)</option>
+                            <option value="referral_bonus">Referral Bonus</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discount-value">Value *</label>
+                        <div class="input-with-suffix">
+                            <input type="number" id="discount-value" required placeholder="20">
+                            <span id="discount-suffix">%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="max-uses">Max Uses</label>
+                        <input type="number" id="max-uses" placeholder="Unlimited">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="valid-days">Duration (days)</label>
+                        <input type="number" id="valid-days" value="30" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-type">User Type</label>
+                        <select id="user-type">
+                            <option value="both">All</option>
+                            <option value="customer">Customers</option>
+                            <option value="provider">Providers</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="custom-code">Custom Code</label>
+                        <input type="text" id="custom-code" placeholder="EASTER25" style="text-transform: uppercase;">
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="hideCreateModal()">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-rocket"></i> Create Code
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let supabaseClient = null;
+        let currentUser = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Initializing Promotional Codes Admin...');
+            
+            // Initialize Supabase client
+            supabaseClient = window.supabase.createClient(
+                window.EZRA_CONFIG.SUPABASE_URL,
+                window.EZRA_CONFIG.SUPABASE_ANON_KEY
+            );
+            
+            // Check authentication
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (!session) {
+                alert('Please login first');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Verify admin status
+            const isAdmin = await checkAdminStatus(session.user);
+            if (!isAdmin) {
+                alert('Access denied: Admin privileges required');
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            currentUser = session.user;
+            console.log('✅ Authentication successful');
+            
+            await loadPromotionalCodes();
+            setupEventListeners();
+        });
+
+        async function checkAdminStatus(user) {
+            try {
+                const { data: profile, error } = await supabaseClient
+                    .from('profiles')
+                    .select('role')
+                    .eq('id', user.id)
+                    .single();
+
+                if (error) {
+                    console.error('❌ Profile check failed:', error);
+                    return false;
+                }
+
+                return profile?.role === 'admin';
+            } catch (error) {
+                console.error('❌ Admin status check failed:', error);
+                return false;
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('search-input').addEventListener('input', filterCodes);
+            document.getElementById('status-filter').addEventListener('change', filterCodes);
+            document.getElementById('type-filter').addEventListener('change', filterCodes);
+            document.getElementById('promo-form').addEventListener('submit', handleCreateCode);
+        }
+
+        async function loadPromotionalCodes() {
+            showLoading();
+            
+            try {
+                const { data: codes, error } = await supabaseClient
+                    .from('promotional_codes')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    throw error;
+                }
+
+                displayCodes(codes || []);
+                updateAnalytics(codes || []);
+                hideLoading();
+                
+            } catch (error) {
+                console.error('Failed to load promotional codes:', error);
+                hideLoading();
+                showEmptyState();
+            }
+        }
+
+        function displayCodes(codes) {
+            const tbody = document.getElementById('codes-table-body');
+            
+            if (codes.length === 0) {
+                showEmptyState();
+                return;
+            }
+            
+            hideEmptyState();
+            
+            tbody.innerHTML = codes.map(code => `
+                <tr>
+                    <td>
+                        <code style="background: var(--gray-100); padding: 4px 8px; border-radius: 4px; font-weight: 600;">
+                            ${code.code}
+                        </code>
+                    </td>
+                    <td>${code.campaign_name}</td>
+                    <td>${formatType(code.discount_type)}</td>
+                    <td>${formatValue(code.discount_value, code.discount_type)}</td>
+                    <td>${code.current_uses || 0}/${code.max_uses || '∞'}</td>
+                    <td>${formatDate(code.valid_until)}</td>
+                    <td>${getStatusBadge(code)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline" onclick="viewCode('${code.id}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="btn btn-sm btn-secondary" onclick="editCode('${code.id}')">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteCode('${code.id}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateAnalytics(codes) {
+            const totalCodes = codes.filter(code => getCodeStatus(code) === 'active').length;
+            const totalUsage = codes.reduce((sum, code) => sum + (code.current_uses || 0), 0);
+            const totalSavings = codes.reduce((sum, code) => {
+                const uses = code.current_uses || 0;
+                const value = code.discount_type === 'percentage' ? 0 : code.discount_value * uses;
+                return sum + value;
+            }, 0);
+            
+            document.getElementById('total-codes').textContent = totalCodes;
+            document.getElementById('total-usage').textContent = totalUsage;
+            document.getElementById('total-savings').textContent = totalSavings.toLocaleString() + ' XAF';
+            document.getElementById('conversion-rate').textContent = totalCodes > 0 ? Math.round((totalUsage / totalCodes) * 100) / 100 + '%' : '0%';
+        }
+
+        function formatType(type) {
+            const types = {
+                'percentage': 'Percentage',
+                'fixed_amount': 'Fixed Amount',
+                'referral_bonus': 'Referral Bonus'
+            };
+            return types[type] || type;
+        }
+
+        function formatValue(value, type) {
+            if (type === 'percentage') {
+                return value + '%';
+            } else {
+                return value.toLocaleString() + ' XAF';
+            }
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        function getCodeStatus(code) {
+            const now = new Date();
+            const validUntil = new Date(code.valid_until);
+            
+            if (validUntil < now) {
+                return 'expired';
+            } else if (code.max_uses && code.current_uses >= code.max_uses) {
+                return 'limit-reached';
+            } else {
+                return 'active';
+            }
+        }
+
+        function getStatusBadge(code) {
+            const status = getCodeStatus(code);
+            const badges = {
+                'active': '<span class="status-badge status-active">Active</span>',
+                'expired': '<span class="status-badge status-expired">Expired</span>',
+                'limit-reached': '<span class="status-badge status-limit-reached">Limit Reached</span>'
+            };
+            return badges[status];
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.querySelector('.table-container').style.display = 'none';
+            document.getElementById('empty-state').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.querySelector('.table-container').style.display = 'block';
+        }
+
+        function showEmptyState() {
+            document.getElementById('empty-state').style.display = 'block';
+            document.querySelector('.table-container').style.display = 'none';
+        }
+
+        function hideEmptyState() {
+            document.getElementById('empty-state').style.display = 'none';
+            document.querySelector('.table-container').style.display = 'block';
+        }
+
+        function showCreateModal() {
+            document.getElementById('create-modal').style.display = 'flex';
+        }
+
+        function hideCreateModal() {
+            document.getElementById('create-modal').style.display = 'none';
+            document.getElementById('promo-form').reset();
+        }
+
+        async function handleCreateCode(e) {
+            e.preventDefault();
+            
+            const formData = {
+                campaign_name: document.getElementById('campaign-name').value,
+                description: document.getElementById('description').value,
+                discount_type: document.getElementById('discount-type').value,
+                discount_value: parseFloat(document.getElementById('discount-value').value),
+                max_uses: document.getElementById('max-uses').value ? parseInt(document.getElementById('max-uses').value) : null,
+                valid_days: parseInt(document.getElementById('valid-days').value),
+                user_type: document.getElementById('user-type').value,
+                custom_code: document.getElementById('custom-code').value || null
+            };
+            
+            try {
+                const code = formData.custom_code || generatePromoCode();
+                const validUntil = new Date();
+                validUntil.setDate(validUntil.getDate() + formData.valid_days);
+                
+                const { error } = await supabaseClient
+                    .from('promotional_codes')
+                    .insert({
+                        code: code,
+                        campaign_name: formData.campaign_name,
+                        description: formData.description,
+                        discount_type: formData.discount_type,
+                        discount_value: formData.discount_value,
+                        max_uses: formData.max_uses,
+                        valid_until: validUntil.toISOString(),
+                        user_type: formData.user_type,
+                        current_uses: 0,
+                        is_active: true,
+                        created_by: currentUser.id
+                    });
+                
+                if (error) throw error;
+                
+                hideCreateModal();
+                await loadPromotionalCodes();
+                alert('Promotional code created successfully!');
+                
+            } catch (error) {
+                console.error('Failed to create promotional code:', error);
+                alert('Failed to create promotional code: ' + error.message);
+            }
+        }
+
+        function generatePromoCode() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        function updateDiscountInput() {
+            const type = document.getElementById('discount-type').value;
+            const suffix = document.getElementById('discount-suffix');
+            
+            if (type === 'percentage') {
+                suffix.textContent = '%';
+            } else {
+                suffix.textContent = 'XAF';
+            }
+        }
+
+        function filterCodes() {
+            // Implement filtering logic
+            console.log('Filtering codes...');
+        }
+
+        function refreshCodes() {
+            loadPromotionalCodes();
+        }
+
+        function exportCodes() {
+            alert('Export functionality coming soon!');
+        }
+
+        function viewCode(id) {
+            alert('View code details coming soon!');
+        }
+
+        function editCode(id) {
+            alert('Edit code functionality coming soon!');
+        }
+
+        function deleteCode(id) {
+            if (confirm('Are you sure you want to delete this promotional code?')) {
+                // Implement delete functionality
+                alert('Delete functionality coming soon!');
+            }
+        }
+    </script>
+</body>
+</html>

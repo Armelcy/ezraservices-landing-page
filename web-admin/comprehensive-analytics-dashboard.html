@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord Analytics - Ezra Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/date-fns@1.30.1/index.min.js"></script>
+</head>
+<body class="bg-gray-100">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="hover:text-blue-200">
+                    <i class="fas fa-arrow-left mr-2"></i>Tableau de bord
+                </a>
+            </div>
+            <h1 class="text-xl font-bold">Analytics Complètes</h1>
+            <div class="flex items-center space-x-4">
+                <button onclick="exportReport()" class="px-4 py-2 bg-green-600 rounded-md hover:bg-green-700">
+                    <i class="fas fa-download mr-2"></i>Exporter
+                </button>
+                <select id="dateRange" onchange="changeDateRange()" class="px-3 py-2 bg-blue-700 border border-blue-500 rounded-md">
+                    <option value="7">7 derniers jours</option>
+                    <option value="30" selected>30 derniers jours</option>
+                    <option value="90">90 derniers jours</option>
+                    <option value="365">1 an</option>
+                    <option value="custom">Personnalisé</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-6">
+        <!-- Key Performance Indicators -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Revenus Totaux</p>
+                        <p class="text-3xl font-bold text-green-600" id="totalRevenue">-</p>
+                        <p class="text-sm text-gray-500" id="revenueChange">-</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <i class="fas fa-coins text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Réservations</p>
+                        <p class="text-3xl font-bold text-blue-600" id="totalBookings">-</p>
+                        <p class="text-sm text-gray-500" id="bookingsChange">-</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <i class="fas fa-calendar text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Nouveaux Utilisateurs</p>
+                        <p class="text-3xl font-bold text-purple-600" id="newUsers">-</p>
+                        <p class="text-sm text-gray-500" id="usersChange">-</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <i class="fas fa-user-plus text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Taux de Conversion</p>
+                        <p class="text-3xl font-bold text-orange-600" id="conversionRate">-</p>
+                        <p class="text-sm text-gray-500" id="conversionChange">-</p>
+                    </div>
+                    <div class="p-3 rounded-full bg-orange-100 text-orange-600">
+                        <i class="fas fa-chart-line text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Revenue Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Évolution des Revenus</h3>
+                    <select id="revenueChartType" onchange="updateRevenueChart()" class="px-3 py-1 border rounded">
+                        <option value="daily">Journalier</option>
+                        <option value="weekly">Hebdomadaire</option>
+                        <option value="monthly">Mensuel</option>
+                    </select>
+                </div>
+                <canvas id="revenueChart" height="300"></canvas>
+            </div>
+
+            <!-- Bookings Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Réservations par Statut</h3>
+                    <button onclick="toggleChartType('bookingsChart')" class="px-3 py-1 bg-blue-600 text-white rounded text-sm">
+                        <i class="fas fa-exchange-alt"></i>
+                    </button>
+                </div>
+                <canvas id="bookingsChart" height="300"></canvas>
+            </div>
+        </div>
+
+        <!-- Services Performance -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Top Services -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Services les Plus Demandés</h3>
+                <div id="topServices" class="space-y-3">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- User Growth -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Croissance Utilisateurs</h3>
+                <canvas id="userGrowthChart" height="200"></canvas>
+            </div>
+
+            <!-- Geographic Distribution -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Répartition Géographique</h3>
+                <div id="geographicData" class="space-y-2">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Payment Methods -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Méthodes de Paiement</h3>
+                <canvas id="paymentMethodsChart" height="300"></canvas>
+            </div>
+
+            <!-- Customer Satisfaction -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Satisfaction Client</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm">Note Moyenne</span>
+                        <span class="text-2xl font-bold text-yellow-500" id="averageRating">-</span>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="flex items-center">
+                            <span class="w-8 text-sm">5★</span>
+                            <div class="flex-1 mx-2 bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 0%" id="rating5"></div>
+                            </div>
+                            <span class="w-8 text-sm text-right" id="rating5Count">0</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-8 text-sm">4★</span>
+                            <div class="flex-1 mx-2 bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 0%" id="rating4"></div>
+                            </div>
+                            <span class="w-8 text-sm text-right" id="rating4Count">0</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-8 text-sm">3★</span>
+                            <div class="flex-1 mx-2 bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 0%" id="rating3"></div>
+                            </div>
+                            <span class="w-8 text-sm text-right" id="rating3Count">0</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-8 text-sm">2★</span>
+                            <div class="flex-1 mx-2 bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 0%" id="rating2"></div>
+                            </div>
+                            <span class="w-8 text-sm text-right" id="rating2Count">0</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="w-8 text-sm">1★</span>
+                            <div class="flex-1 mx-2 bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 0%" id="rating1"></div>
+                            </div>
+                            <span class="w-8 text-sm text-right" id="rating1Count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Real-time Metrics -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            <!-- Active Users -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Utilisateurs Actifs</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">En ligne maintenant</span>
+                        <span class="text-2xl font-bold text-green-600" id="onlineUsers">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Aujourd'hui</span>
+                        <span class="text-xl font-semibold" id="todayUsers">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Cette semaine</span>
+                        <span class="text-xl font-semibold" id="weekUsers">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Santé du Système</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Temps de réponse API</span>
+                        <span class="text-green-600 font-semibold" id="apiResponseTime">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Disponibilité</span>
+                        <span class="text-green-600 font-semibold" id="systemUptime">99.9%</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Erreurs/jour</span>
+                        <span class="text-yellow-600 font-semibold" id="dailyErrors">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Summary -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold mb-4">Résumé Financier</h3>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Commission Ezra</span>
+                        <span class="text-blue-600 font-semibold" id="platformCommission">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Paiements en attente</span>
+                        <span class="text-orange-600 font-semibold" id="pendingPayments">-</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-gray-600">Remboursements</span>
+                        <span class="text-red-600 font-semibold" id="totalRefunds">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detailed Tables -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Recent Transactions -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Transactions Récentes</h3>
+                    <a href="transactions.html" class="text-blue-600 hover:text-blue-800 text-sm">Voir tout</a>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="text-left py-2 text-sm font-medium text-gray-600">ID</th>
+                                <th class="text-left py-2 text-sm font-medium text-gray-600">Montant</th>
+                                <th class="text-left py-2 text-sm font-medium text-gray-600">Statut</th>
+                                <th class="text-left py-2 text-sm font-medium text-gray-600">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTransactions">
+                            <!-- Will be populated dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Top Providers -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold">Meilleurs Prestataires</h3>
+                    <a href="providers.html" class="text-blue-600 hover:text-blue-800 text-sm">Voir tout</a>
+                </div>
+                <div id="topProviders" class="space-y-3">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Date Range Modal -->
+    <div id="dateRangeModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg max-w-md w-full">
+                <div class="p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-medium">Période Personnalisée</h3>
+                        <button onclick="closeDateModal()" class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date de début</label>
+                            <input type="date" id="customStartDate" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Date de fin</label>
+                            <input type="date" id="customEndDate" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex justify-end space-x-3">
+                        <button onclick="closeDateModal()" class="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                            Annuler
+                        </button>
+                        <button onclick="applyCustomDateRange()" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Appliquer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="config-local.js"></script>
+    <script>
+        // Initialize Supabase
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        let charts = {};
+        let currentDateRange = 30;
+        let analyticsData = {};
+
+        // Load analytics on page load
+        window.addEventListener('load', async function() {
+            await checkAdminAuth();
+            await loadAnalytics();
+            initializeCharts();
+            
+            // Auto-refresh every 5 minutes
+            setInterval(loadAnalytics, 300000);
+        });
+
+        async function checkAdminAuth() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const { data: profile } = await supabase
+                .from('profiles')
+                .select('role, permissions')
+                .eq('id', user.id)
+                .single();
+
+            if (!profile || profile.role !== 'admin' || 
+                !profile.permissions?.includes('analytics')) {
+                alert('Accès non autorisé');
+                window.location.href = 'index.html';
+            }
+        }
+
+        async function loadAnalytics() {
+            try {
+                const endDate = new Date();
+                const startDate = new Date();
+                startDate.setDate(endDate.getDate() - currentDateRange);
+
+                // Load KPIs
+                await Promise.all([
+                    loadRevenueData(startDate, endDate),
+                    loadBookingsData(startDate, endDate),
+                    loadUsersData(startDate, endDate),
+                    loadPerformanceData(startDate, endDate)
+                ]);
+
+                updateDashboard();
+            } catch (error) {
+                console.error('Erreur lors du chargement des analytics:', error);
+            }
+        }
+
+        async function loadRevenueData(startDate, endDate) {
+            const { data: payments } = await supabase
+                .from('payments')
+                .select('amount, created_at, status, payment_method')
+                .gte('created_at', startDate.toISOString())
+                .lte('created_at', endDate.toISOString())
+                .eq('status', 'completed');
+
+            analyticsData.revenue = payments || [];
+        }
+
+        async function loadBookingsData(startDate, endDate) {
+            const { data: bookings } = await supabase
+                .from('bookings')
+                .select('*, service:services(title, category, price)')
+                .gte('created_at', startDate.toISOString())
+                .lte('created_at', endDate.toISOString());
+
+            analyticsData.bookings = bookings || [];
+        }
+
+        async function loadUsersData(startDate, endDate) {
+            const { data: users } = await supabase
+                .from('profiles')
+                .select('created_at, role, status, city, last_seen_at')
+                .gte('created_at', startDate.toISOString())
+                .lte('created_at', endDate.toISOString());
+
+            analyticsData.users = users || [];
+        }
+
+        async function loadPerformanceData(startDate, endDate) {
+            const { data: reviews } = await supabase
+                .from('reviews')
+                .select('rating, created_at')
+                .gte('created_at', startDate.toISOString())
+                .lte('created_at', endDate.toISOString());
+
+            analyticsData.reviews = reviews || [];
+        }
+
+        function updateDashboard() {
+            updateKPIs();
+            updateCharts();
+            updateTables();
+        }
+
+        function updateKPIs() {
+            // Total Revenue
+            const totalRevenue = analyticsData.revenue.reduce((sum, payment) => 
+                sum + parseFloat(payment.amount), 0);
+            document.getElementById('totalRevenue').textContent = 
+                totalRevenue.toLocaleString() + ' FCFA';
+
+            // Total Bookings
+            document.getElementById('totalBookings').textContent = 
+                analyticsData.bookings.length.toLocaleString();
+
+            // New Users
+            document.getElementById('newUsers').textContent = 
+                analyticsData.users.length.toLocaleString();
+
+            // Conversion Rate
+            const conversionRate = analyticsData.bookings.length > 0 ? 
+                (analyticsData.revenue.length / analyticsData.bookings.length * 100).toFixed(1) : 0;
+            document.getElementById('conversionRate').textContent = conversionRate + '%';
+
+            // Calculate changes (mock data for demo)
+            document.getElementById('revenueChange').textContent = '+12.5% vs période précédente';
+            document.getElementById('bookingsChange').textContent = '+8.3% vs période précédente';
+            document.getElementById('usersChange').textContent = '+15.2% vs période précédente';
+            document.getElementById('conversionChange').textContent = '+2.1% vs période précédente';
+        }
+
+        function initializeCharts() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            charts.revenue = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Revenus (FCFA)',
+                        data: [],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString() + ' FCFA';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Bookings Chart
+            const bookingsCtx = document.getElementById('bookingsChart').getContext('2d');
+            charts.bookings = new Chart(bookingsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Confirmées', 'En Attente', 'Terminées', 'Annulées'],
+                    datasets: [{
+                        data: [0, 0, 0, 0],
+                        backgroundColor: [
+                            'rgb(34, 197, 94)',
+                            'rgb(251, 191, 36)',
+                            'rgb(59, 130, 246)',
+                            'rgb(239, 68, 68)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // User Growth Chart
+            const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
+            charts.userGrowth = new Chart(userGrowthCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Nouveaux Utilisateurs',
+                        data: [],
+                        backgroundColor: 'rgba(147, 51, 234, 0.8)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Payment Methods Chart
+            const paymentCtx = document.getElementById('paymentMethodsChart').getContext('2d');
+            charts.paymentMethods = new Chart(paymentCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['MTN Mobile Money', 'Orange Money', 'Espèces'],
+                    datasets: [{
+                        data: [0, 0, 0],
+                        backgroundColor: [
+                            'rgb(251, 191, 36)',
+                            'rgb(249, 115, 22)',
+                            'rgb(34, 197, 94)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        function updateCharts() {
+            updateRevenueChart();
+            updateBookingsChart();
+            updateUserGrowthChart();
+            updatePaymentMethodsChart();
+            updateRatingsData();
+        }
+
+        function updateRevenueChart() {
+            // Group revenue by day/week/month based on selection
+            const groupedData = groupDataByPeriod(analyticsData.revenue, 'daily');
+            
+            charts.revenue.data.labels = groupedData.labels;
+            charts.revenue.data.datasets[0].data = groupedData.values;
+            charts.revenue.update();
+        }
+
+        function updateBookingsChart() {
+            const statusCounts = {
+                confirmed: 0,
+                pending: 0,
+                completed: 0,
+                cancelled: 0
+            };
+
+            analyticsData.bookings.forEach(booking => {
+                statusCounts[booking.status] = (statusCounts[booking.status] || 0) + 1;
+            });
+
+            charts.bookings.data.datasets[0].data = [
+                statusCounts.confirmed,
+                statusCounts.pending,
+                statusCounts.completed,
+                statusCounts.cancelled
+            ];
+            charts.bookings.update();
+        }
+
+        function updateUserGrowthChart() {
+            const groupedUsers = groupDataByPeriod(analyticsData.users, 'daily');
+            
+            charts.userGrowth.data.labels = groupedUsers.labels;
+            charts.userGrowth.data.datasets[0].data = groupedUsers.values;
+            charts.userGrowth.update();
+        }
+
+        function updatePaymentMethodsChart() {
+            const methodCounts = {
+                'mtn_momo': 0,
+                'orange_money': 0,
+                'cash': 0
+            };
+
+            analyticsData.revenue.forEach(payment => {
+                methodCounts[payment.payment_method] = 
+                    (methodCounts[payment.payment_method] || 0) + 1;
+            });
+
+            charts.paymentMethods.data.datasets[0].data = [
+                methodCounts.mtn_momo,
+                methodCounts.orange_money,
+                methodCounts.cash
+            ];
+            charts.paymentMethods.update();
+        }
+
+        function updateRatingsData() {
+            const ratingCounts = [0, 0, 0, 0, 0]; // 1-5 stars
+            let totalRating = 0;
+
+            analyticsData.reviews.forEach(review => {
+                const rating = parseInt(review.rating);
+                if (rating >= 1 && rating <= 5) {
+                    ratingCounts[rating - 1]++;
+                    totalRating += rating;
+                }
+            });
+
+            const totalReviews = analyticsData.reviews.length;
+            const averageRating = totalReviews > 0 ? (totalRating / totalReviews).toFixed(1) : 0;
+
+            document.getElementById('averageRating').textContent = averageRating;
+
+            for (let i = 0; i < 5; i++) {
+                const percentage = totalReviews > 0 ? (ratingCounts[i] / totalReviews * 100) : 0;
+                document.getElementById(`rating${i + 1}`).style.width = percentage + '%';
+                document.getElementById(`rating${i + 1}Count`).textContent = ratingCounts[i];
+            }
+        }
+
+        function updateTables() {
+            // Update recent transactions
+            const recentTransactions = analyticsData.revenue.slice(-5).reverse();
+            const transactionsHtml = recentTransactions.map(payment => `
+                <tr class="border-b">
+                    <td class="py-2 text-sm">#${payment.id.slice(0, 8)}</td>
+                    <td class="py-2 text-sm">${parseFloat(payment.amount).toLocaleString()} FCFA</td>
+                    <td class="py-2 text-sm">
+                        <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                            ${payment.status}
+                        </span>
+                    </td>
+                    <td class="py-2 text-sm">${new Date(payment.created_at).toLocaleDateString('fr-FR')}</td>
+                </tr>
+            `).join('');
+            document.getElementById('recentTransactions').innerHTML = transactionsHtml;
+
+            // Update top services
+            const serviceCounts = {};
+            analyticsData.bookings.forEach(booking => {
+                const service = booking.service?.title || 'Service Inconnu';
+                serviceCounts[service] = (serviceCounts[service] || 0) + 1;
+            });
+
+            const topServices = Object.entries(serviceCounts)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+
+            const servicesHtml = topServices.map(([service, count]) => `
+                <div class="flex justify-between items-center p-3 bg-gray-50 rounded">
+                    <span class="text-sm font-medium">${service}</span>
+                    <span class="text-sm text-gray-600">${count} réservations</span>
+                </div>
+            `).join('');
+            document.getElementById('topServices').innerHTML = servicesHtml;
+
+            // Update geographic distribution
+            const cityCounts = {};
+            analyticsData.users.forEach(user => {
+                const city = user.city || 'Non spécifié';
+                cityCounts[city] = (cityCounts[city] || 0) + 1;
+            });
+
+            const topCities = Object.entries(cityCounts)
+                .sort(([,a], [,b]) => b - a)
+                .slice(0, 5);
+
+            const citiesHtml = topCities.map(([city, count]) => `
+                <div class="flex justify-between items-center">
+                    <span class="text-sm">${city}</span>
+                    <span class="text-sm font-semibold">${count}</span>
+                </div>
+            `).join('');
+            document.getElementById('geographicData').innerHTML = citiesHtml;
+        }
+
+        function groupDataByPeriod(data, period) {
+            const grouped = {};
+            
+            data.forEach(item => {
+                const date = new Date(item.created_at);
+                let key;
+                
+                switch (period) {
+                    case 'daily':
+                        key = date.toISOString().split('T')[0];
+                        break;
+                    case 'weekly':
+                        const week = getWeekNumber(date);
+                        key = `Semaine ${week}`;
+                        break;
+                    case 'monthly':
+                        key = date.toISOString().slice(0, 7);
+                        break;
+                }
+                
+                grouped[key] = (grouped[key] || 0) + (parseFloat(item.amount) || 1);
+            });
+
+            return {
+                labels: Object.keys(grouped),
+                values: Object.values(grouped)
+            };
+        }
+
+        function getWeekNumber(date) {
+            const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+            const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+            return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+        }
+
+        function changeDateRange() {
+            const select = document.getElementById('dateRange');
+            if (select.value === 'custom') {
+                document.getElementById('dateRangeModal').classList.remove('hidden');
+            } else {
+                currentDateRange = parseInt(select.value);
+                loadAnalytics();
+            }
+        }
+
+        function closeDateModal() {
+            document.getElementById('dateRangeModal').classList.add('hidden');
+            document.getElementById('dateRange').value = currentDateRange.toString();
+        }
+
+        function applyCustomDateRange() {
+            const startDate = document.getElementById('customStartDate').value;
+            const endDate = document.getElementById('customEndDate').value;
+            
+            if (startDate && endDate) {
+                // Implementation for custom date range
+                closeDateModal();
+                loadAnalytics();
+            }
+        }
+
+        function exportReport() {
+            // Implementation for exporting analytics report
+            alert('Export du rapport en cours de développement');
+        }
+
+        function updateRevenueChart() {
+            const type = document.getElementById('revenueChartType').value;
+            updateRevenueChart();
+        }
+
+        function toggleChartType(chartId) {
+            // Implementation for toggling between chart types
+            if (charts.bookings.config.type === 'doughnut') {
+                charts.bookings.config.type = 'bar';
+            } else {
+                charts.bookings.config.type = 'doughnut';
+            }
+            charts.bookings.update();
+        }
+
+        // Real-time data updates
+        function updateRealTimeMetrics() {
+            document.getElementById('onlineUsers').textContent = Math.floor(Math.random() * 50) + 10;
+            document.getElementById('todayUsers').textContent = Math.floor(Math.random() * 200) + 100;
+            document.getElementById('weekUsers').textContent = Math.floor(Math.random() * 1000) + 500;
+            document.getElementById('apiResponseTime').textContent = Math.floor(Math.random() * 100) + 50 + 'ms';
+            document.getElementById('dailyErrors').textContent = Math.floor(Math.random() * 5);
+        }
+
+        // Update real-time metrics every 30 seconds
+        setInterval(updateRealTimeMetrics, 30000);
+        updateRealTimeMetrics(); // Initial call
+    </script>
+</body>
+</html>
