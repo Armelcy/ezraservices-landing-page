@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Supprimer votre compte Ezra - Demande de suppression de compte et de données">
+    <title>Supprimer mon compte - Ezra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1F2937;
+            background-color: #F9FAFB;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: white;
+            padding: 30px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .header-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #1F2937;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #6B7280;
+            margin-bottom: 5px;
+        }
+
+        .content {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            color: #FF6B35;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #FFE5DC;
+        }
+
+        h3 {
+            font-size: 1.2em;
+            color: #374151;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        p, ul {
+            margin-bottom: 15px;
+            color: #374151;
+        }
+
+        ul {
+            list-style-position: inside;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .warning-box {
+            background-color: #FEF3C7;
+            border-left: 4px solid #F59E0B;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .info-box {
+            background-color: #DBEAFE;
+            border-left: 4px solid #3B82F6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .form-container {
+            background-color: #F9FAFB;
+            padding: 30px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        input[type="email"],
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #D1D5DB;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="email"]:focus,
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #FF6B35;
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            margin: 15px 0;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: start;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 10px;
+            margin-top: 4px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #FF6B35;
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #E55A2B;
+        }
+
+        button:disabled {
+            background-color: #D1D5DB;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            display: none;
+            background-color: #D1FAE5;
+            border-left: 4px solid #10B981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            display: none;
+            background-color: #FEE2E2;
+            border-left: 4px solid #EF4444;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6B7280;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #FF6B35;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #FF6B35;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .content {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Supprimer mon compte Ezra</h1>
+            <p class="subtitle">Demande de suppression de compte et de données personnelles</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="content">
+            <a href="index.html" class="back-link">← Retour à l'accueil</a>
+
+            <section>
+                <h2>Avant de supprimer votre compte</h2>
+                <div class="warning-box">
+                    <strong>⚠️ Attention :</strong> La suppression de votre compte est <strong>irréversible</strong>.
+                    Toutes vos données personnelles seront définitivement supprimées de nos systèmes.
+                </div>
+
+                <h3>Ce qui sera supprimé :</h3>
+                <ul>
+                    <li><strong>Informations de profil :</strong> Nom, prénom, photo, biographie</li>
+                    <li><strong>Coordonnées :</strong> Email, numéro de téléphone, adresse</li>
+                    <li><strong>Historique :</strong> Réservations passées, recherches, préférences</li>
+                    <li><strong>Messages :</strong> Conversations avec les prestataires/clients</li>
+                    <li><strong>Évaluations :</strong> Avis et notes donnés ou reçus</li>
+                    <li><strong>Données de paiement :</strong> Méthodes de paiement enregistrées</li>
+                    <li><strong>Informations de vérification :</strong> Documents d'identité (pour les prestataires)</li>
+                </ul>
+
+                <h3>Ce qui sera conservé :</h3>
+                <ul>
+                    <li><strong>Données légales :</strong> Les transactions financières seront conservées pendant 7 ans conformément aux obligations légales</li>
+                    <li><strong>Données anonymisées :</strong> Certaines statistiques peuvent être conservées de manière anonyme pour nos analyses</li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Délai de traitement</h2>
+                <div class="info-box">
+                    <strong>📅 Délai de suppression :</strong> Votre compte et vos données personnelles seront supprimés dans un délai de <strong>30 jours</strong> après validation de votre demande.
+                    <br><br>
+                    Vous recevrez un email de confirmation une fois la suppression effectuée.
+                </div>
+            </section>
+
+            <section>
+                <h2>Demande de suppression</h2>
+                <p>Remplissez le formulaire ci-dessous pour soumettre votre demande de suppression de compte.</p>
+
+                <div class="form-container">
+                    <form id="deleteAccountForm">
+                        <div class="form-group">
+                            <label for="userType">Type de compte *</label>
+                            <select id="userType" name="userType" required>
+                                <option value="">-- Sélectionnez --</option>
+                                <option value="customer">Client</option>
+                                <option value="provider">Prestataire de services</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email">Email associé au compte *</label>
+                            <input type="email" id="email" name="email" required
+                                   placeholder="votre@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone">Numéro de téléphone (optionnel)</label>
+                            <input type="text" id="phone" name="phone"
+                                   placeholder="+33 6 12 34 56 78">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reason">Raison de la suppression (optionnel)</label>
+                            <textarea id="reason" name="reason"
+                                      placeholder="Aidez-nous à améliorer Ezra en nous expliquant pourquoi vous souhaitez supprimer votre compte..."></textarea>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="confirmUnderstand" required>
+                                <span>Je comprends que la suppression de mon compte est irréversible et que toutes mes données personnelles seront définitivement supprimées dans un délai de 30 jours.</span>
+                            </label>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <label>
+                                <input type="checkbox" id="confirmNoBookings" required>
+                                <span>Je confirme que je n'ai aucune réservation en cours et que tous mes paiements sont réglés.</span>
+                            </label>
+                        </div>
+
+                        <div class="success-message" id="successMessage">
+                            <strong>✅ Demande envoyée avec succès !</strong><br>
+                            Nous avons bien reçu votre demande de suppression de compte. Vous recevrez un email de confirmation à <span id="confirmEmail"></span> dans les prochaines minutes.
+                            <br><br>
+                            Votre compte sera supprimé dans un délai de 30 jours.
+                        </div>
+
+                        <div class="error-message" id="errorMessage">
+                            <strong>❌ Erreur</strong><br>
+                            Une erreur s'est produite lors de l'envoi de votre demande. Veuillez réessayer ou nous contacter directement à <a href="mailto:support@ezraservice.com">support@ezraservice.com</a>
+                        </div>
+
+                        <button type="submit" id="submitButton">Soumettre la demande de suppression</button>
+                    </form>
+                </div>
+            </section>
+
+            <section>
+                <h2>Besoin d'aide ?</h2>
+                <p>Si vous avez des questions concernant la suppression de votre compte ou si vous souhaitez uniquement supprimer certaines données, contactez-nous :</p>
+                <ul>
+                    <li><strong>Email :</strong> <a href="mailto:support@ezraservice.com">support@ezraservice.com</a></li>
+                    <li><strong>Support in-app :</strong> Menu → Aide & Support</li>
+                </ul>
+                <p>Vous pouvez également consulter notre <a href="privacy-policy.html">Politique de Confidentialité</a> pour plus d'informations sur vos droits.</p>
+            </section>
+        </div>
+    </div>
+
+    <footer>
+        <p>
+            <a href="index.html">Accueil</a> |
+            <a href="privacy-policy.html">Politique de Confidentialité</a> |
+            <a href="terms.html">Conditions d'Utilisation</a>
+        </p>
+        <p>© 2026 Ezra. Tous droits réservés.</p>
+    </footer>
+
+    <script type="module">
+        import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
+
+        // Initialize Supabase (use your actual credentials)
+        const supabaseUrl = 'https://gbuudocfihxbuknjfhmy.supabase.co'
+        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdidXVkb2NmaWh4YnVrbmpmaG15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1Mjc0MzAsImV4cCI6MjA0NjEwMzQzMH0.YhVBJt_M2fPYqRqhCDxKP9J_xk0r_d6TkpG_0qlvJ9A'
+        const supabase = createClient(supabaseUrl, supabaseAnonKey)
+
+        document.getElementById('deleteAccountForm').addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const submitButton = document.getElementById('submitButton')
+            const successMessage = document.getElementById('successMessage')
+            const errorMessage = document.getElementById('errorMessage')
+
+            // Hide previous messages
+            successMessage.style.display = 'none'
+            errorMessage.style.display = 'none'
+
+            // Disable submit button
+            submitButton.disabled = true
+            submitButton.textContent = 'Envoi en cours...'
+
+            // Get form data
+            const formData = {
+                user_type: document.getElementById('userType').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                reason: document.getElementById('reason').value,
+                requested_at: new Date().toISOString(),
+                status: 'pending'
+            }
+
+            try {
+                // Insert into account_deletion_requests table
+                const { data, error } = await supabase
+                    .from('account_deletion_requests')
+                    .insert([formData])
+                    .select()
+
+                if (error) {
+                    throw error
+                }
+
+                // Show success message
+                document.getElementById('confirmEmail').textContent = formData.email
+                successMessage.style.display = 'block'
+
+                // Reset form
+                document.getElementById('deleteAccountForm').reset()
+
+                // Scroll to success message
+                successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+
+            } catch (error) {
+                console.error('Error submitting deletion request:', error)
+                errorMessage.style.display = 'block'
+                errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+            } finally {
+                // Re-enable submit button
+                submitButton.disabled = false
+                submitButton.textContent = 'Soumettre la demande de suppression'
+            }
+        })
+    </script>
+</body>
+</html>
