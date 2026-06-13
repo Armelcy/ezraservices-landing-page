@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-v2/
+Disallow: /web-admin/
+Disallow: /login.html
+Disallow: /reset-password.html
+Disallow: /delete-account.html
+Disallow: /debug-test.html
+Disallow: /test-whatsapp.html
+
+Sitemap: https://ezraservice.com/sitemap.xml
