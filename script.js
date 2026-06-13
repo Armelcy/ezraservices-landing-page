@@ -312,7 +312,7 @@ document.addEventListener('DOMContentLoaded', function() {
         whatsappFloat.style.display = 'block';
         whatsappFloat.style.visibility = 'visible';
         // WhatsApp Business phone number (replace with actual business number)
-        const whatsappBusinessNumber = '+237622334455'; // Example Cameroon number
+        const whatsappBusinessNumber = '+237658837203'; // Example Cameroon number
         
         whatsappFloat.addEventListener('click', function() {
             // Pre-filled message for customer support
