@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.ezraworking",
+      "sha256_cert_fingerprints": [
+        "E3:9A:E2:6F:A3:6F:DB:67:87:9A:DD:51:A0:B8:3F:98:3B:2D:3C:77:4F:72:CF:23:71:27:A0:CA:9C:83:05:4F"
+      ]
+    }
+  }
+]
