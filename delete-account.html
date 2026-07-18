@@ -386,9 +386,9 @@
     <script type="module">
         import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm'
 
-        // Initialize Supabase (use your actual credentials)
-        const supabaseUrl = 'https://gbuudocfihxbuknjfhmy.supabase.co'
-        const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdidXVkb2NmaWh4YnVrbmpmaG15Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA1Mjc0MzAsImV4cCI6MjA0NjEwMzQzMH0.YhVBJt_M2fPYqRqhCDxKP9J_xk0r_d6TkpG_0qlvJ9A'
+        // Initialize Supabase (publishable anon key — client-safe)
+        const supabaseUrl = 'https://zouyaaeincpprkdkofgf.supabase.co'
+        const supabaseAnonKey = 'sb_publishable_zYS9hJWJUcFpiwWeScHOXw_eiT7WDsX'
         const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
         document.getElementById('deleteAccountForm').addEventListener('submit', async (e) => {
@@ -418,10 +418,9 @@
 
             try {
                 // Insert into account_deletion_requests table
-                const { data, error } = await supabase
+                const { error } = await supabase
                     .from('account_deletion_requests')
                     .insert([formData])
-                    .select()
 
                 if (error) {
                     throw error
