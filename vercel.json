@@ -1,0 +1,35 @@
+{
+  "redirects": [
+    {
+      "source": "/app",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*Android.*" }],
+      "destination": "https://play.google.com/store/apps/details?id=com.ezraworking",
+      "permanent": false
+    },
+    {
+      "source": "/app",
+      "has": [{ "type": "header", "key": "user-agent", "value": ".*(iPhone|iPad|iPod).*" }],
+      "destination": "https://apps.apple.com/app/id6755406129",
+      "permanent": false
+    },
+    { "source": "/app", "destination": "/", "permanent": false },
+    { "source": "/book/:path*", "destination": "/app", "permanent": false },
+    { "source": "/provider/:path*", "destination": "/app", "permanent": false },
+    { "source": "/booking/:path*", "destination": "/app", "permanent": false },
+    { "source": "/rebook/:path*", "destination": "/app", "permanent": false },
+    { "source": "/join-booking/:path*", "destination": "/app", "permanent": false },
+    { "source": "/group-booking", "destination": "/app", "permanent": false },
+    { "source": "/group/:path*", "destination": "/app", "permanent": false },
+    { "source": "/urgent", "destination": "/app", "permanent": false }
+  ],
+  "headers": [
+    {
+      "source": "/.well-known/assetlinks.json",
+      "headers": [{ "key": "Content-Type", "value": "application/json" }]
+    },
+    {
+      "source": "/.well-known/apple-app-site-association",
+      "headers": [{ "key": "Content-Type", "value": "application/json" }]
+    }
+  ]
+}
