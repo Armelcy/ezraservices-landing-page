@@ -244,10 +244,10 @@
             filter: drop-shadow(0 30px 60px rgba(15,31,53,0.35));
         }
         .phone-frame {
-            width: 280px; height: 570px;
+            width: 260px; height: 555px;
             background: var(--ezra-navy-dark);
             border-radius: 2.5rem;
-            padding: 10px;
+            padding: 8px;
             position: relative;
             border: 2px solid rgba(255,255,255,0.12);
         }
@@ -840,170 +840,23 @@
                         <div class="phone-screen">
 
                             <!-- Screen 1: Customer Home -->
-                            <div class="app-screen screen-home active" id="screen-0">
-                                <div class="app-header">
-                                    <div class="app-header-inner">
-                                        <div class="app-status">
-                                            <span class="app-status-time">09:41</span>
-                                            <div class="app-status-icons">
-                                                <div class="status-dot"></div>
-                                                <div class="status-dot"></div>
-                                                <div class="status-dot"></div>
-                                            </div>
-                                        </div>
-                                        <div class="app-greeting">Bonjour 👋</div>
-                                        <div class="app-name">Marie-Claire K.</div>
-                                        <div class="app-search">
-                                            <span class="search-icon">🔍</span>
-                                            <span class="search-placeholder">Quel service cherchez-vous ?</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="orange-strip"></div>
-                                <div class="screen-body">
-                                    <div class="section-label">Catégories</div>
-                                    <div class="categories-grid">
-                                        <div class="cat-card"><div class="cat-icon">🧹</div><div class="cat-name">Ménage</div></div>
-                                        <div class="cat-card"><div class="cat-icon">⚡</div><div class="cat-name">Électricité</div></div>
-                                        <div class="cat-card"><div class="cat-icon">🔧</div><div class="cat-name">Plomberie</div></div>
-                                        <div class="cat-card"><div class="cat-icon">🌿</div><div class="cat-name">Jardinage</div></div>
-                                    </div>
-                                    <div class="section-label">Prestataires vedettes</div>
-                                    <div class="provider-card">
-                                        <div class="provider-avatar">AK</div>
-                                        <div class="provider-info">
-                                            <div class="provider-name">Aimé Kamgang</div>
-                                            <div class="provider-meta">⭐ 4.9 · Douala · Plomberie</div>
-                                            <div class="provider-price">à partir de 8 500 XAF</div>
-                                        </div>
-                                        <div class="provider-badge">🥇 Or</div>
-                                    </div>
-                                    <div class="provider-card">
-                                        <div class="provider-avatar">FN</div>
-                                        <div class="provider-info">
-                                            <div class="provider-name">Fatou Ndiaye</div>
-                                            <div class="provider-meta">⭐ 4.8 · Yaoundé · Ménage</div>
-                                            <div class="provider-price">à partir de 5 000 XAF</div>
-                                        </div>
-                                        <div class="provider-badge">🥈 Argent</div>
-                                    </div>
-                                </div>
-                                <div class="app-bottom-nav">
-                                    <div class="nav-item active"><div class="nav-icon">🏠</div><div class="nav-label">Accueil</div></div>
-                                    <div class="nav-item"><div class="nav-icon">🔍</div><div class="nav-label">Recherche</div></div>
-                                    <div class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">Réservations</div></div>
-                                    <div class="nav-item"><div class="nav-icon">💬</div><div class="nav-label">Messages</div></div>
-                                </div>
+                            <div class="app-screen active" id="screen-0">
+                                <img src="assets/images/app-screen-1.png" alt="Accueil client EZRA" style="width:100%;height:100%;object-fit:cover;display:block;" />
                             </div>
 
-                            <!-- Screen 2: Provider Dashboard -->
-                            <div class="app-screen screen-provider" id="screen-1">
-                                <div class="provider-header">
-                                    <div class="provider-header-inner">
-                                        <div class="app-status">
-                                            <span class="app-status-time">09:41</span>
-                                            <div class="app-status-icons">
-                                                <div class="status-dot"></div><div class="status-dot"></div><div class="status-dot"></div>
-                                            </div>
-                                        </div>
-                                        <div class="prov-greeting">Tableau de bord</div>
-                                        <div class="prov-name">Jean-Paul E.</div>
-                                        <div class="prov-online">
-                                            <div class="online-dot"></div>
-                                            <span class="online-text">En ligne · Disponible</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="orange-strip"></div>
-                                <div class="earnings-row">
-                                    <div class="earn-card">
-                                        <div class="earn-label">Ce mois</div>
-                                        <div class="earn-value">287K</div>
-                                        <div class="earn-sub">↑ +23% XAF</div>
-                                    </div>
-                                    <div class="earn-card">
-                                        <div class="earn-label">Missions</div>
-                                        <div class="earn-value">34</div>
-                                        <div class="earn-sub">↑ +8 ce mois</div>
-                                    </div>
-                                </div>
-                                <div class="score-card-mini">
-                                    <div class="score-header">
-                                        <span class="score-title">🏆 Ezra Score</span>
-                                        <span class="score-tier">🥇 Or</span>
-                                    </div>
-                                    <div class="score-bar-track">
-                                        <div class="score-bar-fill"></div>
-                                    </div>
-                                    <div class="score-meta">
-                                        <span class="score-pts">72 / 100</span>
-                                        <span class="score-next">13 pts → Platine</span>
-                                    </div>
-                                </div>
-                                <div class="booking-req">
-                                    <div class="section-label" style="padding: 0 0 0.4rem;">Nouvelles demandes</div>
-                                    <div class="booking-req-item">
-                                        <div class="req-icon">🔧</div>
-                                        <div class="req-info">
-                                            <div class="req-service">Plomberie · Urgent</div>
-                                            <div class="req-meta">Bonanjo · Demain 8h</div>
-                                        </div>
-                                        <div class="req-amount">15 000 XAF</div>
-                                    </div>
-                                    <div class="booking-req-item">
-                                        <div class="req-icon">⚡</div>
-                                        <div class="req-info">
-                                            <div class="req-service">Électricité · Standard</div>
-                                            <div class="req-meta">Akwa · Mer. 10h</div>
-                                        </div>
-                                        <div class="req-amount">22 000 XAF</div>
-                                    </div>
-                                </div>
+                            <!-- Screen 2: Customer Bookings -->
+                            <div class="app-screen" id="screen-1">
+                                <img src="assets/images/app-screen-2.png" alt="Réservations EZRA" style="width:100%;height:100%;object-fit:cover;display:block;" />
                             </div>
 
-                            <!-- Screen 3: Booking Confirmed -->
-                            <div class="app-screen screen-booking" id="screen-2">
-                                <div class="booking-confirmed-header">
-                                    <div class="booking-header-inner">
-                                        <div class="app-status">
-                                            <span class="app-status-time">09:41</span>
-                                            <div class="app-status-icons">
-                                                <div class="status-dot"></div><div class="status-dot"></div><div class="status-dot"></div>
-                                            </div>
-                                        </div>
-                                        <div class="booking-back">← Réservations</div>
-                                        <div class="booking-title">Réservation confirmée</div>
-                                    </div>
-                                </div>
-                                <div class="orange-strip"></div>
-                                <div class="booking-body">
-                                    <div class="confirmed-badge">✅</div>
-                                    <div class="confirmed-title">C'est réservé !</div>
-                                    <div class="confirmed-sub">Aimé arrive demain à 8h00</div>
-                                    <div class="booking-detail-card">
-                                        <div class="detail-row">
-                                            <span class="detail-label">Service</span>
-                                            <span class="detail-value">Plomberie</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">Prestataire</span>
-                                            <span class="detail-value">Aimé K. 🥇</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">Date</span>
-                                            <span class="detail-value">Mer. 6 août · 8h00</span>
-                                        </div>
-                                        <div class="detail-row">
-                                            <span class="detail-label">Montant</span>
-                                            <span class="detail-value orange">15 000 XAF</span>
-                                        </div>
-                                    </div>
-                                    <div class="escrow-badge">
-                                        <div class="escrow-icon">🛡️</div>
-                                        <div class="escrow-text">Paiement protégé — libéré uniquement après confirmation de la prestation</div>
-                                    </div>
-                                    <div class="track-btn" style="margin-top: 0.75rem;">📍 Suivre l'arrivée en direct</div>
-                                </div>
+                            <!-- Screen 3: Provider Revenue -->
+                            <div class="app-screen" id="screen-2">
+                                <img src="assets/images/app-screen-3.png" alt="Revenus prestataire EZRA" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                            </div>
+
+                            <!-- Screen 4: Provider Profile -->
+                            <div class="app-screen" id="screen-3">
+                                <img src="assets/images/app-screen-4.png" alt="Profil prestataire EZRA" style="width:100%;height:100%;object-fit:cover;display:block;" />
                             </div>
 
                         </div><!-- /phone-screen -->
@@ -1012,6 +865,7 @@
                         <div class="screen-dot active" data-screen="0"></div>
                         <div class="screen-dot" data-screen="1"></div>
                         <div class="screen-dot" data-screen="2"></div>
+                        <div class="screen-dot" data-screen="3"></div>
                     </div>
                 </div>
 
