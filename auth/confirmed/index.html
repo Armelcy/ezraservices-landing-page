@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirme - Ezra</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --ezra-orange: #FF6B35;
+            --ezra-orange-dark: #E55A2B;
+            --ezra-navy: #1B365D;
+            --gray-50: #F9FAFB;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --success: #10B981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--ezra-navy) 0%, var(--ezra-orange) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            text-align: center;
+            animation: slideUp 0.5s ease;
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--ezra-navy);
+            margin-bottom: 32px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #D1FAE5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+        }
+
+        .success-icon i {
+            font-size: 2.5rem;
+            color: var(--success);
+        }
+
+        .title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ezra-navy);
+            margin-bottom: 12px;
+        }
+
+        .subtitle {
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .app-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .app-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--ezra-orange);
+            color: white;
+            text-decoration: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .app-button:hover {
+            background: var(--ezra-orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .help-section {
+            background: var(--gray-50);
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .help-title {
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .help-text {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .back-link {
+            margin-top: 24px;
+        }
+
+        .back-link a {
+            color: var(--ezra-orange);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 24px; margin: 16px; }
+            .logo { font-size: 2rem; }
+            .app-buttons { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <span style="color: var(--ezra-orange);">&#x1F4F1;</span>
+            Ezra
+        </div>
+
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+
+        <h1 class="title">Email confirme avec succes !</h1>
+        <p class="subtitle">
+            Votre adresse email a ete verifiee. Vous pouvez maintenant vous connecter dans l'application Ezra.
+        </p>
+
+        <div class="app-buttons">
+            <a href="ezra://auth/confirmed" class="app-button">
+                <i class="fas fa-mobile-alt"></i>
+                Ouvrir l'App
+            </a>
+        </div>
+
+        <div class="help-section">
+            <div class="help-title">Vous n'avez pas l'application ?</div>
+            <div class="help-text">
+                <strong>Telechargez Ezra :</strong><br>
+                &bull; App Store (iOS)<br>
+                &bull; Google Play Store (Android)<br><br>
+                <strong>Support :</strong> support@ezraservice.com
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="/">&larr; Retour a l'accueil</a>
+        </div>
+    </div>
+
+    <script>
+        // Try to open the app automatically after a short delay
+        setTimeout(function() {
+            window.location.href = 'ezra://auth/confirmed';
+        }, 3000);
+    </script>
+</body>
+</html>
