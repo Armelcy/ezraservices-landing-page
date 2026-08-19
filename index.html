@@ -693,13 +693,7 @@
             border: 2px solid transparent;
         }
         .download-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
-        .download-btn.coming-soon {
-            background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.5);
-            border: 1px solid rgba(255,255,255,0.1); cursor: default;
-        }
-        .download-btn.coming-soon:hover { transform: none; box-shadow: none; }
         .download-btn-label { font-size: 0.65rem; color: var(--gray-400); display: block; }
-        .download-btn .coming-label { font-size: 0.65rem; color: rgba(255,255,255,0.35); }
         .qr-section {
             background: white; padding: 2rem; border-radius: var(--radius-2xl);
             text-align: center; color: var(--gray-900);
@@ -1049,13 +1043,13 @@
                                 <strong>App Store</strong>
                             </div>
                         </a>
-                        <div class="download-btn coming-soon">
+                        <a href="https://play.google.com/store/apps/details?id=com.ezraworking" target="_blank" rel="noopener" class="download-btn">
                             <span style="font-size:1.5rem">🤖</span>
                             <div>
-                                <span class="coming-label">Bientôt sur</span>
-                                <strong style="color:rgba(255,255,255,0.4)">Google Play</strong>
+                                <span class="download-btn-label">Disponible sur</span>
+                                <strong>Google Play</strong>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="qr-section">
