@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prestataire — Ezra</title>
+  <meta name="description" content="Réservez ce prestataire sur Ezra" />
+  <meta property="og:site_name" content="Ezra" />
+  <meta property="og:type" content="profile" />
+  <link rel="icon" href="/assets/favicon.ico" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0F1F35;
+      --orange: #FF6B35;
+      --cream:  #F7F4F0;
+      --white:  #FFFFFF;
+      --text:   #1A1A1A;
+      --sub:    #6B7280;
+      --border: #E5E7EB;
+      --green:  #34C759;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--cream);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: var(--navy);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .header-logo { font-size: 22px; font-weight: 800; color: #fff; letter-spacing: 0.3px; }
+    .header-tagline { font-size: 12px; color: rgba(255,255,255,0.5); margin-left: auto; }
+    .accent-bar { height: 3px; background: var(--orange); }
+
+    /* ── Main container ── */
+    .main { flex: 1; max-width: 480px; margin: 0 auto; width: 100%; padding: 24px 16px 48px; }
+
+    /* ── Loading / Error ── */
+    .state-box {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--sub);
+    }
+    .state-box .icon { font-size: 48px; margin-bottom: 12px; }
+    .state-box p { font-size: 15px; line-height: 1.5; }
+    .spinner {
+      width: 36px; height: 36px; border: 3px solid var(--border);
+      border-top-color: var(--orange); border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Provider card ── */
+    .provider-card {
+      background: var(--white);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+    }
+
+    .card-hero {
+      background: var(--navy);
+      padding: 28px 20px 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      position: relative;
+    }
+    .card-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange);
+    }
+
+    .avatar {
+      width: 70px; height: 70px; border-radius: 35px;
+      background: var(--orange);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+      border: 3px solid rgba(255,255,255,0.2);
+    }
+
+    .hero-info { flex: 1 }
+    .provider-name {
+      font-size: 20px; font-weight: 800; color: #fff;
+      line-height: 1.2; margin-bottom: 4px;
+    }
+    .provider-category {
+      font-size: 13px; color: var(--orange); font-weight: 600; margin-bottom: 8px;
+    }
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: rgba(255,107,53,0.18);
+      border-radius: 10px; padding: 3px 8px;
+      font-size: 11px; color: var(--orange); font-weight: 700;
+    }
+
+    .card-body { padding: 20px; }
+
+    .stat-row {
+      display: flex; gap: 12px; margin-bottom: 16px;
+    }
+    .stat {
+      flex: 1; background: var(--cream); border-radius: 12px;
+      padding: 12px; text-align: center;
+    }
+    .stat-value { font-size: 20px; font-weight: 800; color: var(--navy); }
+    .stat-label { font-size: 11px; color: var(--sub); margin-top: 2px; }
+
+    .stars { color: #FF9500; font-size: 14px; margin-bottom: 2px; }
+
+    .location-row {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--sub); margin-bottom: 12px;
+    }
+    .location-row svg { flex-shrink: 0; }
+
+    .bio {
+      font-size: 14px; color: var(--text); line-height: 1.6;
+      padding: 14px; background: var(--cream); border-radius: 12px;
+      margin-bottom: 4px;
+    }
+
+    /* ── CTA section ── */
+    .cta-section { display: flex; flex-direction: column; gap: 10px; }
+
+    .btn-primary {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: var(--orange);
+      color: #fff; font-size: 16px; font-weight: 700;
+      border: none; border-radius: 14px; padding: 17px 20px;
+      text-decoration: none; cursor: pointer; width: 100%;
+      transition: opacity 0.15s;
+    }
+    .btn-primary:active { opacity: 0.85; }
+
+    .store-row { display: flex; gap: 10px; }
+    .btn-store {
+      flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--white); color: var(--navy);
+      font-size: 13px; font-weight: 600;
+      border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 12px 8px; text-decoration: none;
+      transition: border-color 0.15s;
+    }
+    .btn-store:active { border-color: var(--orange); }
+
+    /* ── Footer ── */
+    .footer {
+      text-align: center; padding: 24px 20px;
+      font-size: 12px; color: var(--sub); line-height: 1.6;
+    }
+    .footer a { color: var(--orange); text-decoration: none; }
+
+    /* ── Open-in-app status ── */
+    #open-status {
+      font-size: 12px; color: var(--sub); text-align: center;
+      display: none; margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <span class="header-logo">Ezra</span>
+  <span class="header-tagline">Services à domicile</span>
+</div>
+<div class="accent-bar"></div>
+
+<div class="main">
+  <div id="loading" class="state-box">
+    <div class="spinner"></div>
+    <p>Chargement du profil...</p>
+  </div>
+
+  <div id="error" class="state-box" style="display:none">
+    <div class="icon">🔍</div>
+    <p>Prestataire introuvable.<br>Ce profil n'existe pas ou n'est plus disponible.</p>
+  </div>
+
+  <div id="content" style="display:none">
+    <div class="provider-card">
+      <div class="card-hero">
+        <div class="avatar" id="avatar"></div>
+        <div class="hero-info">
+          <div class="provider-name" id="provider-name"></div>
+          <div class="provider-category" id="provider-category"></div>
+          <span class="verified-badge">✓ Vérifié Ezra</span>
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="stat-row">
+          <div class="stat" id="rating-stat" style="display:none">
+            <div class="stars" id="stars"></div>
+            <div class="stat-value" id="rating-val"></div>
+            <div class="stat-label">Note</div>
+          </div>
+          <div class="stat" id="reviews-stat" style="display:none">
+            <div class="stat-value" id="reviews-val"></div>
+            <div class="stat-label">Avis</div>
+          </div>
+        </div>
+
+        <div class="location-row" id="location-row" style="display:none">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span id="location-text"></span>
+        </div>
+
+        <div class="bio" id="bio" style="display:none"></div>
+      </div>
+    </div>
+
+    <div class="cta-section">
+      <button class="btn-primary" id="open-btn" onclick="openInApp()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+        Réserver sur Ezra
+      </button>
+      <p id="open-status">Ouverture de l'application...</p>
+
+      <div class="store-row">
+        <a class="btn-store" href="https://apps.apple.com/app/id6755406129" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          App Store
+        </a>
+        <a class="btn-store" href="https://play.google.com/store/apps/details?id=com.ezraworking" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M3.18 23.76c.3.17.64.21.98.12l12.59-7.26-2.75-2.76-10.82 9.9zM.34 1.09C.13 1.41 0 1.82 0 2.28v19.44c0 .46.13.87.34 1.19l.06.06 10.89-10.89v-.26L.4 1.03l-.06.06zM20.68 10.53l-2.91-1.68-3.07 3.07 3.07 3.07 2.94-1.7c.84-.48.84-1.27-.03-1.76zM4.16.24l12.59 7.27-2.75 2.75L3.18.24c.34-.09.68-.04.98.12v-.12z"/>
+          </svg>
+          Play Store
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Ezra — Services à domicile au Cameroun</p>
+  <p style="margin-top:6px"><a href="https://ezraservice.com">ezraservice.com</a> · <a href="https://ezraservice.com/privacy-policy">Confidentialité</a></p>
+</div>
+
+<script>
+  const SUPABASE_URL = 'https://zouyaaeincpprkdkofgf.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_zYS9hJWJUcFpiwWeScHOXw_eiT7WDsX';
+
+  function getProviderId() {
+    const parts = window.location.pathname.split('/').filter(Boolean);
+    // /provider/{id} → parts = ['provider', '{id}']
+    return parts.length >= 2 ? parts[1] : null;
+  }
+
+  function getInitials(name) {
+    if (!name) return '?';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function renderStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating - full >= 0.5;
+    let s = '';
+    for (let i = 0; i < full; i++) s += '★';
+    if (half) s += '½';
+    return s;
+  }
+
+  async function loadProvider() {
+    const id = getProviderId();
+    if (!id) { showError(); return; }
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/provider_profiles?id=eq.${encodeURIComponent(id)}&select=id,business_name,category,rating,total_reviews,description,location,location_neighborhood,verified&limit=1`,
+        { headers: { 'apikey': SUPABASE_KEY, 'Content-Type': 'application/json' } }
+      );
+      const data = await res.json();
+
+      if (!data || data.length === 0 || data.error) { showError(); return; }
+
+      const p = data[0];
+      const name = p.business_name || 'Prestataire Ezra';
+      const location = [p.location_neighborhood, p.location].filter(Boolean).join(', ');
+
+      document.title = `${name} — Ezra`;
+      document.querySelector('meta[name="description"]').setAttribute('content',
+        `Réservez ${name} sur Ezra — ${p.category || 'Services à domicile'} au Cameroun`);
+
+      document.getElementById('avatar').textContent = getInitials(name);
+      document.getElementById('provider-name').textContent = name;
+      document.getElementById('provider-category').textContent = p.category || 'Prestataire de service';
+
+      const rating = Number(p.rating);
+      if (rating > 0) {
+        document.getElementById('stars').textContent = renderStars(rating);
+        document.getElementById('rating-val').textContent = rating.toFixed(1);
+        document.getElementById('rating-stat').style.display = '';
+      }
+
+      const reviews = Number(p.total_reviews);
+      if (reviews > 0) {
+        document.getElementById('reviews-val').textContent = reviews;
+        document.getElementById('reviews-stat').style.display = '';
+      }
+
+      if (location) {
+        document.getElementById('location-text').textContent = location;
+        document.getElementById('location-row').style.display = 'flex';
+      }
+
+      if (p.description && p.description.trim()) {
+        document.getElementById('bio').textContent = p.description.trim();
+        document.getElementById('bio').style.display = '';
+      }
+
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('content').style.display = '';
+
+      // Update open button with provider ID
+      document.getElementById('open-btn').dataset.providerId = p.id;
+
+    } catch (e) {
+      showError();
+    }
+  }
+
+  function showError() {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('error').style.display = '';
+  }
+
+  function openInApp() {
+    const providerId = document.getElementById('open-btn').dataset.providerId
+      || getProviderId();
+    if (!providerId) return;
+
+    const statusEl = document.getElementById('open-status');
+    statusEl.style.display = 'block';
+    statusEl.textContent = 'Ouverture de l\'application...';
+
+    // Try custom scheme first (works if app is installed, no Universal Link needed)
+    const customScheme = `ezra://provider/${providerId}`;
+    window.location.href = customScheme;
+
+    // After 1.8s, if still here, redirect to smart store link
+    setTimeout(() => {
+      statusEl.textContent = 'Application non installée — téléchargez Ezra ci-dessous';
+      // Highlight store buttons
+      document.querySelectorAll('.btn-store').forEach(el => {
+        el.style.borderColor = '#FF6B35';
+        el.style.color = '#FF6B35';
+      });
+    }, 1800);
+  }
+
+  loadProvider();
+</script>
+</body>
+</html>

@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/provider/:id", "destination": "/provider.html" }
+  ],
   "redirects": [
     {
       "source": "/app",
@@ -14,7 +17,6 @@
     },
     { "source": "/app", "destination": "/", "permanent": false },
     { "source": "/book/:path*", "destination": "/app", "permanent": false },
-    { "source": "/provider/:path*", "destination": "/app", "permanent": false },
     { "source": "/booking/:path*", "destination": "/app", "permanent": false },
     { "source": "/rebook/:path*", "destination": "/app", "permanent": false },
     { "source": "/join-booking/:path*", "destination": "/app", "permanent": false },

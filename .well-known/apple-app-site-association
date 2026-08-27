@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["T8F27XHR8H.com.uboralabs.ezra.app"],
+        "components": [
+          { "/": "/provider/*", "comment": "Provider profile pages — open to booking screen" },
+          { "/": "/book/*", "comment": "Direct booking deep links" },
+          { "/": "/booking/*", "comment": "Booking status links" }
+        ]
+      }
+    ]
+  }
+}
