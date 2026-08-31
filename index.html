@@ -10,7 +10,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ezraservice.com/">
     <meta property="og:title" content="Ezra Services | Plombier, électricien, ménage à domicile au Cameroun">
-    <meta property="og:description" content="Trouvez des prestataires qualifiés et sélectionnés pour tous vos besoins. Service premium au Cameroun.">
+    <meta property="og:description" content="Le service local, à portée de main. Plombiers, électriciens, femmes de ménage vérifiés à Douala et Yaoundé — réservez en quelques minutes.">
     <meta property="og:image" content="https://ezraservice.com/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -19,8 +19,8 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ezra Services — Marketplace de Services au Cameroun">
-    <meta name="twitter:description" content="Connectez-vous aux meilleurs prestataires à Douala et Yaoundé. Plombiers, électriciens, ménage et plus.">
+    <meta name="twitter:title" content="Ezra Services — Le service local, à portée de main.">
+    <meta name="twitter:description" content="Connectez-vous aux meilleurs prestataires vérifiés à Douala et Yaoundé. Plombiers, électriciens, ménage et plus.">
     <meta name="twitter:image" content="https://ezraservice.com/og-image.png">
 
     <!-- Canonical & Robots -->
@@ -47,6 +47,7 @@
           "applicationCategory": "LifestyleApplication",
           "operatingSystem": "iOS, Android",
           "installUrl": "https://apps.apple.com/app/id6755406129",
+          "installUrl_android": "https://play.google.com/store/apps/details?id=com.ezraworking",
           "publisher": { "@id": "https://uboralabs.com/#org" },
           "areaServed": { "@type": "Country", "name": "Cameroon" },
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "XAF" }
@@ -150,7 +151,7 @@
             font-weight: 800; font-size: 1.5rem; color: var(--ezra-navy);
             text-decoration: none;
         }
-        .logo-image { width: 40px; height: 40px; object-fit: contain; transition: transform 0.3s ease; }
+        .logo-image { width: 48px; height: 48px; object-fit: contain; transition: transform 0.3s ease; }
         .logo:hover .logo-image { transform: scale(1.05); }
         .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
         .nav-link {
@@ -496,7 +497,8 @@
             animation: floatY 6s ease-in-out infinite;
             display: flex; align-items: center; gap: 0.4rem; white-space: nowrap;
         }
-        .floating-badge .badge-icon { font-size: 1rem; }
+        .floating-badge .badge-icon { display: flex; align-items: center; }
+        .floating-badge .badge-icon svg { width: 16px; height: 16px; }
         .floating-badge:nth-child(1) { top: 15%; left: -30%; animation-delay: 0s; }
         .floating-badge:nth-child(2) { top: 55%; right: -35%; animation-delay: 2s; }
         .floating-badge:nth-child(3) { bottom: 15%; left: -25%; animation-delay: 4s; }
@@ -532,8 +534,13 @@
             width: 72px; height: 72px;
             background: linear-gradient(135deg, rgba(255,107,53,0.1), rgba(255,107,53,0.05));
             border-radius: var(--radius-xl); display: flex; align-items: center;
-            justify-content: center; font-size: 1.75rem; margin: 0 auto 1.5rem;
+            justify-content: center; margin: 0 auto 1.5rem;
             border: 1px solid rgba(255,107,53,0.15);
+            transition: background 0.3s ease;
+        }
+        .service-icon svg { width: 34px; height: 34px; }
+        .service-card:hover .service-icon {
+            background: linear-gradient(135deg, rgba(255,107,53,0.18), rgba(255,107,53,0.08));
         }
         .service-card h3 { font-size: 1.25rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.75rem; }
         .service-card p { color: var(--gray-600); line-height: 1.6; font-size: 0.95rem; }
@@ -595,8 +602,9 @@
         .benefit-icon-wrap {
             width: 48px; height: 48px; border-radius: var(--radius-lg); flex-shrink: 0;
             background: linear-gradient(135deg, var(--ezra-orange), var(--ezra-orange-dark));
-            display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+            display: flex; align-items: center; justify-content: center;
         }
+        .benefit-icon-wrap svg { width: 24px; height: 24px; }
         .benefit-text h4 { font-size: 1rem; font-weight: 700; color: white; margin-bottom: 0.25rem; }
         .benefit-text p { font-size: 0.9rem; color: rgba(255,255,255,0.6); line-height: 1.5; }
 
@@ -604,42 +612,30 @@
             background: rgba(255,255,255,0.06); border-radius: var(--radius-2xl);
             padding: 2rem; border: 1px solid rgba(255,255,255,0.1);
         }
-        .income-showcase {
-            background: rgba(255,107,53,0.1); border-radius: var(--radius-xl);
-            padding: 1.5rem; margin-bottom: 1.5rem;
-            border: 1px solid rgba(255,107,53,0.2); text-align: center;
+        .founding-badge {
+            display: inline-block; background: rgba(255,107,53,0.15);
+            color: var(--ezra-orange); border: 1px solid rgba(255,107,53,0.3);
+            border-radius: 999px; padding: 0.35rem 1rem;
+            font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;
+            margin-bottom: 1rem;
         }
-        .income-label { font-size: 0.8rem; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem; }
-        .income-amount { font-size: 2.5rem; font-weight: 900; color: var(--ezra-orange); line-height: 1; }
-        .income-period { font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-top: 0.25rem; }
-        .income-note { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 0.5rem; }
-
-        /* Ezra Score mini preview */
-        .score-preview {
-            background: rgba(255,255,255,0.05); border-radius: var(--radius-xl);
-            padding: 1.25rem; margin-bottom: 1.5rem;
-            border: 1px solid rgba(255,255,255,0.08);
+        .commission-offer {
+            display: flex; align-items: center; gap: 1rem;
+            background: rgba(255,107,53,0.12); border: 1px solid rgba(255,107,53,0.25);
+            border-radius: var(--radius-xl); padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
         }
-        .score-preview-title { font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 1rem; }
-        .tier-row-mini { display: flex; gap: 0.5rem; justify-content: space-between; }
-        .tier-mini {
-            flex: 1; text-align: center; padding: 0.5rem 0.25rem;
-            border-radius: var(--radius-md); border: 1px solid rgba(255,255,255,0.08);
-            transition: all 0.3s ease;
+        .commission-pct {
+            font-size: 2rem; font-weight: 900; color: var(--ezra-orange);
+            line-height: 1; flex-shrink: 0;
         }
-        .tier-mini.active { border-color: transparent; }
-        .tier-mini-icon { font-size: 1.1rem; margin-bottom: 0.2rem; }
-        .tier-mini-name { font-size: 0.55rem; font-weight: 700; }
-        .tier-mini-score { font-size: 0.45rem; color: rgba(255,255,255,0.4); }
-        .tier-mini.bronze { background: rgba(205,127,50,0.12); }
-        .tier-mini.bronze .tier-mini-name { color: #CD7F32; }
-        .tier-mini.silver { background: rgba(156,163,175,0.12); }
-        .tier-mini.silver .tier-mini-name { color: #9CA3AF; }
-        .tier-mini.gold { background: rgba(212,175,55,0.15); }
-        .tier-mini.gold .tier-mini-name { color: #D4AF37; }
-        .tier-mini.platinum { background: rgba(99,102,241,0.15); }
-        .tier-mini.platinum .tier-mini-name { color: #818CF8; }
-        .tier-mini.gold.active { box-shadow: 0 0 0 1.5px #D4AF37; }
+        .commission-detail { display: flex; flex-direction: column; gap: 0.15rem; }
+        .commission-label { font-size: 0.85rem; font-weight: 700; color: white; }
+        .commission-sub { font-size: 0.75rem; color: rgba(255,255,255,0.5); }
+        .founding-desc {
+            font-size: 0.9rem; color: rgba(255,255,255,0.65);
+            line-height: 1.6; margin-bottom: 1.5rem;
+        }
 
         .provider-cta-btns { display: flex; flex-direction: column; gap: 0.75rem; }
         .btn-provider-primary {
@@ -677,31 +673,17 @@
             background: linear-gradient(135deg, var(--ezra-navy), var(--ezra-navy-dark));
             color: white;
         }
-        .download-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
-        .download h2 { font-size: 2.25rem; font-weight: 800; margin-bottom: 1.5rem; }
-        .download-features { margin: 1.5rem 0; }
-        .feature-item { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; font-weight: 500; }
-        .feature-check {
-            width: 22px; height: 22px; background: var(--ezra-orange); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: white; font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
-        }
-        .download-buttons { display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap; }
+        .download-content { max-width: 560px; margin: 0 auto; text-align: center; }
+        .download h2 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem; }
+        .download-subtitle { color: rgba(255,255,255,0.6); font-size: 1rem; margin-bottom: 2.5rem; }
+        .download-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
         .download-btn {
-            background: white; color: var(--gray-900); padding: 0.875rem 1.5rem;
+            background: white; color: var(--gray-900); padding: 0.875rem 1.75rem;
             border-radius: var(--radius-lg); text-decoration: none; font-weight: 600;
             transition: all 0.3s ease; display: flex; align-items: center; gap: 0.75rem;
-            border: 2px solid transparent;
         }
-        .download-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+        .download-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); }
         .download-btn-label { font-size: 0.65rem; color: var(--gray-400); display: block; }
-        .qr-section {
-            background: white; padding: 2rem; border-radius: var(--radius-2xl);
-            text-align: center; color: var(--gray-900);
-        }
-        .qr-image { width: 180px; height: 180px; margin: 0 auto 1rem; border-radius: var(--radius-lg); overflow: hidden; }
-        .qr-image img { width: 100%; height: 100%; object-fit: contain; }
-        .qr-label { font-size: 0.875rem; color: var(--gray-500); font-weight: 500; }
-
         /* ─── ENGAGEMENTS ─── */
         .engagements { padding: 6rem 0; background: white; }
         .engagements-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
@@ -710,7 +692,8 @@
             border: 1px solid var(--gray-100); transition: all 0.3s ease;
         }
         .engagement-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-4px); }
-        .engagement-icon { font-size: 2rem; margin-bottom: 1rem; }
+        .engagement-icon { width: 48px; height: 48px; margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; }
+        .engagement-icon svg { width: 40px; height: 40px; }
         .engagement-card h4 { font-size: 1rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.5rem; }
         .engagement-card p { font-size: 0.9rem; color: var(--gray-600); line-height: 1.6; }
         .engagement-tag { font-size: 0.75rem; font-weight: 600; color: var(--ezra-orange); margin-top: 0.75rem; }
@@ -780,7 +763,6 @@
         <div class="nav-container">
             <a href="#home" class="logo">
                 <img src="assets/images/ezra-logo-new-transparent.png" alt="Ezra Services" class="logo-image">
-                Ezra
             </a>
             <nav>
                 <ul class="nav-links" id="nav-links">
@@ -804,12 +786,10 @@
                 <div class="hero-badge">🇨🇲 Disponible à Douala &amp; Yaoundé</div>
                 <h1>Trouvez un <span class="highlight">prestataire de confiance</span> en quelques minutes</h1>
                 <p class="hero-subtitle">
-                    Plombiers, électriciens, femmes de ménage — sélectionnés et approuvés.
-                    Réservez depuis votre téléphone, payez en espèces à la livraison.<br>
-                    <span style="font-size:0.85em;opacity:0.75;">Bientôt : MTN MoMo &amp; Orange Money</span>
+                    Le service local, à portée de main. Plombiers, électriciens, femmes de ménage — profils contrôlés, paiement Mobile Money ou en espèces, réservables en quelques minutes.
                 </p>
                 <div class="hero-buttons">
-                    <a href="#download" class="btn-primary">📱 Télécharger l'App</a>
+                    <a href="#download" class="btn-primary" style="display:inline-flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg> Télécharger l'App</a>
                     <a href="#services" class="btn-secondary">Découvrir les services</a>
                 </div>
                 <div class="hero-stats">
@@ -866,9 +846,9 @@
                 </div>
 
                 <!-- Floating badges -->
-                <div class="floating-badge"><span class="badge-icon">✅</span> Profils approuvés</div>
-                <div class="floating-badge"><span class="badge-icon">🥇</span> Ezra Score Or</div>
-                <div class="floating-badge"><span class="badge-icon">💵</span> Paiement à la livraison</div>
+                <div class="floating-badge"><span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span> Profil contrôlé</div>
+                <div class="floating-badge"><span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span> 0% commission Ezra</div>
+                <div class="floating-badge"><span class="badge-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span> Paiement sécurisé</div>
             </div>
         </div>
     </section>
@@ -879,15 +859,71 @@
             <div class="section-header">
                 <div class="section-badge">Ce que nous proposons</div>
                 <h2 class="section-title">Services disponibles</h2>
-                <p class="section-subtitle">Des professionnels qualifiés pour tous vos besoins quotidiens à Douala et Yaoundé</p>
+                <p class="section-subtitle">Des professionnels pour tous vos besoins quotidiens à Douala et Yaoundé</p>
             </div>
             <div class="services-grid">
-                <div class="service-card"><div class="service-icon">🔧</div><h3>Plomberie & Électricité</h3><p>Interventions d'urgence, réparations et installations par des professionnels certifiés.</p></div>
-                <div class="service-card"><div class="service-icon">🏠</div><h3>Ménage & Nettoyage</h3><p>Services de nettoyage résidentiel et commercial avec personnel formé et équipé.</p></div>
-                <div class="service-card"><div class="service-icon">🔨</div><h3>Réparations & Bricolage</h3><p>Menuiserie, peinture, et tous travaux de rénovation par des artisans experts.</p></div>
-                <div class="service-card"><div class="service-icon">🚚</div><h3>Transport & Déménagement</h3><p>Solutions de transport sécurisé et déménagement avec assurance incluse.</p></div>
-                <div class="service-card"><div class="service-icon">👩‍🍳</div><h3>Services Culinaires</h3><p>Chefs à domicile et services de traiteur pour tous vos événements.</p></div>
-                <div class="service-card"><div class="service-icon">🌿</div><h3>Jardinage & Paysage</h3><p>Entretien d'espaces verts et aménagement paysager professionnel.</p></div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                    </div>
+                    <h3>Beauté & Bien-être</h3>
+                    <p>Maquillage, esthéticienne, ongles, massage — à domicile, sur rendez-vous.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                        </svg>
+                    </div>
+                    <h3>Plomberie & Électricité</h3>
+                    <p>Interventions d'urgence, réparations et installations par des professionnels.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+                            <path d="M20 3v4M22 5h-4M4 17v2M5 18H3"/>
+                        </svg>
+                    </div>
+                    <h3>Ménage & Nettoyage</h3>
+                    <p>Services de nettoyage résidentiel et commercial avec personnel formé et équipé.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="14" height="8" x="5" y="2" rx="2"/>
+                            <rect width="20" height="8" x="2" y="14" rx="2"/>
+                            <path d="M6 18h2M12 18h6"/>
+                        </svg>
+                    </div>
+                    <h3>Réparations Tech</h3>
+                    <p>Téléphones, laptops, tablettes — diagnostic et réparation rapide.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/>
+                            <path d="M15 18H9"/>
+                            <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/>
+                            <circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/>
+                        </svg>
+                    </div>
+                    <h3>Transport & Déménagement</h3>
+                    <p>Transport sécurisé et déménagement avec suivi en temps réel.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 12-8.373 8.373a1 1 0 1 1-3-3L12 9"/>
+                            <path d="m18 15 4-4"/>
+                            <path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172V7l-2.26-2.26a6 6 0 0 0-4.202-1.756L9 2.96l.92.82A6.18 6.18 0 0 1 12 8.4V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/>
+                        </svg>
+                    </div>
+                    <h3>Réparations & Bricolage</h3>
+                    <p>Menuiserie, peinture, et tous travaux de rénovation par des artisans experts.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -926,75 +962,59 @@
             <div class="section-header">
                 <div class="section-badge">Rejoignez Ezra</div>
                 <h2 class="section-title">Travaillez à votre rythme.<br>Gagnez plus.</h2>
-                <p class="section-subtitle">Des clients à Douala et Yaoundé cherchent vos compétences. Inscrivez-vous, obtenez des missions, construisez votre réputation.</p>
+                <p class="section-subtitle">Des clients à Douala et Yaoundé cherchent vos compétences sur Ezra. Inscrivez-vous, obtenez des missions, construisez votre réputation.</p>
             </div>
 
             <div class="provider-grid">
                 <div class="provider-benefits">
                     <div class="benefit-item">
-                        <div class="benefit-icon-wrap">💼</div>
+                        <div class="benefit-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </div>
                         <div class="benefit-text">
                             <h4>Clients directs, sans intermédiaire</h4>
                             <p>Ezra vous met directement en contact avec des clients vérifiés à Douala et Yaoundé. Commission transparente par mission — pas de frais d'inscription, pas de surprises.</p>
                         </div>
                     </div>
                     <div class="benefit-item">
-                        <div class="benefit-icon-wrap">📱</div>
+                        <div class="benefit-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg>
+                        </div>
                         <div class="benefit-text">
                             <h4>Gérez tout depuis l'app</h4>
                             <p>Acceptez ou refusez des missions, chattez avec les clients, suivez vos paiements et votre planning — le tout depuis votre téléphone.</p>
                         </div>
                     </div>
                     <div class="benefit-item">
-                        <div class="benefit-icon-wrap">💳</div>
+                        <div class="benefit-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>
+                        </div>
                         <div class="benefit-text">
                             <h4>Paiement garanti sur chaque mission</h4>
                             <p>Le client paie en espèces à la fin de la prestation. Bientôt : paiement Mobile Money en escrow pour zéro risque d'impayé.</p>
                         </div>
                     </div>
                     <div class="benefit-item">
-                        <div class="benefit-icon-wrap">🏆</div>
+                        <div class="benefit-icon-wrap">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+                        </div>
                         <div class="benefit-text">
-                            <h4>Montez en grade avec l'Ezra Score</h4>
-                            <p>Plus vous travaillez et recevez de bons avis, plus votre score monte. Les prestataires Or et Platine apparaissent en priorité dans les résultats — plus de missions, automatiquement.</p>
+                            <h4>Visibilité dès le premier jour</h4>
+                            <p>En tant que prestataire fondateur, vous construisez votre réputation avant la concurrence. Les premiers avis et missions restent associés à votre profil pour toujours.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="provider-cta-panel">
-                    <div class="income-showcase">
-                        <div class="income-label">Potentiel de revenus estimé</div>
-                        <div class="income-amount">300 000+</div>
-                        <div class="income-period">XAF / mois</div>
-                        <div class="income-note">Estimation basée sur 20–25 missions/mois à 12 000–15 000 XAF — résultats variables selon l'activité</div>
-                    </div>
-
-                    <div class="score-preview">
-                        <div class="score-preview-title">🏆 Système Ezra Score — Progressez, gagnez plus</div>
-                        <div style="font-size:0.7rem;color:rgba(255,255,255,0.55);margin-bottom:0.8rem;">Calculé sur vos avis clients et votre fiabilité (taux de complétion des missions)</div>
-                        <div class="tier-row-mini">
-                            <div class="tier-mini bronze">
-                                <div class="tier-mini-icon">🥉</div>
-                                <div class="tier-mini-name">Bronze</div>
-                                <div class="tier-mini-score">0 pts</div>
-                            </div>
-                            <div class="tier-mini silver">
-                                <div class="tier-mini-icon">🥈</div>
-                                <div class="tier-mini-name">Argent</div>
-                                <div class="tier-mini-score">40 pts</div>
-                            </div>
-                            <div class="tier-mini gold active">
-                                <div class="tier-mini-icon">🥇</div>
-                                <div class="tier-mini-name">Or</div>
-                                <div class="tier-mini-score">65 pts</div>
-                            </div>
-                            <div class="tier-mini platinum">
-                                <div class="tier-mini-icon">💎</div>
-                                <div class="tier-mini-name">Platine</div>
-                                <div class="tier-mini-score">85 pts</div>
-                            </div>
+                    <div class="founding-badge">Prestataires fondateurs · Septembre 2026</div>
+                    <div class="commission-offer">
+                        <div class="commission-pct">0%</div>
+                        <div class="commission-detail">
+                            <span class="commission-label">0% de commission Ezra jusqu'au 1er novembre</span>
+                            <span class="commission-sub">Gardez 100% de vos revenus pendant le lancement</span>
                         </div>
                     </div>
+                    <p class="founding-desc">Soyez parmi les premiers à rejoindre Ezra à Douala et Yaoundé. Les prestataires fondateurs construisent leur réputation avant la concurrence — chaque avis et mission restent liés à votre profil.</p>
 
                     <div class="provider-steps">
                         <div class="prov-step">
@@ -1013,10 +1033,10 @@
 
                     <div class="provider-cta-btns">
                         <a href="https://apps.apple.com/app/id6755406129" target="_blank" rel="noopener" class="btn-provider-primary">
-                            📱 S'inscrire comme prestataire
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:6px"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg> S'inscrire comme prestataire
                         </a>
                         <a href="https://wa.me/237658837203?text=Bonjour%2C+je+veux+devenir+prestataire+sur+Ezra+%F0%9F%91%8B" target="_blank" rel="noopener" class="btn-provider-whatsapp">
-                            💬 Poser une question sur WhatsApp
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline;vertical-align:middle;margin-right:6px"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg> Poser une question sur WhatsApp
                         </a>
                     </div>
                 </div>
@@ -1028,39 +1048,23 @@
     <section class="download" id="download">
         <div class="container">
             <div class="download-content">
-                <div>
-                    <h2>Téléchargez l'App Ezra</h2>
-                    <p style="color: rgba(255,255,255,0.7);">Accédez à tous nos services premium depuis votre téléphone. Gratuit, sans inscription obligatoire pour explorer.</p>
-                    <div class="download-features">
-                        <div class="feature-item"><div class="feature-check">✓</div><span>Réservations en temps réel</span></div>
-                        <div class="feature-item"><div class="feature-check">✓</div><span>Chat direct avec les prestataires</span></div>
-                        <div class="feature-item"><div class="feature-check">✓</div><span>Suivi GPS des interventions</span></div>
-                        <div class="feature-item"><div class="feature-check">✓</div><span>Paiement en espèces à la livraison</span></div>
-                        <div class="feature-item"><div class="feature-check">⏳</div><span>Bientôt : MTN MoMo &amp; Orange Money</span></div>
-                        <div class="feature-item"><div class="feature-check">✓</div><span>Tableau de bord prestataire complet</span></div>
-                    </div>
-                    <div class="download-buttons">
-                        <a href="https://apps.apple.com/app/id6755406129" target="_blank" rel="noopener" class="download-btn">
-                            <span style="font-size:1.5rem">🍎</span>
-                            <div>
-                                <span class="download-btn-label">Disponible sur</span>
-                                <strong>App Store</strong>
-                            </div>
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=com.ezraworking" target="_blank" rel="noopener" class="download-btn">
-                            <span style="font-size:1.5rem">🤖</span>
-                            <div>
-                                <span class="download-btn-label">Disponible sur</span>
-                                <strong>Google Play</strong>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="qr-section">
-                    <div class="qr-image">
-                        <img src="assets/images/qr-ezraservice.png" alt="QR Code — Télécharger Ezra">
-                    </div>
-                    <p class="qr-label">📱 Scannez pour télécharger directement</p>
+                <h2>Téléchargez l'App Ezra</h2>
+                <p class="download-subtitle">Gratuit sur iPhone et Android — disponible dès maintenant</p>
+                <div class="download-buttons">
+                    <a href="https://apps.apple.com/app/id6755406129" target="_blank" rel="noopener" class="download-btn">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="var(--gray-900)"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+                        <div>
+                            <span class="download-btn-label">Disponible sur</span>
+                            <strong>App Store</strong>
+                        </div>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.ezraworking" target="_blank" rel="noopener" class="download-btn">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M3.18 23.76a2 2 0 0 1-.86-1.72V1.96A2 2 0 0 1 3.18.24l12.3 11.76-12.3 11.76Z" fill="#4CAF50"/><path d="M19.64 15.5 15.48 12l4.16-3.5 2.72 1.63a2 2 0 0 1 0 3.74L19.64 15.5Z" fill="#FFC107"/><path d="m15.48 12-12.3 11.76c.3.28.73.37 1.14.15L18.12 16l-2.64-4Z" fill="#F44336"/><path d="m15.48 12 2.64-4L4.32.09C3.91-.13 3.48-.04 3.18.24L15.48 12Z" fill="#2196F3"/></svg>
+                        <div>
+                            <span class="download-btn-label">Disponible sur</span>
+                            <strong>Google Play</strong>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -1076,19 +1080,33 @@
             </div>
             <div class="engagements-grid">
                 <div class="engagement-card">
-                    <div class="engagement-icon">🛡️</div>
-                    <h4>Sélection des prestataires</h4>
-                    <p>Chaque prestataire passe par un processus d'approbation avant d'apparaître sur la plateforme. Profil, compétences et disponibilité contrôlés par notre équipe.</p>
-                    <div class="engagement-tag">Profils approuvés par l'équipe Ezra</div>
+                    <div class="engagement-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <h4>Profils contrôlés</h4>
+                    <p>Les prestataires fournissent une pièce d'identité et leurs références à l'inscription. Les avis clients complètent la confiance au fil des missions.</p>
+                    <div class="engagement-tag">Identité & références à l'inscription</div>
                 </div>
                 <div class="engagement-card">
-                    <div class="engagement-icon">💳</div>
+                    <div class="engagement-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
                     <h4>Paiement protégé</h4>
                     <p>Payez en espèces directement au prestataire après la prestation. Bientôt : paiement MTN MoMo ou Orange Money sécurisé en escrow — le prestataire payé uniquement après confirmation.</p>
                     <div class="engagement-tag">Paiement à la livraison · MoMo bientôt</div>
                 </div>
                 <div class="engagement-card">
-                    <div class="engagement-icon">📞</div>
+                    <div class="engagement-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--ezra-orange)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/>
+                        </svg>
+                    </div>
                     <h4>Support réactif à Douala</h4>
                     <p>Un problème avec une prestation ? Notre équipe basée à Douala vous répond sur WhatsApp et trouve une solution rapidement.</p>
                     <div class="engagement-tag">WhatsApp · +237 658 837 203</div>
@@ -1206,27 +1224,28 @@
                         <img src="assets/images/ezra-logo-new-transparent.png" alt="Ezra" class="footer-logo-img">
                         <span class="footer-logo-text">Ezra Services</span>
                     </a>
-                    <p class="footer-desc">Votre marketplace premium pour trouver les meilleurs prestataires de services au Cameroun. Vérifiés, fiables, disponibles.</p>
+                    <p class="footer-desc">Le service local, à portée de main. Profils contrôlés à Douala et Yaoundé — beauté, plomberie, ménage, tech et plus.</p>
                     <div class="footer-socials">
-                        <a href="mailto:support@ezraservice.com" class="footer-social" title="Email">📧</a>
-                        <a href="https://wa.me/237658837203" class="footer-social" target="_blank" rel="noopener" title="WhatsApp">💬</a>
-                        <a href="tel:+237658837203" class="footer-social" title="Téléphone">📱</a>
+                        <a href="mailto:support@ezraservice.com" class="footer-social" title="Email"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></a>
+                        <a href="https://wa.me/237658837203" class="footer-social" target="_blank" rel="noopener" title="WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></a>
+                        <a href="tel:+237658837203" class="footer-social" title="Téléphone"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6 6l.88-.88a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
                     </div>
                 </div>
                 <div>
                     <h4>Services</h4>
                     <ul class="footer-links">
+                        <li><a href="#services">Beauté & Bien-être</a></li>
                         <li><a href="#services">Plomberie & Électricité</a></li>
                         <li><a href="#services">Ménage & Nettoyage</a></li>
-                        <li><a href="#services">Réparations</a></li>
-                        <li><a href="#services">Transport</a></li>
+                        <li><a href="#services">Réparations Tech</a></li>
+                        <li><a href="#services">Transport & Déménagement</a></li>
                     </ul>
                 </div>
                 <div>
                     <h4>Prestataires</h4>
                     <ul class="footer-links">
                         <li><a href="#prestataires">Devenir prestataire</a></li>
-                        <li><a href="#prestataires">Ezra Score</a></li>
+                        <li><a href="#prestataires">Programme prestataires</a></li>
                         <li><a href="https://wa.me/237658837203?text=Je+veux+devenir+prestataire+sur+Ezra" target="_blank" rel="noopener">S'inscrire via WhatsApp</a></li>
                     </ul>
                 </div>
@@ -1249,7 +1268,7 @@
     </footer>
 
     <!-- WhatsApp Float -->
-    <a class="whatsapp-float" href="https://wa.me/237658837203?text=Bonjour%21+Je+souhaite+utiliser+les+services+Ezra." target="_blank" rel="noopener" aria-label="Contacter via WhatsApp">💬</a>
+    <a class="whatsapp-float" href="https://wa.me/237658837203?text=Bonjour%21+Je+souhaite+utiliser+les+services+Ezra." target="_blank" rel="noopener" aria-label="Contacter via WhatsApp"><svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></a>
 
     <script>
         // Header scroll
