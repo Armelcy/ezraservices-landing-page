@@ -53,15 +53,26 @@
           "offers": { "@type": "Offer", "price": "0", "priceCurrency": "XAF" }
         },
         {
-          "@type": "LocalBusiness",
+          "@type": "HomeAndConstructionBusiness",
           "name": "Ezra Services",
           "url": "https://ezraservice.com",
+          "description": "Marketplace de prestataires vérifiés à domicile — plombiers, électriciens, agents de ménage — disponible à Douala et Yaoundé, paiement MTN MoMo et Orange Money.",
           "parentOrganization": { "@id": "https://uboralabs.com/#org" },
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "Douala",
-            "addressCountry": "CM"
-          }
+          "areaServed": [
+            { "@type": "City", "name": "Douala", "containedInPlace": { "@type": "Country", "name": "Cameroon" } },
+            { "@type": "City", "name": "Yaoundé", "containedInPlace": { "@type": "Country", "name": "Cameroon" } }
+          ],
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Services à domicile",
+            "itemListElement": [
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Plomberie à domicile", "areaServed": "Douala, Yaoundé" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Electricien à domicile", "areaServed": "Douala, Yaoundé" } },
+              { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Ménage à domicile", "areaServed": "Douala, Yaoundé" } }
+            ]
+          },
+          "paymentAccepted": "MTN MoMo, Orange Money",
+          "currenciesAccepted": "XAF"
         }
       ]
     }
@@ -76,6 +87,54 @@
       "potentialAction": { "@type": "SearchAction", "target": "https://ezraservice.com/search?q={search_term_string}", "query-input": "required name=search_term_string" },
       "publisher": { "@type": "Organization", "name": "Ubora Labs", "url": "https://uboralabs.com" },
       "areaServed": { "@type": "Country", "name": "Cameroon" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Comment sont vérifiés les prestataires ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Chaque prestataire passe par un processus d'approbation par notre équipe avant d'apparaître sur la plateforme. Un prestataire dont le profil n'est pas validé ne peut pas accepter de missions."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Comment fonctionne le paiement ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Le paiement se fait par MTN MoMo ou Orange Money via notre système d'escrow sécurisé. Votre argent est bloqué à la réservation et libéré au prestataire uniquement après confirmation de la prestation — vous êtes protégé à chaque étape."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Que se passe-t-il si le prestataire ne se présente pas ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Contactez notre support WhatsApp immédiatement. Nous trouvons une solution rapide : remplacement du prestataire ou nouvelle date. Les prestataires qui ne respectent pas leurs engagements sont signalés et leur Ezra Score est impacté."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Combien coûte Ezra pour les prestataires ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "L'inscription sur Ezra est entièrement gratuite. Une commission transparente est prélevée uniquement sur les missions complétées — pas de frais mensuels, pas d'abonnement. Vous ne payez que quand vous gagnez."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Dans quelles villes Ezra est-il disponible ?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ezra est actuellement disponible à Douala et Yaoundé. Nous prévoyons d'étendre le service à d'autres villes du Cameroun prochainement."
+          }
+        }
+      ]
     }
     </script>
 
